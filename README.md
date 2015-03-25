@@ -1,3 +1,3 @@
 # Counseling Center Check-in
 
-Check-in system of the ASU Counseling Center
+Check-in system for the ASU Counseling Center
