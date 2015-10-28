@@ -51,10 +51,14 @@ class Reason extends \Resource
     {
         parent::__construct();
         $this->label = new \Variable\String(null, 'label');
+        $this->label->setLimit(100);
         $this->summary = new \Variable\String(null, 'summary');
+        $this->summary->setLimit(100);
         $this->instruction = new \Variable\String(null, 'instruction');
+        $this->instruction->setLimit(100);
         $this->flag_emergency = new \Variable\Bool(null, 'flag_emergency');
         $this->icon = new \Variable\String(null, 'icon');
+        $this->icon->setLimit(20);
         $this->admin_menu_show = new \Variable\Bool(null, 'admin_menu_show');
         $this->wait_listed = new \Variable\Bool(null, 'wait_listed');
     }

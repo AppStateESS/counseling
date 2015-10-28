@@ -23,6 +23,7 @@ class Clinician extends \Resource
         parent::__construct();
         $this->user_id = new \Variable\Integer(null, 'user_id');
         $this->name = new \Variable\String(null, 'name');
+        $this->name->setLimit(100);
     }
 
 }

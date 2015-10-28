@@ -17,6 +17,7 @@ class Disposition extends \Resource
     {
         parent::__construct();
         $this->label = new \Variable\String(null, 'label');
+        $this->label->setLimit(100);
     }
 
 }
