@@ -1,0 +1,40 @@
+.checkin-box {
+    max-width : 600px;
+    border : 1px solid #8B8B8B;
+    border-radius: 6px;
+    margin : 0 auto;
+    padding : .8em 3em 2em 3em;
+    background-color : #F9F9F9;
+}
+
+.checkin-box input {
+    margin-top : 1em;
+    font-size : 1.6em;
+    height : 2em;
+}
+
+.checkin-box div.alert {
+    margin-top : 1em;
+    margin-bottom : .3em;
+    transition: opacity 0.5s ease-in;
+}
+
+.checkin-box button.continue {
+    margin-top : 2em;
+}
+
+.checkin-box p {
+    margin-bottom : .1em;
+    font-family : Arial, sans;
+}
+
+.checkin-box .title {
+    font-size : 2em;
+    font-weight : bold;
+}
+
+.checkin-box .subtitle {
+    font-family : Arial, sans;
+    font-size : 1.6em;
+    color : #606060;
+}
