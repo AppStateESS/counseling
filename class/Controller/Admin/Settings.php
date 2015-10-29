@@ -9,6 +9,26 @@ namespace counseling\Controller\Admin;
 class Settings extends \counseling\Controller\Base
 {
 
+    public function get(\Request $request)
+    {
+        $command = $this->routeCommand($request);
+        if (empty($command)) {
+            return parent::get($request);
+        } else {
+            return $command->get($request);
+        }
+    }
+
+    public function post(\Request $request)
+    {
+        $command = $this->routeCommand($request);
+        if (empty($command)) {
+            return parent::post($request);
+        } else {
+            return $command->post($request);
+        }
+    }
+
     public function getHtmlView($data, \Request $request)
     {
         if (COUNSELING_REACT_DEV) {
@@ -26,6 +46,27 @@ class Settings extends \counseling\Controller\Base
 EOF;
         $view = new \View\HtmlView($content);
         return $view;
+    }
+
+    public function getJsonView($data, \Request $request)
+    {
+        return parent::getJsonView($data, $request);
+    }
+
+    private function routeCommand($request)
+    {
+        $command = $request->shiftCommand();
+
+        if (empty($command)) {
+            return null;
+        }
+
+        $className = 'counseling\Controller\Admin\Settings\\' . $command;
+        if (!class_exists($className)) {
+            throw new \Http\NotAcceptableException($request);
+        }
+        $commandObject = new $className($this->getModule());
+        return $commandObject;
     }
 
 }
