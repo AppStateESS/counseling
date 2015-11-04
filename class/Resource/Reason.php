@@ -51,6 +51,12 @@ class Reason extends \Resource
      * 
      */
     protected $wait_listed;
+    
+    /**
+     * If true, ask the visitor for their phone number.
+     * @var \Variable\Bool
+     */
+    protected $ask_for_phone;
 
     /**
      * Order listed in check in dialog
