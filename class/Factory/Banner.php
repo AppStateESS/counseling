@@ -13,20 +13,16 @@ class Banner
     {
     }
     
-    public static function logInByEmail($email)
-    {
-    }
-    
     public static function fakeStudent()
     {
         return array(
-            'username' => 'mcnaneym',
+            'userName' => 'mcnaneym',
             'banner_id' => '123456789',
-            'firstname' => 'Matt',
-            'lastname' => 'McNaney',
-            'email' => 'mcnaneym@appstate.edu',
-            'errornum' => 0,
-            'error' => null
+            'firstName' => 'Matt',
+            'lastame' => 'McNaney',
+            'phoneNumber' => '8282651010',
+            'emailAddress' => 'mcnaneym@appstate.edu',
+            'studentLevel' => 'U'
         );
     }
 }
