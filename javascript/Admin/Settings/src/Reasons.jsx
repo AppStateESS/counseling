@@ -277,7 +277,7 @@ var ReasonInstruction = React.createClass({
     getInitialState: function() {
         return {
             editMode : false,
-            instruction : '1'
+            instruction : null
         };
     },
 
@@ -298,13 +298,14 @@ var ReasonInstruction = React.createClass({
     },
 
     formMode : function() {
-        this.props.setCurrentEdit(this.props.reasonId, this.props.section);
+        this.props.setCurrentEdit(this.props.reasonId, 3);
         this.setState({
             editMode : true
         });
     },
 
     saveInstruction : function() {
+
         $.post('counseling/Admin/Settings/Reason', {
         	command : 'setInstruction',
             reasonId : this.props.reasonId,
@@ -326,6 +327,7 @@ var ReasonInstruction = React.createClass({
 
     closeForm : function() {
         this.setState({
+            instruction : this.props.value,
             editMode : false
         });
     },
@@ -333,13 +335,13 @@ var ReasonInstruction = React.createClass({
     render: function() {
         var value = null;
         var option = null;
-        if (this.state.instruction === '1') {
+        if (this.props.value === '1') {
             option = 'Sit down';
         } else {
             option = 'See the front desk';
         }
 
-        if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId && this.props.currentEdit.section == this.props.section) {
+        if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId && this.props.currentEdit.section == '3') {
             value = (
                 <div className="row">
                     <div className="col-sm-3">
@@ -465,7 +467,6 @@ var ReasonValue = React.createClass({
     },
 
     render: function() {
-        console.log(this.props.currentEdit);
         if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId && this.props.currentEdit.section == this.props.section) {
             value = (
                 <LineEdit
