@@ -66,45 +66,60 @@ class Reason extends Base
     {
         $reason_id = filter_input(INPUT_POST, 'reasonId', FILTER_SANITIZE_NUMBER_INT);
         $reason = self::build($reason_id);
-        
         $reason->setTitle(self::pullPostString('title'));
         $reason->setDescription(self::pullPostString('description'));
-        $reason->setInstruction(self::pullPostString('instruction'));
-        $reason->setFlagEmergency(self::pullPostCheck('flagEmergency'));
-        //$reason->setIcon(self::pullPostString('waitListed'));
+        $reason->setInstruction(self::pullPostInteger('instruction'));
+        $reason->setShowEmergency(self::pullPostCheck('showEmergency'));
+        $reason->setIcon(self::pullPostString('icon'));
         $reason->setAdminMenuShow(self::pullPostCheck('adminMenuShow'));
         $reason->setWaitListed(self::pullPostCheck('waitListed'));
+        $reason->setAskForPhone(self::pullPostCheck('askForPhone'));
         $reason->setOrdering(self::getLastOrder() + 1);
-        
+
         self::saveResource($reason);
     }
 
     public static function getLastOrder()
     {
         $db = \Database::getDB();
-        $tbl = $db->addTable('cc_reason');
+        $tbl = $db->addTable('cc_reason', null, false);
         $col = $tbl->getField('ordering');
+        $exp = new \Database\Expression("max($col)", 'max');
+        $db->addExpression($exp);
+        $result = $db->selectOneRow();
+        if (empty($result)) {
+            return 0;
+        } else {
+            return $result['max'];
+        }
     }
-    
+
     public static function flipEmergency($reason_id)
     {
         $reason = self::build($reason_id);
-        $reason->setFlagEmergency(!$reason->getFlagEmergency());
+        $reason->setShowEmergency(!$reason->getShowEmergency());
         self::saveResource($reason);
     }
-    
+
     public static function flipAdminMenuShow($reason_id)
     {
         $reason = self::build($reason_id);
         $reason->setAdminMenuShow(!$reason->getAdminMenuShow());
         self::saveResource($reason);
     }
-    
+
     public static function flipWaitListed($reason_id)
     {
         $reason = self::build($reason_id);
         $reason->setWaitListed(!$reason->getWaitListed());
         self::saveResource($reason);
     }
-    
+
+    public static function flipAskForPhone($reason_id)
+    {
+        $reason = self::build($reason_id);
+        $reason->setAskForPhone(!$reason->getAskForPhone());
+        self::saveResource($reason);
+    }
+
 }
