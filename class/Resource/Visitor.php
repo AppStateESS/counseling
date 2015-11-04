@@ -79,6 +79,8 @@ class Visitor extends \Resource
         $this->phone_number = new \Variable\PhoneNumber(null, 'phone_number');
         $this->user_id = new \Variable\Integer(null, 'user_id');
         $this->visit_count = new \Variable\Integer(null, 'visit_count');
+        $this->email = new \Variable\Email(null, 'email');
+        $this->email->setLimit(100);
     }
 
 }
