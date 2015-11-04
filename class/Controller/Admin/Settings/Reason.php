@@ -25,6 +25,9 @@ class Reason extends \counseling\Controller\Base
             case 'list':
                 $json = Factory::listReasons();
                 break;
+
+            default:
+                throw new \Exception('Unknown command');
         }
 
         $view = new \View\JsonView($json);
@@ -42,7 +45,7 @@ class Reason extends \counseling\Controller\Base
             case 'save':
                 Factory::post();
                 break;
-            
+
             case 'flipEmergency':
                 Factory::flipEmergency(filter_input(INPUT_POST, 'reasonId', FILTER_SANITIZE_NUMBER_INT));
                 break;
@@ -54,8 +57,24 @@ class Reason extends \counseling\Controller\Base
             case 'flipWaitListed':
                 Factory::flipWaitListed(filter_input(INPUT_POST, 'reasonId', FILTER_SANITIZE_NUMBER_INT));
                 break;
+
+            case 'flipAskForPhone':
+                Factory::flipAskForPhone(filter_input(INPUT_POST, 'reasonId', FILTER_SANITIZE_NUMBER_INT));
+                break;
+
+            case 'setDescription':
+                $this->setDescription();
+                break;
+
+            case 'setTitle':
+                $this->setTitle();
+                break;
+
+            case 'setInstruction':
+                $this->setInstruction();
+                break;
         }
-        
+
         $view = new \View\JsonView(array('success' => true));
         $response = new \Response($view);
         return $response;
@@ -66,6 +85,27 @@ class Reason extends \counseling\Controller\Base
         $content = 'Reasons HTML works';
         $view = new \View\HtmlView($content);
         return $view;
+    }
+
+    private function setDescription()
+    {
+        $reason = Factory::loadByPost();
+        $reason->setDescription(Factory::pullPostString('description'));
+        Factory::saveResource($reason);
+    }
+
+    private function setTitle()
+    {
+        $reason = Factory::loadByPost();
+        $reason->setTitle(Factory::pullPostString('title'));
+        Factory::saveResource($reason);
+    }
+
+    private function setInstruction()
+    {
+        $reason = Factory::loadByPost();
+        $reason->setInstruction(Factory::pullPostInteger('instruction'));
+        Factory::saveResource($reason);
     }
 
 }
