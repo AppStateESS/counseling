@@ -5,15 +5,14 @@
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
 
-function tailgate_uninstall(&$content)
+function counseling_uninstall(&$content)
 {
     $db = Database::newDB();
 
-    $db->buildTable('tg_game')->drop(true);
-    $db->buildTable('tg_lot')->drop(true);
-    $db->buildTable('tg_lottery')->drop(true);
-    $db->buildTable('tg_spot')->drop(true);
-    $db->buildTable('tg_student')->drop(true);
-    $db->buildTable('tg_visitor')->drop(true);
+    $db->buildTable('cc_clinician')->drop(true);
+    $db->buildTable('cc_disposition')->drop(true);
+    $db->buildTable('cc_reason')->drop(true);
+    $db->buildTable('cc_visit')->drop(true);
+    $db->buildTable('cc_visitor')->drop(true);
     return true;
 }
