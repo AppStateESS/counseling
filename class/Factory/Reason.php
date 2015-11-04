@@ -15,8 +15,41 @@ class Reason extends Base
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_reason');
-        $tbl->addOrderBy('title');
-        return $db->select();
+        $tbl->addOrderBy('ordering');
+        $result = $db->select();
+        foreach ($result as $key => $value) {
+            $result[$key]['instruction_full'] = self::getFullInstruction($value['instruction']);
+        }
+        return $result;
+    }
+
+    public static function getFullInstruction($instruction)
+    {
+        switch ($instruction) {
+            case 1:
+                return COUNSELING_SIT_INSTRUCTION;
+                break;
+
+            case 2:
+                return COUNSELING_FRONT_DESK_INSTRUCTION;
+                break;
+
+            default:
+                throw new \Exception('Unknown instruction:' . $instruction);
+        }
+    }
+
+    public static function getInstructionList()
+    {
+        return array(1 => COUNSELING_SIT_INSTRUCTION, 2 => COUNSELING_FRONT_DESK_INSTRUCTION);
+    }
+
+    public static function loadByPost($varname = 'reasonId')
+    {
+        $reason = new Resource;
+        $reason->setId(filter_input(INPUT_POST, $varname, FILTER_SANITIZE_NUMBER_INT));
+        self::loadByID($reason);
+        return $reason;
     }
 
     public static function build($id = 0)
