@@ -31,7 +31,9 @@ class Settings extends \counseling\Controller\Base
 
     public function getHtmlView($data, \Request $request)
     {
+        \Layout::addStyle('counseling', 'Admin/style.css');
         if (COUNSELING_REACT_DEV) {
+            \counseling\Factory\React::load('Admin/Settings/', 'Mixins.jsx');
             \counseling\Factory\React::load('Admin/Settings/', 'Visitors.jsx');
             \counseling\Factory\React::load('Admin/Settings/', 'Visits.jsx');
             \counseling\Factory\React::load('Admin/Settings/', 'Reasons.jsx');
