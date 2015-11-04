@@ -19,4 +19,9 @@ class Base extends \ResourceFactory
         return filter_input(INPUT_POST, $varname, FILTER_VALIDATE_BOOLEAN);
     }
 
+    public static function pullPostInteger($varname)
+    {
+        return filter_input(INPUT_POST, $varname, FILTER_SANITIZE_NUMBER_INT);
+    }
+
 }
