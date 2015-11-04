@@ -23,14 +23,23 @@
     margin-top : 2em;
 }
 
-.checkin-box p {
+.checkin-box p, .checkin-box ul li {
     margin-bottom : .1em;
     font-family : Arial, sans;
 }
 
+.checkin-box ul li {
+    text-align : left;
+}
+
+.checkin-box ul li:hover {
+    background-color : rgb(230, 230, 230);
+}
+
+
 .checkin-box .title {
     font-size : 2em;
-    font-weight : bold;
+    font-weight : bolder;
 }
 
 .checkin-box .subtitle {
