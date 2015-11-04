@@ -57,7 +57,7 @@ var Reasons = React.createClass({
         if (this.state.showForm) {
             form = <ReasonForm closeForm={this.closeForm} reload={this.loadReasons} fail={this.saveFailure}/>;
         } else {
-            button = <button className="btn btn-success" onClick={this.showForm}>Add reason <i className="fa fa-caret-down"></i></button>;
+            button = <button className="btn btn-success" onClick={this.showForm} style={{marginBottom:'1em'}}>Add reason <i className="fa fa-caret-down"></i></button>;
         }
         if (this.state.saveFail) {
             alert = <div className="alert alert-danger"><strong><i className="fa fa-exclamation-triangle"></i> Error:</strong> Reason save failed</div>;
@@ -81,10 +81,31 @@ var Reasons = React.createClass({
 });
 
 var ReasonList = React.createClass({
+    getInitialState: function() {
+        return {
+            editTitle : false,
+            editDescription : false,
+            editInstruction : false,
+            title : null,
+            description : null,
+            instruction : null,
+        };
+    },
+
     getDefaultProps: function() {
         return {
             reasons : null
         };
+    },
+
+    componentDidUpdate : function()
+    {
+        if (this.state.pageEditMode === true) {
+            console.log('finished updating list, setting pageEditMode to false');
+            this.setState({
+                pageEditMode : false
+            });
+        }
     },
 
     flipEmergency : function(i, event)
@@ -120,51 +141,417 @@ var ReasonList = React.createClass({
         	}.bind(this));
     },
 
+    flipAskForPhone : function (i, event)
+    {
+        $.post('counseling/Admin/Settings/Reason', {
+        	command : 'flipAskForPhone',
+            reasonId : this.props.reasons[i].id,
+        }, null, 'json')
+        	.done(function(data){
+                this.props.reload();
+        	}.bind(this));
+    },
+
     render: function() {
-        // BoolIcon is in Settings/Dashboard.jsx
         var reasons = null;
+        var emergency = null;
+        var wait = null;
+        var show = null;
+        var phone = null;
+        var title = null;
+        var instruction = null;
+
+        var props = {};
+        props.reload = this.props.reload;
+
         if (this.props.reasons) {
             reasons = this.props.reasons.map(function(value, key){
+                emergency = <FlipOption handleClick={this.flipEmergency.bind(this,key)}
+                    active={value.show_emergency == '1'}
+                    title="Reason ask visitor if they have an emergency"
+                    label="Emergency" icon="fa-exclamation-triangle" />;
+
+                show = <FlipOption handleClick={this.flipAdminMenuShow.bind(this,key)}
+                    active={value.admin_menu_show == '1'}
+                    title="Reason will show a tally on the admin screen"
+                    label="Tally" icon="fa-eye" />;
+
+                wait = <FlipOption handleClick={this.flipWaitListed.bind(this,key)}
+                    active={value.wait_listed == '1'}
+                    title="Choosing this reason puts visitor in wait queue"
+                    label="Waiting" icon="fa-hourglass-start" />;
+
+                phone = <FlipOption handleClick={this.flipAskForPhone.bind(this,key)}
+                    active={value.ask_for_phone == '1'}
+                    title="Choosing this asks for the visitor's phone number"
+                    label="Phone number" icon="fa-phone" />;
+
+                props.reasonId = value.id;
+
                 return (
-                    <tr key={key}>
-                        <td className="col-sm-1">{value.ordering}</td>
-                        <td>{value.title}</td>
-                        <td className="col-sm-2"><BoolIcon bool={value.flag_emergency} handleClick={this.flipEmergency.bind(this,key)}/></td>
-                        <td className="col-sm-2"><BoolIcon bool={value.admin_menu_show} handleClick={this.flipAdminMenuShow.bind(this,key)}/></td>
-                        <td className="col-sm-2"><BoolIcon bool={value.wait_listed} handleClick={this.flipWaitListed.bind(this,key)}/></td>
-                    </tr>
+                    <div className="panel panel-default" key={key}>
+                        <div className="panel-heading">
+                            <span className="badge">{value.ordering}</span>
+                        </div>
+                        <div className="panel-body">
+                            <div>
+                                <strong>Title:</strong>
+                                <ReasonTitle value={value.title} {...props} />
+                            </div>
+                            <div>
+                                <strong>Description:</strong>
+                                <ReasonDescription value={value.description} {...props}/>
+                            </div>
+                            <div>
+                                <strong>Instruction:</strong>
+                                <ReasonInstruction value={value.instruction} {...props}/>
+                            </div>
+                            <hr />
+                            <div className="row">
+                                <div className="col-sm-3">
+                                    {emergency}
+                                </div>
+                                <div className="col-sm-3">
+                                    {phone}
+                                </div>
+                                <div className="col-sm-3">
+                                    {wait}
+                                </div>
+                                <div className="col-sm-3">
+                                    {show}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 );
             }.bind(this));
         }
         return (
-            <table className="table table-striped sans">
-                <tbody>
-                    <tr>
-                        <th>#</th>
-                        <th>Title</th>
-                        <th>Emergency</th>
-                        <th>Admin menu</th>
-                        <th>Wait list</th>
-                    </tr>
-                    {reasons}
-                </tbody>
-            </table>
+            <div>{reasons}</div>
         );
     }
 
 });
+var ReasonTitle = React.createClass({
+
+    getDefaultProps: function() {
+        return {
+            value : null,
+            editMode : false,
+            reasonId : 0,
+            reload : null
+        };
+    },
+
+    update : function(title) {
+        if (title === null || title.length === 0) {
+            return;
+        }
+        $.post('counseling/Admin/Settings/Reason', {
+        	command : 'setTitle',
+            reasonId : this.props.reasonId,
+            title : title
+        }, null, 'json')
+        	.done(function(data){
+                this.props.reload();
+        	}.bind(this));
+    },
+
+    render: function() {
+        return (
+            <ReasonValue {...this.props}
+                update={this.update}
+                placeholder="One or two words describing reason. Internal use only."
+                defaultValue={this.props.value}
+                />
+        );
+    }
+
+});
+
+var ReasonInstruction = React.createClass({
+    getInitialState: function() {
+        return {
+            editMode : false,
+            instruction : '1'
+        };
+    },
+
+    getDefaultProps: function() {
+        return {
+            value : '1',
+            editMode : false,
+            reasonId : 0,
+            content : null
+        };
+    },
+
+    componentDidMount : function() {
+        this.setState({
+            editMode : this.props.editMode,
+            instruction : this.props.value
+        });
+    },
+
+    formMode : function() {
+        this.setState({
+            editMode : true
+        });
+    },
+
+    saveInstruction : function() {
+        $.post('counseling/Admin/Settings/Reason', {
+        	command : 'setInstruction',
+            reasonId : this.props.reasonId,
+            instruction : this.state.instruction
+        }, null, 'json')
+        	.done(function(data){
+                this.setState({
+                    editMode : false
+                });
+                this.props.reload();
+        	}.bind(this));
+    },
+
+    updateInstruction : function(e) {
+        this.setState({
+            instruction : e.target.value
+        });
+    },
+
+    closeForm : function() {
+        this.setState({
+            editMode : false
+        });
+    },
+
+    render: function() {
+        var value = null;
+        var option = null;
+        if (this.state.instruction === '1') {
+            option = 'Sit down';
+        } else {
+            option = 'See the front desk';
+        }
+
+        if (this.state.editMode) {
+            value = (
+                <div className="row">
+                    <div className="col-sm-3">
+                        <ReasonInstructionSelect value={this.state.instruction} handleChange={this.updateInstruction}/>
+                    </div>
+                    <div className="col-sm-2">
+                        <button className="btn btn-success" onClick={this.saveInstruction}><i className="fa fa-check"></i></button>
+                        <button className="btn btn-danger" onClick={this.closeForm}><i className="fa fa-times"></i></button>
+                    </div>
+                </div>
+            );
+        } else {
+            value = <div className="pointer" onClick={this.formMode} title="Click to edit">{option}</div>;
+        }
+
+        return (
+            <div>{value}</div>
+        )
+    }
+
+});
+
+var ReasonInstructionSelect = React.createClass({
+    getDefaultProps: function() {
+        return {
+            value : '1'
+        };
+    },
+
+    render: function() {
+        return (
+            <select ref="instructionSelect" defaultValue={this.props.value} className="form-control" onChange={this.props.handleChange}>
+                <option value="1">Sit down</option>
+                <option value="2">See front desk</option>
+            </select>
+        );
+    }
+
+});
+
+var ReasonDescription = React.createClass({
+
+    getDefaultProps: function() {
+        return {
+            value : null,
+            editMode : false,
+            reasonId : 0
+        };
+    },
+
+    update : function(description) {
+        if (description=== null || description.length === 0) {
+            return;
+        }
+        $.post('counseling/Admin/Settings/Reason', {
+        	command : 'setDescription',
+            reasonId : this.props.reasonId,
+            description : description
+        }, null, 'json')
+        	.done(function(data){
+                this.props.reload();
+        	}.bind(this));
+    },
+
+    render: function() {
+        return (
+            <ReasonValue
+                {...this.props}
+                update={this.update}
+                placeholder="Description of reason. Seen by visitors."
+                defaultValue={this.props.value}
+                />
+        );
+    }
+
+});
+
+
+var ReasonValue = React.createClass({
+    getInitialState: function() {
+        return {
+            value : null,
+            editMode : false
+        };
+    },
+
+    getDefaultProps: function() {
+        return {
+            editMode : false,
+            placeholder : null,
+            defaultValue : null,
+            update : null,
+        };
+    },
+
+    componentDidMount : function() {
+        this.setState({
+            editMode : this.props.editMode
+        });
+    },
+
+
+    updateValue : function(e) {
+        this.setState({
+            value : e.target.value
+        });
+    },
+
+    closeInput : function() {
+        this.setState({
+            editMode : false
+        });
+    },
+
+    openInput : function() {
+        this.setState({
+            editMode : true
+        });
+    },
+
+    sendUpdate: function() {
+        this.props.update(this.state.value);
+        this.closeInput();
+    },
+
+    render: function() {
+        if (this.state.editMode) {
+            value = (
+                <LineEdit
+                    placeholder={this.props.placeholder}
+                    handleChange={this.updateValue}
+                    defaultValue={this.props.defaultValue}
+                    value={this.state.value}
+                    close={this.closeInput}
+                    update={this.sendUpdate}
+                />
+            );
+        } else {
+            value = (
+                <div className="editItem" onClick={this.openInput} title="Click to edit">{this.props.defaultValue}</div>
+            );
+        }
+
+        return (
+            <div>{value}</div>
+        );
+    }
+
+});
+
+
+var LineEdit = React.createClass({
+    getDefaultProps: function() {
+        return {
+            placeholder : null,
+            handleChange : null,
+            defaultValue : null,
+            close : null,
+            update : null
+        };
+    },
+
+    render: function() {
+        return (
+            <div className="input-group">
+                <input className="editItem form-control" placeholder={this.props.placeholder} onChange={this.props.handleChange} defaultValue={this.props.defaultValue}/>
+                <span className="input-group-btn">
+                    <button className="btn btn-success" onClick={this.props.update}><i className="fa fa-check"></i></button>
+                    <button className="btn btn-danger" onClick={this.props.close}><i className="fa fa-times"></i></button>
+                </span>
+            </div>
+        );
+    }
+
+});
+
+var FlipOption = React.createClass({
+    getDefaultProps: function() {
+        return {
+            handleClick : null,
+            active : false,
+            title : null,
+            label : null,
+            icon : null
+        };
+    },
+
+    render: function() {
+        var divClass = 'pointer';
+        var iconClass = 'fa fa-lg ' + this.props.icon;
+
+        if (this.props.active) {
+            divClass += ' text-success'
+        } else {
+            divClass += ' dim'
+        }
+        return (
+            <div onClick={this.props.handleClick} className={divClass}><i className={iconClass} title={this.props.title}></i> {this.props.label}</div>
+        );
+    }
+
+});
+
 
 var ReasonForm = React.createClass({
     getInitialState: function() {
         return {
             title : null,
             description : null,
-            instruction : null,
+            instruction : 1,
             icon : null,
-            flagEmergency : 0,
+            showEmergency : 0,
             adminMenuShow : 0,
+            askForPhone : 0,
             waitListed : 0,
-            formError : false
+            formError : false,
+            instructionList : null
         };
     },
 
@@ -179,7 +566,7 @@ var ReasonForm = React.createClass({
     componentDidMount: function() {
         $(function () {
           $('[data-toggle="tooltip"]').tooltip()
-        })
+        });
     },
 
     save: function(event) {
@@ -200,17 +587,9 @@ var ReasonForm = React.createClass({
             return;
         }
 
-        if (this.state.instruction === null || this.state.instruction.length === 0) {
-            $('#instruction').css('borderColor', 'red');
-            this.setState({
-                formError: true
-            });
-            return;
-        }
         this.setState({
             formError : false
         });
-
         $.post('counseling/Admin/Settings/Reason', {
         	command : 'save',
             reasonId : 0,
@@ -218,8 +597,9 @@ var ReasonForm = React.createClass({
             description : this.state.description,
             instruction : this.state.instruction,
             icon : this.state.icon,
-            flagEmergency : this.state.flagEmergency,
+            showEmergency : this.state.showEmergency,
             adminMenuShow : this.state.adminMenuShow,
+            askForPhone : this.state.askForPhone,
             waitListed : this.state.waitListed
         }, null, 'json')
         	.done(function(data){
@@ -234,7 +614,9 @@ var ReasonForm = React.createClass({
     },
 
     updateTitle : function(event) {
-        this.setState({title : event.target.value});
+        this.setState({
+            title : event.target.value}
+        );
     },
 
     updateDescription : function(event) {
@@ -251,13 +633,19 @@ var ReasonForm = React.createClass({
 
     updateEmergency : function(event) {
         this.setState({
-            flagEmergency: event.target.checked
+            showEmergency: event.target.checked
         });
     },
 
     updateAdminMenu : function(event) {
         this.setState({
             adminMenuShow: event.target.checked
+        });
+    },
+
+    updateAskForPhone : function(event) {
+        this.setState({
+            askForPhone: event.target.checked
         });
     },
 
@@ -275,67 +663,60 @@ var ReasonForm = React.createClass({
 
     render: function() {
         return (
-            <div style={{position:'absolute', width:'100%', backgroundColor:'white', border : '1px solid black', padding:'1em', borderRadius : '10px'}}>
+            <div style={{position:'absolute', width : '600px', backgroundColor:'white', border : '1px solid black', padding:'1em', borderRadius : '10px', zIndex : '50'}}>
                 <form method="post" action="counseling/Admin/Settings/Reasons">
                     <input type="hidden" name="command" value="add" />
-                    <div className="row">
-                        <div className="col-sm-6">
-                            <div className="form-group">
-                                <TextInput inputId="title" label="Title" placeholder="One or two words describing reason. Internal use only."
-                                    handleChange={this.updateTitle} required={true}/>
-                            </div>
-                        </div>
-                        <div className="col-sm-6">
-                            <div className="form-group">
-                                <TextInput inputId="description" label="Description" placeholder="Description of reason. Seen by visitors."
-                                    handleChange={this.updateDescription} required={true}/>
-                            </div>
-                        </div>
+                    {this.state.formError ? <div className="alert alert-danger" style={{fontSize : '1em'}}>Please complete all highlighted text inputs.</div> : null}
+                    <div className="form-group">
+                        <TextInput inputId="title" label="Title" placeholder="One or two words describing reason. Internal use only."
+                            handleChange={this.updateTitle} required={true} tabIndex={1}/>
                     </div>
-                    <div className="row">
-                        <div className="col-sm-6">
-                            <div className="form-group">
-                                <TextInput inputId="instruction" label="Instructions" placeholder="Directions given to visitor after checking in"
-                                    handleChange={this.updateInstruction} required={true}/>
-                            </div>
+                    <div className="form-group">
+                        <TextInput inputId="description" label="Description" placeholder="Description of reason. Seen by visitors."
+                            handleChange={this.updateDescription} required={true} tabIndex={2}/>
+                    </div>
+                    <div className="form-group">
+                            <label>Directions</label>
+                            <p>
+                                <label style={{marginRight:'2em'}}>
+                                    <input type="radio" name="instruction" value="1" defaultChecked={true} tabIndex={3} onClick={this.updateInstruction}/> Sit down
+                                </label>
+                                <label>
+                                    <input type="radio" name="instruction" value="2" tabIndex={4} onClick={this.updateInstruction}/> Front desk
+                                </label>
+                            </p>
+                    </div>
 
-                            <div className="form-group">
-                                <label>
-                                    <input type="checkbox" name="flagEmergency" value="1" onChange={this.updateEmergency}/> Flag as emergency
-                                        &nbsp;<i className="fa fa-question-circle pointer" data-toggle="tooltip" data-placement="right"
-                                        title="If checked, choosing this reason will put the visitor into emergency mode."></i>
-                                </label>
-                            </div>
-                            <div className="form-group">
-                                <label>
-                                    <input type="checkbox" name="adminMenuShow" value="1" onChange={this.updateAdminMenu}/> Track on dashboard
-                                        &nbsp;<i className="fa fa-question-circle pointer" data-toggle="tooltip" data-placement="right"
-                                        title="If checked, this reason will have a icon and tally on the dashboard."></i>
-                                </label>
-                            </div>
-                            <div className="form-group">
-                                <label>
-                                    <input type="checkbox" name="waitListed" value="1"  onChange={this.updateWaitListed} /> Put on wait list
-                                        &nbsp;<i className="fa fa-question-circle pointer" data-toggle="tooltip" data-placement="right"
-                                        title="If checked, the visitor will be placed on the waiting list."></i>
-                                </label>
-                            </div>
-
-                        </div>
-                        <div className="col-sm-6">
-                            <label>Icon</label>
-                            <IconTable />
-                        </div>
+                    <div className="form-group">
+                        <label>
+                            <input type="checkbox" name="showEmergency" value="1" onChange={this.updateEmergency} tabIndex={5}/> Show emergency question
+                                &nbsp;<i className="fa fa-question-circle pointer" data-toggle="tooltip" data-placement="right"
+                                title="If checked, the visitor will be asked if they have an emergency."></i>
+                        </label>
                     </div>
-                    <div className="row">
-                        <div className="col-sm-4">
-                            <button className="btn btn-primary" onClick={this.save}><i className="fa fa-save"></i> Save reason</button>&nbsp;
-                            <button className="btn btn-danger" onClick={this.closeForm}><i className="fa fa-times"></i> Cancel</button>
-                        </div>
-                        <div className="col-sm-8">
-                            {this.state.formError ? <div className="label label-danger" style={{fontSize : '1em'}}>Please complete all highlighted text inputs.</div> : null}
-                        </div>
+                    <div className="form-group">
+                        <label>
+                            <input type="checkbox" name="adminMenuShow" value="1" onChange={this.updateAdminMenu} tabIndex={6}/> Track on dashboards
+                                &nbsp;<i className="fa fa-question-circle pointer" data-toggle="tooltip" data-placement="right"
+                                title="If checked, this reason will have a icon and tally on the dashboard."></i>
+                        </label>
                     </div>
+                    <div className="form-group">
+                        <label>
+                            <input type="checkbox" name="waitListed" value="1"  onChange={this.updateWaitListed} tabIndex={7}/> Put on wait list
+                                &nbsp;<i className="fa fa-question-circle pointer" data-toggle="tooltip" data-placement="right"
+                                title="If checked, the visitor will be placed on the waiting list."></i>
+                        </label>
+                    </div>
+                    <div className="form-group">
+                        <label>
+                            <input type="checkbox" name="askForPhone" value="1"  onChange={this.updateAskForPhone} tabIndex={8}/> Ask for phone number
+                                &nbsp;<i className="fa fa-question-circle pointer" data-toggle="tooltip" data-placement="right"
+                                title="If checked, the visitor will be asked for their phone number."></i>
+                        </label>
+                    </div>
+                    <button className="pull-left btn btn-primary" onClick={this.save} tabIndex={8}><i className="fa fa-check"></i> Save reason</button>&nbsp;
+                    <button className="btn btn-danger" onClick={this.closeForm} tabIndex={9}><i className="fa fa-times"></i> Cancel</button>
                 </form>
             </div>
         );
