@@ -1,0 +1,16 @@
+.dim {
+    color : #c6c6c6;
+}
+
+.editItem {
+    border : 1px solid white;
+    border-radius: 6px;
+    padding : 4px;
+    font-family : arial;
+    margin-bottom : 1em;
+}
+
+.editItem:hover {
+    cursor : pointer;
+    border-color : #d6d6d6;
+}
