@@ -68,20 +68,27 @@ class Reason extends \Resource
     public function __construct()
     {
         parent::__construct();
-        $this->title = new \Variable\String(null, 'label');
+        $this->title = new \Variable\String(null, 'title');
         $this->title->setLimit(100);
-        $this->description = new \Variable\String(null, 'summary');
+        $this->description = new \Variable\String(null, 'description');
         $this->description->setLimit(100);
-        $this->instruction = new \Variable\String(null, 'instruction');
-        $this->instruction->setLimit(100);
-        $this->flag_emergency = new \Variable\Bool(null, 'flag_emergency');
+        $this->instruction = new \Variable\Integer(null, 'instruction');
+        $this->instruction->setRange(0,100);
+        $this->show_emergency = new \Variable\Bool(false, 'show_emergency');
         $this->icon = new \Variable\String(null, 'icon');
         $this->icon->setLimit(20);
-        $this->admin_menu_show = new \Variable\Bool(null, 'admin_menu_show');
-        $this->wait_listed = new \Variable\Bool(null, 'wait_listed');
-        $this->ordering = new \Variable\Integer(1, 'order');
+        $this->icon->allowNull(true);
+        $this->admin_menu_show = new \Variable\Bool(false, 'admin_menu_show');
+        $this->wait_listed = new \Variable\Bool(false, 'wait_listed');
+        $this->ask_for_phone = new \Variable\Bool(false, 'ask_for_phone');
+        $this->ordering = new \Variable\Integer(1, 'ordering');
     }
 
+    public function getAskForPhone()
+    {
+        return $this->ask_for_phone->get();
+    }
+    
     public function getTitle()
     {
         return $this->title->get();
@@ -97,9 +104,9 @@ class Reason extends \Resource
         return $this->instruction->get();
     }
 
-    public function getFlagEmergency()
+    public function getShowEmergency()
     {
-        return $this->flag_emergency->get();
+        return $this->show_emergency->get();
     }
 
     public function getIcon()
@@ -122,6 +129,11 @@ class Reason extends \Resource
         return $this->ordering->get();
     }
 
+    public function setAskForPhone($var)
+    {
+        return $this->ask_for_phone->set($var);
+    }
+    
     public function setTitle($var)
     {
         $this->title->set($var);
@@ -137,9 +149,9 @@ class Reason extends \Resource
         $this->instruction->set($var);
     }
 
-    public function setFlagEmergency($var)
+    public function setShowEmergency($var)
     {
-        $this->flag_emergency->set($var);
+        $this->show_emergency->set($var);
     }
 
     public function setIcon($var)
