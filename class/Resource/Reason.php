@@ -23,7 +23,7 @@ class Reason extends \Resource
     /**
      * What the visitor should do (sit down, see admin, etc.)
      * when done signing in.
-     * @var \Variable\String
+     * @var \Variable\Integer
      */
     protected $instruction;
 
