@@ -28,10 +28,10 @@ class Reason extends \Resource
     protected $instruction;
 
     /**
-     * If reason is selected, flag visit as an emergency
+     * If reason is selected, ask user if there is an emergency
      * @var \Variable\Bool
      */
-    protected $flag_emergency;
+    protected $show_emergency;
 
     /**
      * FontAwesome icon name. Shown is admin_menu_show is true.
