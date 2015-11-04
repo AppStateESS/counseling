@@ -42,6 +42,7 @@ class User extends \Http\Controller
     public function checkin()
     {
         if (COUNSELING_REACT_DEV) {
+            \counseling\Factory\React::load('User/Checkin/', 'Mixins.jsx');
             \counseling\Factory\React::load('User/Checkin/', 'Swipe.jsx');
             \counseling\Factory\React::load('User/Checkin/', 'Reason.jsx');
             \counseling\Factory\React::load('User/Checkin/', 'Phone.jsx');
