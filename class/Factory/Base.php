@@ -11,7 +11,7 @@ class Base extends \ResourceFactory
 
     public static function pullPostString($varname)
     {
-        return trim(strip_tags(filter_input(INPUT_POST, $varname, FILTER_SANITIZE_STRING)));
+        return trim(strip_tags(filter_input(INPUT_POST, $varname, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
     }
 
     public static function pullPostCheck($varname)
