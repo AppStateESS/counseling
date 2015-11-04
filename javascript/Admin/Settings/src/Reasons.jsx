@@ -3,12 +3,8 @@ var Reasons = React.createClass({
         return {
             showForm : false,
             reasons : null,
-            saveFail : false
-        };
-    },
-
-    getDefaultProps: function() {
-        return {
+            saveFail : false,
+            currentEdit : null
         };
     },
 
@@ -22,7 +18,7 @@ var Reasons = React.createClass({
         	command : 'list'
         }).done(function(data){
             this.setState({
-                reasons : data
+                reasons : data,
             });
         }.bind(this));
     },
@@ -45,6 +41,17 @@ var Reasons = React.createClass({
     {
         this.setState({
             saveFail : true
+        });
+    },
+
+    setCurrentEdit : function(reasonId, section)
+    {
+        var currentEdit = null;
+        if (reasonId !== null) {
+            currentEdit = {id : reasonId, section : section};
+        }
+        this.setState({
+            currentEdit : currentEdit
         });
     },
 
@@ -73,7 +80,7 @@ var Reasons = React.createClass({
                 </div>
                 {alert}
                 <div className="settings-listing">
-                    <ReasonList reasons={this.state.reasons} reload={this.loadReasons}/>
+                    <ReasonList reasons={this.state.reasons} reload={this.loadReasons} currentEdit={this.state.currentEdit} setCurrentEdit={this.setCurrentEdit}/>
                 </div>
             </div>
         );
@@ -89,6 +96,8 @@ var ReasonList = React.createClass({
             title : null,
             description : null,
             instruction : null,
+            currentEdit : null,
+            setCurrentEdit : null
         };
     },
 
@@ -96,16 +105,6 @@ var ReasonList = React.createClass({
         return {
             reasons : null
         };
-    },
-
-    componentDidUpdate : function()
-    {
-        if (this.state.pageEditMode === true) {
-            console.log('finished updating list, setting pageEditMode to false');
-            this.setState({
-                pageEditMode : false
-            });
-        }
     },
 
     flipEmergency : function(i, event)
@@ -163,6 +162,8 @@ var ReasonList = React.createClass({
 
         var props = {};
         props.reload = this.props.reload;
+        props.currentEdit = this.props.currentEdit;
+        props.setCurrentEdit = this.props.setCurrentEdit;
 
         if (this.props.reasons) {
             reasons = this.props.reasons.map(function(value, key){
@@ -187,7 +188,6 @@ var ReasonList = React.createClass({
                     label="Phone number" icon="fa-phone" />;
 
                 props.reasonId = value.id;
-
                 return (
                     <div className="panel panel-default" key={key}>
                         <div className="panel-heading">
@@ -237,9 +237,10 @@ var ReasonTitle = React.createClass({
     getDefaultProps: function() {
         return {
             value : null,
-            editMode : false,
             reasonId : 0,
-            reload : null
+            reload : null,
+            currentEdit : null,
+            setCurrentEdit : null
         };
     },
 
@@ -263,6 +264,9 @@ var ReasonTitle = React.createClass({
                 update={this.update}
                 placeholder="One or two words describing reason. Internal use only."
                 defaultValue={this.props.value}
+                currentEdit={this.props.currentEdit}
+                setCurrentEdit={this.props.setCurrentEdit}
+                section="1"
                 />
         );
     }
@@ -294,6 +298,7 @@ var ReasonInstruction = React.createClass({
     },
 
     formMode : function() {
+        this.props.setCurrentEdit(this.props.reasonId, this.props.section);
         this.setState({
             editMode : true
         });
@@ -334,7 +339,7 @@ var ReasonInstruction = React.createClass({
             option = 'See the front desk';
         }
 
-        if (this.state.editMode) {
+        if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId && this.props.currentEdit.section == this.props.section) {
             value = (
                 <div className="row">
                     <div className="col-sm-3">
@@ -380,8 +385,9 @@ var ReasonDescription = React.createClass({
     getDefaultProps: function() {
         return {
             value : null,
-            editMode : false,
-            reasonId : 0
+            reasonId : 0,
+            currentEdit : null,
+            setCurrentEdit : null
         };
     },
 
@@ -406,6 +412,7 @@ var ReasonDescription = React.createClass({
                 update={this.update}
                 placeholder="Description of reason. Seen by visitors."
                 defaultValue={this.props.value}
+                section="2"
                 />
         );
     }
@@ -423,19 +430,15 @@ var ReasonValue = React.createClass({
 
     getDefaultProps: function() {
         return {
-            editMode : false,
+            currentEdit : null,
+            setCurrentEdit : null,
             placeholder : null,
             defaultValue : null,
             update : null,
+            section : 0,
+            reasonId : 0
         };
     },
-
-    componentDidMount : function() {
-        this.setState({
-            editMode : this.props.editMode
-        });
-    },
-
 
     updateValue : function(e) {
         this.setState({
@@ -450,6 +453,7 @@ var ReasonValue = React.createClass({
     },
 
     openInput : function() {
+        this.props.setCurrentEdit(this.props.reasonId, this.props.section);
         this.setState({
             editMode : true
         });
@@ -461,7 +465,8 @@ var ReasonValue = React.createClass({
     },
 
     render: function() {
-        if (this.state.editMode) {
+        console.log(this.props.currentEdit);
+        if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId && this.props.currentEdit.section == this.props.section) {
             value = (
                 <LineEdit
                     placeholder={this.props.placeholder}
