@@ -30,7 +30,10 @@ var Stage = React.createClass({
     getInitialState: function() {
         return {
             content : 'empty',
-            visitor : null
+            visitor : null,
+            reason : null,
+            phone : null,
+            emergency : false
         };
     },
 
@@ -44,6 +47,7 @@ var Stage = React.createClass({
         this.setState({
             reason : reason
         });
+        this.props.updateState('phone');
     },
 
     updateVisitor : function(visitor) {
@@ -53,28 +57,43 @@ var Stage = React.createClass({
         this.props.updateState('reason');
     },
 
+    updatePhone : function(phone) {
+        this.setState({
+            phone : phone
+        });
+        this.props.updateState('emergency');
+    },
+
+    updateEmergency : function(emergency)
+    {
+        console.log(emergency);
+        this.setState({
+            emergency : emergency
+        });
+        this.props.updateState('directions');
+    },
+
     render: function() {
         var content = null;
-        console.log(this.props.stage);
         switch (this.props.stage) {
             case 'swipe':
                 return <Swipe update={this.updateVisitor} />;
             break;
 
             case 'reason':
-                return <Reason update={this.updateReason}/>;
+                return <Reason update={this.updateReason} visitor={this.state.visitor}/>;
             break;
 
             case 'phone':
-                return <Phone />;
+                return <Phone update={this.updatePhone} visitor={this.state.visitor}/>;
             break;
 
             case 'emergency':
-                return <Emergency />;
+                return <Emergency update={this.updateEmergency}/>;
             break;
 
-            case 'message':
-                return <Message />
+            case 'directions':
+                return <Directions />
             break;
         }
     }
@@ -82,10 +101,6 @@ var Stage = React.createClass({
 });
 
 var Box = React.createClass({
-    getInitialState: function() {
-        return {
-        };
-    },
 
     getDefaultProps: function() {
         return {
