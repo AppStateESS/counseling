@@ -8,12 +8,6 @@ namespace counseling\Controller\Admin;
  */
 class Dashboard extends \counseling\Controller\Base
 {
-
-    protected function getJsonView($data, \Request $request)
-    {
-        
-    }
-
     public function getHtmlView($data, \Request $request)
     {
         if (COUNSELING_REACT_DEV) {
