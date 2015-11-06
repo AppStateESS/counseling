@@ -1,9 +1,4 @@
 var Emergency = React.createClass({
-    getInitialState: function() {
-        return {
-        };
-    },
-
     getDefaultProps: function() {
         return {
             update : null
