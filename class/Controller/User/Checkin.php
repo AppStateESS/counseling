@@ -3,6 +3,8 @@
 namespace counseling\Controller\User;
 
 use counseling\Factory\Banner;
+use counseling\Factory\Reason;
+use counseling\Factory\Visitor;
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
@@ -19,8 +21,12 @@ class Checkin extends \counseling\Controller\Base
 
         $command = $request->getVar('command');
         switch ($command) {
-            case 'loginStudent':
-                $json = $this->loginStudent();
+            case 'loginVisitor':
+                $json = $this->loginVisitor();
+                break;
+
+            case 'instructions':
+                $json = Reason::getInstructionList();
                 break;
         }
 
@@ -28,28 +34,21 @@ class Checkin extends \counseling\Controller\Base
         return $view;
     }
 
-    public function getHtmlView($data, \Request $request)
+    private function loginVisitor()
     {
-        
-    }
+        $banner_id = filter_input(INPUT_GET, 'bannerId', FILTER_SANITIZE_STRING);
 
-    private function loginStudent()
-    {
-        $student = filter_input(INPUT_GET, 'student', FILTER_SANITIZE_STRING);
-        $jsonStudent = array('student'=>null);
-
-        if (COUNSELING_FAKE_STUDENT) {
-            if ($student == '123456789' || $student == 'barfoo') {
-                $jsonStudent = Banner::fakeStudent();
-            }
-        } else {
-            if (is_numeric($student) && strlen($student == 9)) {
-                $jsonStudent = Banner::logInById($student);
-            } else {
-                $jsonStudent = Banner::logInByEmail($student);
-            }
+        $visitor = Visitor::getByBannerId($banner_id);
+        if (empty($visitor)) {
+            $visitor = Visitor::createFromBanner($banner_id);
         }
-        return $jsonStudent;
+
+        if (empty($visitor)) {
+            return null;
+        } else {
+            $jsonVisitor = $visitor->getStringVars();
+            return $jsonVisitor;
+        }
     }
 
 }
