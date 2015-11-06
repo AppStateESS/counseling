@@ -9,20 +9,23 @@ namespace counseling\Factory;
 class Banner
 {
 
-    public static function logInById($id)
+    public static function pullByFakeBannerId($banner_id)
     {
+        if ($banner_id == '123456789') {
+            return array(
+                'userName' => 'mcnaneym',
+                'firstName' => 'Matt',
+                'lastName' => 'McNaney',
+                'phoneNumber' => '8282651010',
+                'emailAddress' => 'mcnaneym@appstate.edu',
+                'studentLevel' => 'U'
+            );
+        }
     }
-    
-    public static function fakeStudent()
+
+    public static function pullByBannerId($banner_id)
     {
-        return array(
-            'userName' => 'mcnaneym',
-            'banner_id' => '123456789',
-            'firstName' => 'Matt',
-            'lastame' => 'McNaney',
-            'phoneNumber' => '8282651010',
-            'emailAddress' => 'mcnaneym@appstate.edu',
-            'studentLevel' => 'U'
-        );
+        
     }
+
 }
