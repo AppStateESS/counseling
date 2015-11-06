@@ -22,7 +22,7 @@ class Visit extends \Resource
     protected $complete_reason;
 
     /**
-     * User id of admin that marked the student complete
+     * User id of admin that marked the visitor complete
      * @var \Variable\Integer
      */
     protected $complete_staff_id;
@@ -56,21 +56,119 @@ class Visit extends \Resource
      * @var \Variable\Integer
      */
     protected $visitor_id;
-    
     protected $table = 'cc_visit';
 
     public function __construct()
     {
         parent::__construct();
         $this->arrival_time = new \Variable\DateTime(null, 'arrival_time');
-        $this->complete_reason = new \Variable\Integer(null, 'complete_reason');
-        $this->complete_staff_id = new \Variable\Integer(null, 'complete_staff_id');
-        $this->complete_time = new \Variable\Integer(null, 'complete_time');
+        $this->complete_reason = new \Variable\Integer(0, 'complete_reason');
+        $this->complete_staff_id = new \Variable\Integer(0, 'complete_staff_id');
+        $this->complete_time = new \Variable\DateTime(0, 'complete_time');
         $this->disposition_array = new \Variable\Arr(null, 'disposition_array');
-        $this->disposition_array->setIsTableColumn(false);
+        $this->disposition_array->allowNull(true);
         $this->has_emergency = new \Variable\Bool(null, 'has_emergency');
         $this->reason_id = new \Variable\Integer(null, 'reason_id');
         $this->visitor_id = new \Variable\Integer(null, 'visitor_id');
+        
+        $this->full_name = new \Variable\String(null, 'full_name');
+        $this->full_name->setIsTableColumn(false);
+        $this->total_visits = new \Variable\Integer(0, 'total_visits');
+        
     }
 
+    public function getArrivalTime()
+    {
+        return $this->arrival_time->get();
+    }
+
+    public function getCompleteReason()
+    {
+        return $this->complete_reason->get();
+    }
+
+    public function getCompleteStaffId()
+    {
+        return $this->complete_staff_id->get();
+    }
+
+    public function getCompleteTime()
+    {
+        return $this->complete_time->get();
+    }
+
+    public function getDispostionArray()
+    {
+        return $this->disposition_array->get();
+    }
+
+    public function getHasEmergency()
+    {
+        return $this->has_emergency->get();
+    }
+
+    public function getReasonId()
+    {
+        return $this->reason_id->get();
+    }
+
+    public function getVisitorId()
+    {
+        return $this->visitor_id->get();
+    }
+
+    public function setArrivalTime($var)
+    {
+        $this->arrival_time->set($var);
+    }
+
+    public function setCompleteReason($var)
+    {
+        $this->complete_reason->set($var);
+    }
+
+    public function setCompleteStaffId($var)
+    {
+        $this->complete_staff_id->set($var);
+    }
+
+    public function setCompleteTime($var)
+    {
+        $this->complete_time->set($var);
+    }
+
+    public function setDispostionArray($var)
+    {
+        $this->disposition_array->set($var);
+    }
+
+    public function setHasEmergency($var)
+    {
+        $this->has_emergency->set($var);
+    }
+    
+    public function setFullName($var)
+    {
+        $this->full_name->set($var);
+    }
+    
+    public function setTotalVisits($var)
+    {
+        $this->total_visits->set($var);
+    }
+
+    public function setReasonId($var)
+    {
+        $this->reason_id->set($var);
+    }
+
+    public function setVisitorId($var)
+    {
+        $this->visitor_id->set($var);
+    }
+
+    public function stampArrivalTime()
+    {
+        $this->arrival_time = time();
+    }
 }
