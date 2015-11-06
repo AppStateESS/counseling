@@ -47,7 +47,7 @@ class User extends \Http\Controller
             \counseling\Factory\React::load('User/Checkin/', 'Reason.jsx');
             \counseling\Factory\React::load('User/Checkin/', 'Phone.jsx');
             \counseling\Factory\React::load('User/Checkin/', 'Emergency.jsx');
-            \counseling\Factory\React::load('User/Checkin/', 'Message.jsx');
+            \counseling\Factory\React::load('User/Checkin/', 'Instruction.jsx');
             \counseling\Factory\React::load('User/Checkin/', 'Login.jsx');
         }
 
