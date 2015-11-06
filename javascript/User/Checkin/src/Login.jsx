@@ -3,12 +3,7 @@
 var Login = React.createClass({
     getInitialState: function() {
         return {
-            stage : 'swipe',
-        };
-    },
-
-    getDefaultProps: function() {
-        return {
+            stage : 'swipe'
         };
     },
 
@@ -20,7 +15,7 @@ var Login = React.createClass({
 
     render: function() {
         return (
-            <Stage updateState={this.updateStage} stage={this.state.stage}/>
+            <Stage updateStage={this.updateStage} stage={this.state.stage}/>
         );
     }
 
@@ -29,11 +24,11 @@ var Login = React.createClass({
 var Stage = React.createClass({
     getInitialState: function() {
         return {
-            content : 'empty',
             visitor : null,
             reason : null,
             phone : null,
-            emergency : false
+            emergency : false,
+            instructionList : null
         };
     },
 
@@ -43,34 +38,101 @@ var Stage = React.createClass({
         };
     },
 
+    componentDidMount : function() {
+        $.getJSON('counseling/User/Checkin', {
+        	command : 'instructions'
+        }).done(function(data){
+            this.setState({
+                instructionList : data
+            });
+        }.bind(this));
+
+    },
+
     updateReason : function(reason) {
         this.setState({
             reason : reason
         });
-        this.props.updateState('phone');
+        if (reason.ask_for_phone === '1') {
+            this.props.updateStage('phone');
+        } else {
+            if (this.state.reason.show_emergency === '1') {
+                this.props.updateStage('emergency');
+            } else {
+                this.props.updateStage('instruction')
+            }
+        }
     },
 
     updateVisitor : function(visitor) {
         this.setState({
             visitor : visitor,
         });
-        this.props.updateState('reason');
+        this.props.updateStage('reason');
     },
 
     updatePhone : function(phone) {
+        if (phone === null || phone.length === 0) {
+            return;
+        }
+        //update phone number if changed
+        if (phone !== this.state.visitor.phone_number) {
+            $.post('counseling/User/Visitor', {
+            	command : 'updatePhone',
+                visitorId : this.state.visitor.id,
+                phoneNumber : phone
+            }, null, 'json')
+            	.done(function(data){
+            		console.log(data);
+            	}.bind(this));
+
+        }
+
         this.setState({
             phone : phone
         });
-        this.props.updateState('emergency');
+        if (this.state.reason.show_emergency === '1') {
+            this.props.updateStage('emergency');
+        } else {
+            this.props.updateStage('instruction')
+        }
     },
 
-    updateEmergency : function(emergency)
-    {
-        console.log(emergency);
+    updateEmergency : function(emergency) {
         this.setState({
             emergency : emergency
         });
-        this.props.updateState('directions');
+        this.props.updateStage('instruction');
+    },
+
+
+    componentDidUpdate : function(props, state)
+    {
+        if (this.props.stage === 'instruction') {
+            this.completeCheckin();
+        }
+    },
+
+    completeCheckin : function() {
+        $.post('counseling/User/Visit', {
+        	command : 'create',
+            visitorId : this.state.visitor.id,
+            reasonId : this.state.reason.id,
+            emergency : this.state.emergency
+        }, null, 'json')
+        	.done(function(data){
+                this.resetLogin();
+        	}.bind(this));
+    },
+
+    resetLogin : function() {
+        this.props.updateStage('swipe');
+        this.setState({
+            visitor : null,
+            reason : null,
+            phone : null,
+            emergency : false,
+        });
     },
 
     render: function() {
@@ -92,8 +154,8 @@ var Stage = React.createClass({
                 return <Emergency update={this.updateEmergency}/>;
             break;
 
-            case 'directions':
-                return <Directions />
+            case 'instruction':
+                return <Instruction update={this.resetLogin} instruction={this.state.reason.instruction} instructionList={this.state.instructionList}/>
             break;
         }
     }
