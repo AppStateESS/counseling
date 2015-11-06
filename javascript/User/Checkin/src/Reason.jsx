@@ -17,6 +17,9 @@ var Reason = React.createClass({
         $.getJSON('counseling/User/Reason', {
         	command : 'list'
         }).done(function(data){
+            if (data === null) {
+                data = [];
+            }
             this.setState({
                 reasons : data
             })
@@ -32,7 +35,9 @@ var Reason = React.createClass({
     render: function() {
         var content;
 
-        if (this.state.reasons === null || this.state.reasons.length === 0 ){
+        if (this.state.reasons === null) {
+            content = 'Loading...';
+        } else if (this.state.reasons.length === 0 ){
             content = <div className="alert alert-danger">System error: Please alert front desk.</div>;
         } else {
             var reasonList = this.state.reasons.map(function(value, i){
@@ -41,7 +46,7 @@ var Reason = React.createClass({
             content = (
                 <div>
                     <div className="text-center">
-                        <p className="title">Hello, {this.props.visitor.firstName}.</p>
+                        <p className="title">Hello, {this.props.visitor.first_name}.</p>
                         <p className="title">Why are you visiting today?</p>
                     </div>
                     <ul className="list-group">
