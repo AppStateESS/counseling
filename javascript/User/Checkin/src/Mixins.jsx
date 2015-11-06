@@ -1,7 +1,7 @@
 var errorTimeout = {
     componentDidUpdate : function() {
         if (this.state.error === true) {
-            this.interval = setInterval(function(){
+            this.interval = setTimeout(function(){
                 this.resetForm();
             }.bind(this), 5000);
         }
