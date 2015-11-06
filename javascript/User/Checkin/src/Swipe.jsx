@@ -1,9 +1,12 @@
 var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 var Swipe = React.createClass({
+    mixins: [errorTimeout],
+
     getInitialState: function() {
         return {
-            error : false
+            error : false,
+            visitor : null
         };
 
     },
@@ -16,51 +19,33 @@ var Swipe = React.createClass({
 
     loginFailure : function() {
         this.setState({
-            student : '',
+            visitor : '',
             error : true
         });
     },
 
-    logInStudent : function() {
-        if (this.state.student.length > 3) {
+    logInVisitor : function() {
+        if (this.state.visitor.length > 3) {
             $.getJSON('counseling/User/Checkin', {
-            	command : 'loginStudent',
-                student : this.state.student
+            	command : 'loginVisitor',
+                bannerId : this.state.visitor
             }).done(function(data){
-                if (data.student === null) {
+                if (data.visitor === null) {
                     this.loginFailure();
                 } else {
-                    //this.setState({error:false});
                     this.props.update(data);
                 }
             }.bind(this)).fail(function() {
                 this.loginFailure();
             }.bind(this));
+        } else {
+            this.loginFailure();
         }
-    },
-
-    componentDidUpdate : function() {
-        if (this.state.error === true) {
-            this.interval = setInterval(function(){
-                this.resetForm();
-            }.bind(this), 5000);
-        }
-    },
-
-    componentWillUnmount : function() {
-        clearTimeout(this.interval);
-    },
-
-    resetForm : function() {
-        clearTimeout(this.interval);
-        this.setState({
-            error : false
-        });
     },
 
     handleChange : function(e) {
         this.setState({
-            student : e.target.value
+            visitor : e.target.value
         });
     },
 
@@ -75,7 +60,7 @@ var Swipe = React.createClass({
                 </div>
             );
         } else {
-            field = <input type="text" placeholder="Banner ID or ASU Email" onChange={this.handleChange} className="form-control" value={this.state.student} />;
+            field = <input type="text" placeholder="Banner ID or ASU Email" onChange={this.handleChange} className="form-control" value={this.state.visitor} />;
         }
 
 
@@ -84,10 +69,10 @@ var Swipe = React.createClass({
                 <div className="text-center">
                     <p className="title">Welcome! Please Check-in</p>
                     <p className="subtitle">Swipe your AppCard to get started</p>
-                    <p>Don't have your AppCard?<br />Enter your ASU email address instead.</p>
+                    <p>Don't have your AppCard?<br />Enter your Banner ID number instead.</p>
                     {field}
                 </div>
-                <button className="continue pull-right btn btn-default" onClick={this.logInStudent}>Continue <i className="fa fa-chevron-right fa-sm"></i></button>
+                <button className="continue pull-right btn btn-default" onClick={this.logInVisitor}>Continue <i className="fa fa-chevron-right fa-sm"></i></button>
                 <div className="clearfix"></div>
             </div>
         );
