@@ -50,6 +50,9 @@ class Module extends \Module implements \SettingDefaults
             $content = $user->checkin();
             \Layout::add($content);
         }
+        if (\Current_User::allow('counseling')) {
+            \counseling\Controller\Admin::loadAdminBar();
+        }
     }
 
 }
