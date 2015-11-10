@@ -38,5 +38,17 @@ class Admin extends \Http\Controller
         $commandObject = new $className($this->getModule());
         return $commandObject;
     }
+    
+    public static function loadAdminBar()
+    {
+        $auth = \Current_User::getAuthorization();
+        
+        $vars['logout_uri'] = $auth->logout_link;
+        $vars['username'] = \Current_User::getDisplayName();
+        $template =  new \Template($vars);
+        $template->setModuleTemplate('counseling', 'Admin/navbar.html');
+        $content = $template->get();
+        \Layout::plug($content, 'NAV_LINKS');
+    }
 
 }
