@@ -1,0 +1,27 @@
+<?php
+
+namespace counseling\Admin\Dashboard;
+
+/**
+ * @license http://opensource.org/licenses/lgpl-3.0.html
+ * @author Matthew McNaney <mcnaney at gmail dot com>
+ */
+class Waiting extends \counseling\Controller\Base
+{
+        protected function getJsonView($data, \Request $request)
+    {
+        if (!$request->isVar('command')) {
+            throw new \Exception('Unknown JSON command');
+        }
+
+        $command = $request->getVar('command');
+        switch ($command) {
+            case 'list':
+                $json = Factory::getSummaryData();
+                break;
+        }
+
+        $view = new \View\JsonView($json);
+        return $view;
+    }
+}
