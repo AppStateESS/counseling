@@ -58,10 +58,19 @@ class Visitor extends \Resource
     protected $visit_count;
     
     /**
-     *
      * @var \Variable\Email
      */
     protected $email;
+    
+    /**
+     * @var \Variable\Bool
+     */
+    protected $intake_complete;
+
+    /**
+     * @var \Variable\Bool
+     */
+    protected $previously_seen;
     
     protected $table = 'cc_visitor';
 
@@ -83,6 +92,8 @@ class Visitor extends \Resource
         $this->visit_count = new \Variable\Integer(null, 'visit_count');
         $this->email = new \Variable\Email(null, 'email');
         $this->email->setLimit(100);
+        $this->intake_complete = new \Variable\Bool(false, 'intake_complete');
+        $this->previously_seen = new \Variable\Bool(false, 'previously_seen');
     }
 
     public function setBannerId($var)
@@ -140,6 +151,11 @@ class Visitor extends \Resource
         $this->email->set($var);
     }
 
+    public function setIntakeComplete($var)
+    {
+        $this->intake_complete->set($var);
+    }
+    
     public function getBannerId()
     {
         return $this->banner_id->get();
@@ -163,6 +179,11 @@ class Visitor extends \Resource
     public function getHasBeenSeen()
     {
         return $this->has_been_seen->get();
+    }
+    
+    public function getIntakeComplete()
+    {
+        return $this->intake_complete->get();
     }
 
     public function getLastName()
