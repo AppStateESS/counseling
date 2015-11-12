@@ -12,12 +12,6 @@ var Instruction = React.createClass({
         };
     },
 
-    componentDidMount : function() {
-        setTimeout(function(){
-            this.props.update();
-        }.bind(this), 5000);
-    },
-
     render: function() {
         var content = null;
         var instruction = null
