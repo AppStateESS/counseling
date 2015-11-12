@@ -16,10 +16,9 @@ var Emergency = React.createClass({
         if (this.props.list === null) {
             return null;
         }
-
         var rows = this.props.list.map(function(value, key){
             return (
-                <EmergencyRow key={key} visitor={value.visitor} waiting={value.waiting} />
+                <EmergencyRow key={key} visit={value} />
             );
         }.bind(this));
 
@@ -40,8 +39,7 @@ var EmergencyRow = React.createClass({
 
     getDefaultProps: function() {
         return {
-            visitor : null,
-            waiting : 0
+            visit : null,
         };
     },
 
@@ -52,13 +50,13 @@ var EmergencyRow = React.createClass({
                     <i className="fa fa-lg fa-exclamation-triangle"></i>
                 </div>
                 <div className="col-sm-5 visitor-name">
-                    {this.props.visitor}
+                    {this.props.visit.visitor.first_name} {this.props.visit.visitor.last_name}
                 </div>
                 <div className="col-sm-3">
-                    {this.props.waiting} min
+                    {this.props.visit.wait_time} min
                 </div>
                 <div className="col-sm-3">
-                    <WaitingAction />
+                    <WaitingAction visitId={this.props.visit.id}/>
                 </div>
             </div>
         );
