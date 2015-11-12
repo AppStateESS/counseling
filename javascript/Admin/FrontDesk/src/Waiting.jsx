@@ -7,49 +7,49 @@ var Waiting = React.createClass({
     },
 
     componentDidMount : function() {
+        this.loadLists();
+    },
+
+    loadLists : function() {
         $.getJSON('counseling/Admin/Dashboard/Waiting', {
         	command : 'list'
         }).done(function(data){
-        	console.log(data);
+            this.setState({
+                emergencyList : data.emergencyList,
+                waitingList : data.waitingList
+            });
         }.bind(this));
-
     },
 
     render: function() {
-        // var emergencyList = this.state.emergencyList;
-        var emergencyList = [
-            {
-                visitor : 'Tom Smith',
-                waiting : 10
-            },
-            {
-                visitor : 'Jacob Jones',
-                waiting : 8
-            }
-        ];
-
-
         return (
             <div>
-                <Emergency list={emergencyList}/>
-                <WaitingList />
+                <Emergency list={this.state.emergencyList} reload={this.loadLists}/>
+                <WaitingList list={this.state.waitingList} reload={this.loadLists} />
             </div>
         );
     }
 });
 
 var WaitingList = React.createClass({
-    getInitialState: function() {
-        return {
-        };
-    },
-
     getDefaultProps: function() {
         return {
+            list : null,
+            reload : null
         };
     },
 
     render: function() {
+
+        var listRows = null;
+        if (this.props.list == null) {
+            return <div />;
+        }
+        listRows = this.props.list.map(function(value, key){
+            return (
+                <WaitingListRow {...value} count={key} key={key} reload={this.props.reload}/>
+            );
+        }.bind(this));
         return (
             <div className="waiting-list">
                 <table className="table table-striped">
@@ -63,7 +63,7 @@ var WaitingList = React.createClass({
                             <th>Status</th>
                             <th>&nbsp;</th>
                         </tr>
-                        <WaitingListRow />
+                        {listRows}
                     </tbody>
                 </table>
             </div>
@@ -75,19 +75,27 @@ var WaitingListRow = React.createClass({
 
     getDefaultProps: function() {
         return {
+            value : {},
+            count : 0,
+            reload : null
         };
     },
 
     render: function() {
+        var count = this.props.count + 1;
         return (
             <tr>
-                <td>1</td>
+                <td>{count}</td>
                 <td><i className="fa fa-man"></i></td>
-                <td>Mark Johnson</td>
-                <td>45</td>
-                <td><WaitingListVisits visitNumber="7"/></td>
-                <td><WaitingListStatus intakeComplete={true} seenLastVisit={false} /></td>
-                <td><WaitingAction /></td>
+                <td>{this.props.visitor.first_name} {this.props.visitor.last_name}</td>
+                <td>{this.props.wait_time} min.</td>
+                <td><WaitingListVisits visitNumber={this.props.total_visits} /></td>
+                <td>
+                    <WaitingListStatus intakeComplete={this.props.visitor.intake_complete}
+                     seenLastVisit={this.props.visitor.previously_seen} visitorId={this.props.visitor.id}
+                     reload={this.props.reload}/>
+                </td>
+                 <td><WaitingAction visitId={this.props.visit_id}/></td>
             </tr>
         );
     }
@@ -130,20 +138,36 @@ var WaitingListStatus = React.createClass({
 
     getDefaultProps: function() {
         return {
-            intakeComplete : false,
-            seenLastVisit : false
+            intakeComplete : '0',
+            seenLastVisit : '0',
+            visitorId : 0,
+            reload : null
         };
     },
 
+    intakeComplete : function()
+    {
+        if (confirm('Has the student completed their intake form?')) {
+             $.post('counseling/Admin/Dashboard/Waiting/', {
+             	command : 'intakeComplete',
+                visitorId : this.props.visitorId
+             }, null, 'json')
+             	.done(function(data){
+                    this.props.reload();
+             	}.bind(this));
+        }
+
+    },
+
     render: function() {
-        if (this.props.intakeComplete === true) {
-            if (this.props.seenLastVisit === true) {
+        if (this.props.intakeComplete === '1') {
+            if (this.props.seenLastVisit === '1') {
                 return <span className="label label-danger">Unseen last visit</span>
             } else {
                 return <span className="label label-success">Intake complete</span>
             }
         } else {
-            return <span className="label label-danger">Intake incomplete</span>
+            return <span className="label label-danger" style={{cursor:'pointer'}} title="Click to acknowledge intake completion" onClick={this.intakeComplete}>Intake incomplete</span>
         }
     }
 
@@ -153,7 +177,28 @@ var WaitingAction = React.createClass({
 
     getDefaultProps: function() {
         return {
+            visitId : 0
         };
+    },
+
+    leave : function() {
+
+    },
+
+    missing : function() {
+
+    },
+
+    appointment : function() {
+
+    },
+
+    seen : function() {
+
+    },
+
+    remove : function() {
+
     },
 
     getOptions : function() {
@@ -161,29 +206,34 @@ var WaitingAction = React.createClass({
         options.push(
             {
                 label : <div><i className="fa fa-external-link"></i> Had to leave</div>,
-                handleClick : null
+                visitId : this.props.visitId,
+                handleClick : this.leave
             },
             {
                 label : <div><i className="fa fa-eye-slash"></i> Missing</div>,
-                handleClick : null
+                visitId : this.props.visitId,
+                handleClick : this.missing
             },
             {
                 label : <div><i className="fa fa-clock-o"></i> Made appointment</div>,
-                handleClick : null
+                visitId : this.props.visitId,
+                handleClick : this.appointment
             },
             {
                 divider : true
             },
             {
                 label : <div className="text-success"><i className="fa fa-thumbs-o-up"></i> Seen</div>,
-                handleClick : null
+                visitId : this.props.visitId,
+                handleClick : this.seen
             },
             {
                 divider : true
             },
             {
                 label : <div className="text-danger"><i className="fa fa-trash-o"></i> Remove</div>,
-                handleClick : null
+                visitId : this.props.visitId,
+                handleClick : this.remove
             }
         );
         return options;
