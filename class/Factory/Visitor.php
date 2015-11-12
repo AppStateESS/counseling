@@ -52,4 +52,9 @@ class Visitor extends Base
         return $visitor;
     }
     
+    public static function intakeComplete($id) {
+        $visitor = new Resource;
+        self::loadByID($visitor, $id);
+        $visitor->setIntakeComplete(true);
+    }
 }
