@@ -56,7 +56,7 @@ var Stage = React.createClass({
         if (reason.ask_for_phone === '1') {
             this.props.updateStage('phone');
         } else {
-            if (this.state.reason.show_emergency === '1') {
+            if (reason.show_emergency === '1') {
                 this.props.updateStage('emergency');
             } else {
                 this.props.updateStage('instruction')
@@ -83,7 +83,7 @@ var Stage = React.createClass({
                 phoneNumber : phone
             }, null, 'json')
             	.done(function(data){
-            		console.log(data);
+            		//console.log(data);
             	}.bind(this));
 
         }
@@ -121,7 +121,7 @@ var Stage = React.createClass({
             emergency : this.state.emergency
         }, null, 'json')
         	.done(function(data){
-                this.resetLogin();
+                setTimeout(this.resetLogin, 5000);
         	}.bind(this));
     },
 
