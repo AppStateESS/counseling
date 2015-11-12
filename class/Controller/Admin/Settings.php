@@ -65,7 +65,7 @@ EOF;
 
         $className = 'counseling\Controller\Admin\Settings\\' . $command;
         if (!class_exists($className)) {
-            throw new \Http\NotAcceptableException($request);
+            throw new \Exception('Unknown command');
         }
         $commandObject = new $className($this->getModule());
         return $commandObject;
