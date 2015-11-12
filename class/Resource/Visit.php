@@ -56,6 +56,7 @@ class Visit extends \Resource
      * @var \Variable\Integer
      */
     protected $visitor_id;
+    
     protected $table = 'cc_visit';
 
     public function __construct()
@@ -70,11 +71,6 @@ class Visit extends \Resource
         $this->has_emergency = new \Variable\Bool(null, 'has_emergency');
         $this->reason_id = new \Variable\Integer(null, 'reason_id');
         $this->visitor_id = new \Variable\Integer(null, 'visitor_id');
-        
-        $this->full_name = new \Variable\String(null, 'full_name');
-        $this->full_name->setIsTableColumn(false);
-        $this->total_visits = new \Variable\Integer(0, 'total_visits');
-        
     }
 
     public function getArrivalTime()
@@ -152,11 +148,6 @@ class Visit extends \Resource
         $this->full_name->set($var);
     }
     
-    public function setTotalVisits($var)
-    {
-        $this->total_visits->set($var);
-    }
-
     public function setReasonId($var)
     {
         $this->reason_id->set($var);
