@@ -41,7 +41,7 @@ var Reason = React.createClass({
             content = <div className="alert alert-danger">System error: Please alert front desk.</div>;
         } else {
             var reasonList = this.state.reasons.map(function(value, i){
-                return <li key={i} className="list-group-item pointer" onClick={this.pickReason.bind(this, i)}>{value.description}</li>;
+                return <li key={i} className="list-group-item" style={{cursor : 'pointer'}} onClick={this.pickReason.bind(this, i)}>{value.description}</li>;
             }.bind(this));
             content = (
                 <div>
