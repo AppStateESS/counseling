@@ -16,7 +16,7 @@ var Reasons = React.createClass({
     {
         $.getJSON('counseling/Admin/Settings/Reason', {
         	command : 'list'
-        }).done(function(data){
+        }).done(function(data) {
             this.setState({
                 reasons : data,
             });
@@ -194,17 +194,33 @@ var ReasonList = React.createClass({
                             <span className="badge">{value.ordering}</span>
                         </div>
                         <div className="panel-body">
-                            <div>
-                                <strong>Title:</strong>
-                                <ReasonTitle value={value.title} {...props} />
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="section">
+                                        <strong>Title:</strong>
+                                        <ReasonTitle value={value.title} {...props} />
+                                    </div>
+                                </div>
+                                <div className="col-sm-6">
+                                    <div className="section">
+                                        <strong>Description:</strong>
+                                        <ReasonDescription value={value.description} {...props}/>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <strong>Description:</strong>
-                                <ReasonDescription value={value.description} {...props}/>
-                            </div>
-                            <div>
-                                <strong>Instruction:</strong>
-                                <ReasonInstruction value={value.instruction} {...props}/>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="section">
+                                        <strong>Instruction:</strong>
+                                        <ReasonInstruction value={value.instruction} {...props}/>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6">
+                                    <div className="section">
+                                        <strong>Category:</strong>
+                                        <ReasonCategory value={value.category} {...props}/>
+                                    </div>
+                                </div>
                             </div>
                             <hr />
                             <div className="row">
@@ -273,6 +289,120 @@ var ReasonTitle = React.createClass({
 
 });
 
+var ReasonCategory = React.createClass({
+    getInitialState: function() {
+        return {
+            editMode : false,
+            instruction : null
+        };
+    },
+
+    getDefaultProps: function() {
+        return {
+            value : '1',
+            editMode : false,
+            reasonId : 0
+        };
+    },
+
+    componentDidMount : function() {
+        this.setState({
+            editMode : this.props.editMode,
+            category : this.props.value
+        });
+    },
+
+    formMode : function() {
+        this.props.setCurrentEdit(this.props.reasonId, 4);
+        this.setState({
+            editMode : true
+        });
+    },
+
+    saveCategory : function() {
+        $.post('counseling/Admin/Settings/Reason', {
+            command : 'setCategory',
+            reasonId : this.props.reasonId,
+            category : this.state.category
+        }, null, 'json')
+            .done(function(data){
+                this.setState({
+                    editMode : false
+                });
+                this.props.reload();
+            }.bind(this));
+    },
+
+    updateCategory : function(e) {
+        this.setState({
+            category : e.target.value
+        });
+    },
+
+    closeForm : function() {
+        this.setState({
+            category : this.props.value,
+            editMode : false
+        });
+    },
+
+    render: function() {
+        var value = null;
+        var matchOption = null;
+
+        switch (this.props.value) {
+            case '0':
+            matchOption = 'Other';
+            break;
+
+            case '1':
+            matchOption = 'Walk-in';
+            break;
+
+            case '2':
+            matchOption = 'Appointment';
+            break;
+        }
+
+        var selectOptions = [
+            {
+                value : '0',
+                label : 'Other'
+            },
+            {
+                value : '1',
+                label : 'Walk-in'
+            },
+            {
+                value : '2',
+                label : 'Appointment'
+            }
+        ];
+
+        if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId && this.props.currentEdit.section == '4') {
+            value = (
+                <div className="row">
+                    <div className="col-sm-8">
+                        <ReasonSelect options={selectOptions} match={this.state.category} handleChange={this.updateCategory}/>
+                    </div>
+                    <div className="col-sm-4">
+                        <button className="btn btn-success" onClick={this.saveCategory}><i className="fa fa-check"></i></button>
+                        <button className="btn btn-danger" onClick={this.closeForm}><i className="fa fa-times"></i></button>
+                    </div>
+                </div>
+            );
+        } else {
+            value = <div style={{cursor : 'pointer'}} onClick={this.formMode} className="col-sm-8 editItem" title="Click to edit">{matchOption}</div>;
+        }
+
+
+        return (
+            <div>{value}</div>
+        );
+    }
+
+});
+
 var ReasonInstruction = React.createClass({
     getInitialState: function() {
         return {
@@ -285,8 +415,7 @@ var ReasonInstruction = React.createClass({
         return {
             value : '1',
             editMode : false,
-            reasonId : 0,
-            content : null
+            reasonId : 0
         };
     },
 
@@ -305,7 +434,6 @@ var ReasonInstruction = React.createClass({
     },
 
     saveInstruction : function() {
-
         $.post('counseling/Admin/Settings/Reason', {
         	command : 'setInstruction',
             reasonId : this.props.reasonId,
@@ -334,27 +462,38 @@ var ReasonInstruction = React.createClass({
 
     render: function() {
         var value = null;
-        var option = null;
+        var matchOption = null;
         if (this.props.value === '1') {
-            option = 'Sit down';
+            matchOption = 'Sit down';
         } else {
-            option = 'See the front desk';
+            matchOption = 'See the front desk';
         }
+
+        var selectOptions = [
+            {
+                value : '1',
+                label : 'Sit down'
+            },
+            {
+                value : '2',
+                label : 'See front desk'
+            }
+        ];
 
         if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId && this.props.currentEdit.section == '3') {
             value = (
                 <div className="row">
-                    <div className="col-sm-3">
-                        <ReasonInstructionSelect value={this.state.instruction} handleChange={this.updateInstruction}/>
+                    <div className="col-sm-8">
+                        <ReasonSelect options={selectOptions} match={this.state.instruction} handleChange={this.updateInstruction}/>
                     </div>
-                    <div className="col-sm-2">
+                    <div className="col-sm-4">
                         <button className="btn btn-success" onClick={this.saveInstruction}><i className="fa fa-check"></i></button>
                         <button className="btn btn-danger" onClick={this.closeForm}><i className="fa fa-times"></i></button>
                     </div>
                 </div>
             );
         } else {
-            value = <div className="pointer" onClick={this.formMode} title="Click to edit">{option}</div>;
+            value = <div style={{cursor : 'pointer'}} onClick={this.formMode} className="col-sm-8 editItem" title="Click to edit">{matchOption}</div>;
         }
 
         return (
@@ -364,18 +503,21 @@ var ReasonInstruction = React.createClass({
 
 });
 
-var ReasonInstructionSelect = React.createClass({
+var ReasonSelect = React.createClass({
     getDefaultProps: function() {
         return {
-            value : '1'
+            match : '0',
+            handleChange : null,
+            options : null
         };
     },
 
     render: function() {
         return (
-            <select ref="instructionSelect" defaultValue={this.props.value} className="form-control" onChange={this.props.handleChange}>
-                <option value="1">Sit down</option>
-                <option value="2">See front desk</option>
+            <select ref="instructionSelect" defaultValue={this.props.match} className="form-control" onChange={this.props.handleChange}>
+                {this.props.options.map(function(value,key){
+                    return (<option key={key} value={value.value}>{value.label}</option>);
+                }.bind(this))}
             </select>
         );
     }
@@ -529,16 +671,16 @@ var FlipOption = React.createClass({
     },
 
     render: function() {
-        var divClass = 'pointer';
+        var divClass = null;
         var iconClass = 'fa fa-lg ' + this.props.icon;
 
         if (this.props.active) {
-            divClass += ' text-success'
+            divClass = 'text-success'
         } else {
-            divClass += ' dim'
+            divClass = 'dim'
         }
         return (
-            <div onClick={this.props.handleClick} className={divClass}><i className={iconClass} title={this.props.title}></i> {this.props.label}</div>
+            <div onClick={this.props.handleClick} className={divClass} style={{cursor:'pointer'}}><i className={iconClass} title={this.props.title}></i> {this.props.label}</div>
         );
     }
 
@@ -681,45 +823,51 @@ var ReasonForm = React.createClass({
                         <TextInput inputId="description" label="Description" placeholder="Description of reason. Seen by visitors."
                             handleChange={this.updateDescription} required={true} tabIndex={2}/>
                     </div>
-                    <div className="form-group">
-                            <label>Directions</label>
-                            <p>
-                                <label style={{marginRight:'2em'}}>
-                                    <input type="radio" name="instruction" value="1" defaultChecked={true} tabIndex={3} onClick={this.updateInstruction}/> Sit down
-                                </label>
+                    <div className="row">
+                        <div className="col-sm-6">
+                            <div className="form-group">
+                                    <label>Instructions</label>
+                                    <p>
+                                        <label style={{marginRight:'2em'}}>
+                                            <input type="radio" name="instruction" value="1" defaultChecked={true} tabIndex={3} onClick={this.updateInstruction}/> Sit down
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="instruction" value="2" tabIndex={4} onClick={this.updateInstruction}/> Front desk
+                                        </label>
+                                    </p>
+                            </div>
+                            <div className="form-group">
                                 <label>
-                                    <input type="radio" name="instruction" value="2" tabIndex={4} onClick={this.updateInstruction}/> Front desk
+                                    <input type="checkbox" name="showEmergency" value="1" onChange={this.updateEmergency} tabIndex={5}/> Show emergency question
+                                        &nbsp;<i className="fa fa-question-circle" style={{cursor:'pointer'}} data-toggle="tooltip" data-placement="right"
+                                        title="If checked, the visitor will be asked if they have an emergency."></i>
                                 </label>
-                            </p>
-                    </div>
-
-                    <div className="form-group">
-                        <label>
-                            <input type="checkbox" name="showEmergency" value="1" onChange={this.updateEmergency} tabIndex={5}/> Show emergency question
-                                &nbsp;<i className="fa fa-question-circle pointer" data-toggle="tooltip" data-placement="right"
-                                title="If checked, the visitor will be asked if they have an emergency."></i>
-                        </label>
-                    </div>
-                    <div className="form-group">
-                        <label>
-                            <input type="checkbox" name="adminMenuShow" value="1" onChange={this.updateAdminMenu} tabIndex={6}/> Track on dashboards
-                                &nbsp;<i className="fa fa-question-circle pointer" data-toggle="tooltip" data-placement="right"
-                                title="If checked, this reason will have a icon and tally on the dashboard."></i>
-                        </label>
-                    </div>
-                    <div className="form-group">
-                        <label>
-                            <input type="checkbox" name="waitListed" value="1"  onChange={this.updateWaitListed} tabIndex={7}/> Put on wait list
-                                &nbsp;<i className="fa fa-question-circle pointer" data-toggle="tooltip" data-placement="right"
-                                title="If checked, the visitor will be placed on the waiting list."></i>
-                        </label>
-                    </div>
-                    <div className="form-group">
-                        <label>
-                            <input type="checkbox" name="askForPhone" value="1"  onChange={this.updateAskForPhone} tabIndex={8}/> Ask for phone number
-                                &nbsp;<i className="fa fa-question-circle pointer" data-toggle="tooltip" data-placement="right"
-                                title="If checked, the visitor will be asked for their phone number."></i>
-                        </label>
+                            </div>
+                            <div className="form-group">
+                                <label>
+                                    <input type="checkbox" name="adminMenuShow" value="1" onChange={this.updateAdminMenu} tabIndex={6}/> Track on dashboards
+                                        &nbsp;<i className="fa fa-question-circle" style={{cursor:'pointer'}} data-toggle="tooltip" data-placement="right"
+                                        title="If checked, this reason will have a icon and tally on the dashboard."></i>
+                                </label>
+                            </div>
+                            <div className="form-group">
+                                <label>
+                                    <input type="checkbox" name="waitListed" value="1"  onChange={this.updateWaitListed} tabIndex={7}/> Put on wait list
+                                        &nbsp;<i className="fa fa-question-circle" style={{cursor:'pointer'}} data-toggle="tooltip" data-placement="right"
+                                        title="If checked, the visitor will be placed on the waiting list."></i>
+                                </label>
+                            </div>
+                            <div className="form-group">
+                                <label>
+                                    <input type="checkbox" name="askForPhone" value="1"  onChange={this.updateAskForPhone} tabIndex={8}/> Ask for phone number
+                                        &nbsp;<i className="fa fa-question-circle" style={{cursor:'pointer'}} data-toggle="tooltip" data-placement="right"
+                                        title="If checked, the visitor will be asked for their phone number."></i>
+                                </label>
+                            </div>
+                        </div>
+                        <div className="col-sm-6">
+                            <GroupSelect />
+                        </div>
                     </div>
                     <button className="pull-left btn btn-primary" onClick={this.save} tabIndex={8}><i className="fa fa-check"></i> Save reason</button>&nbsp;
                     <button className="btn btn-danger" onClick={this.closeForm} tabIndex={9}><i className="fa fa-times"></i> Cancel</button>
@@ -730,11 +878,7 @@ var ReasonForm = React.createClass({
 
 });
 
-var IconTable = React.createClass({
-    getInitialState: function() {
-        return {
-        };
-    },
+var GroupSelect = React.createClass({
 
     getDefaultProps: function() {
         return {
@@ -743,38 +887,14 @@ var IconTable = React.createClass({
 
     render: function() {
         return (
-            <table className="table">
-                <tbody>
-                <tr>
-                    <td><i className="fa fa-hand-paper-o"></i></td>
-                    <td><i className="fa fa-calendar"></i></td>
-                    <td><i className="fa fa-map-o"></i></td>
-                    <td><i className="fa fa-book"></i></td>
-                    <td><i className="fa fa-check-square-o"></i></td>
-                </tr>
-                <tr>
-                    <td><i className="fa fa-clock-o"></i></td>
-                    <td><i className="fa fa-comment-o"></i></td>
-                    <td><i className="fa fa-frown-o"></i></td>
-                    <td><i className="fa fa-smile-o"></i></td>
-                    <td><i className="fa fa-users"></i></td>
-                </tr>
-                <tr>
-                    <td><i className="fa fa-user"></i></td>
-                    <td><i className="fa fa-home"></i></td>
-                    <td><i className="fa fa-phone"></i></td>
-                    <td><i className="fa fa-question"></i></td>
-                    <td><i className="fa fa-star"></i></td>
-                </tr>
-                <tr>
-                    <td><i className="fa fa-thumbs-o-up"></i></td>
-                    <td><i className="fa fa-thumbs-o-down"></i></td>
-                    <td><i className="fa fa-warning"></i></td>
-                    <td><i className="fa fa-gear"></i></td>
-                    <td>&nbsp;</td>
-                </tr>
-                </tbody>
-            </table>
+            <div>
+                <label>Summary group</label>
+                <ul style={{listStyleType : 'none'}}>
+                    <li><label><input type="radio" name="summaryGroup" value="1"/> <i className="fa fa-male fa-lg"></i> Walk-in</label></li>
+                    <li><label><input type="radio" name="summaryGroup" value="2"/> <i className="fa fa-clock-o fa-lg"></i> Appointment</label></li>
+                    <li><label><input type="radio" name="summaryGroup" defaultChecked={true} value="0"/> <i className="fa fa-question-circle fa-lg"></i> Other</label></li>
+                </ul>
+            </div>
         );
     }
 

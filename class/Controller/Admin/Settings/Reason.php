@@ -73,6 +73,10 @@ class Reason extends \counseling\Controller\Base
             case 'setInstruction':
                 $this->setInstruction();
                 break;
+            
+            case 'setCategory':
+                $this->setCategory();
+                break;
         }
 
         $view = new \View\JsonView(array('success' => true));
@@ -105,6 +109,13 @@ class Reason extends \counseling\Controller\Base
     {
         $reason = Factory::loadByPost();
         $reason->setInstruction(Factory::pullPostInteger('instruction'));
+        Factory::saveResource($reason);
+    }
+
+    private function setCategory()
+    {
+        $reason = Factory::loadByPost();
+        $reason->setCategory(Factory::pullPostInteger('category'));
         Factory::saveResource($reason);
     }
 

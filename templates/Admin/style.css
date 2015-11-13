@@ -5,12 +5,15 @@
 .editItem {
     border : 1px solid white;
     border-radius: 6px;
-    padding : 4px;
+    padding : 6px;
     font-family : arial;
-    margin-bottom : 1em;
 }
 
 .editItem:hover {
     cursor : pointer;
     border-color : #d6d6d6;
+}
+
+.settings-listing .section {
+    margin-bottom : 1em;
 }

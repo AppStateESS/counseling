@@ -34,10 +34,10 @@ class Reason extends \Resource
     protected $show_emergency;
 
     /**
-     * FontAwesome icon name. Shown is admin_menu_show is true.
-     * @var \Variable\String
+     * Category to list visitor under on admin menu
+     * @var \Variable\Integer
      */
-    protected $icon;
+    protected $category;
 
     /**
      * If true, show tally of waiting with that reason
@@ -75,9 +75,8 @@ class Reason extends \Resource
         $this->instruction = new \Variable\Integer(null, 'instruction');
         $this->instruction->setRange(0,100);
         $this->show_emergency = new \Variable\Bool(false, 'show_emergency');
-        $this->icon = new \Variable\String(null, 'icon');
-        $this->icon->setLimit(20);
-        $this->icon->allowNull(true);
+        $this->category = new \Variable\Integer(0, 'category');
+        $this->category->setRange(0, 10);
         $this->admin_menu_show = new \Variable\Bool(false, 'admin_menu_show');
         $this->wait_listed = new \Variable\Bool(false, 'wait_listed');
         $this->ask_for_phone = new \Variable\Bool(false, 'ask_for_phone');
@@ -109,9 +108,9 @@ class Reason extends \Resource
         return $this->show_emergency->get();
     }
 
-    public function getIcon()
+    public function getCategory()
     {
-        return $this->icon->get();
+        return $this->category->get();
     }
 
     public function getAdminMenuShow()
@@ -154,9 +153,9 @@ class Reason extends \Resource
         $this->show_emergency->set($var);
     }
 
-    public function setIcon($var)
+    public function setCategory($var)
     {
-        $this->icon->set($var);
+        $this->category->set($var);
     }
 
     public function setAdminMenuShow($var)
