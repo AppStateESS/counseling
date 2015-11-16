@@ -22,3 +22,5 @@ define('CC_CATEGORY_OTHER_ICON', 'fa-question-circle');
 define('CC_CATEGORY_EMERGENCY_ICON', 'fa-exclamation-triangle');
 define('CC_CATEGORY_WALKIN_ICON', 'fa-male');
 define('CC_CATEGORY_APPOINTMENT_ICON', 'fa-clock-o');
+
+define('CC_AVERAGE_OFFSET', 0);
