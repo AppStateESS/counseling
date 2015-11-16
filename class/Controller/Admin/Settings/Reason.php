@@ -50,10 +50,6 @@ class Reason extends \counseling\Controller\Base
                 Factory::flipEmergency(filter_input(INPUT_POST, 'reasonId', FILTER_SANITIZE_NUMBER_INT));
                 break;
 
-            case 'flipAdminMenuShow':
-                Factory::flipAdminMenuShow(filter_input(INPUT_POST, 'reasonId', FILTER_SANITIZE_NUMBER_INT));
-                break;
-
             case 'flipWaitListed':
                 Factory::flipWaitListed(filter_input(INPUT_POST, 'reasonId', FILTER_SANITIZE_NUMBER_INT));
                 break;
@@ -77,6 +73,15 @@ class Reason extends \counseling\Controller\Base
             case 'setCategory':
                 $this->setCategory();
                 break;
+            
+            case 'delete':
+                if (\Current_User::isDeity()) {
+                    Factory::delete(filter_input(INPUT_POST, 'reasonId', FILTER_SANITIZE_NUMBER_INT));
+                } else {
+                    throw new \Exception('Action not allowed');
+                }
+                break;
+            
         }
 
         $view = new \View\JsonView(array('success' => true));
