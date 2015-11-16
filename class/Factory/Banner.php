@@ -11,16 +11,17 @@ class Banner
 
     public static function pullByFakeBannerId($banner_id)
     {
-        if ($banner_id == '123456789') {
-            return array(
-                'userName' => 'mcnaneym',
-                'firstName' => 'Matt',
-                'lastName' => 'McNaney',
-                'phoneNumber' => '8282651010',
-                'emailAddress' => 'mcnaneym@appstate.edu',
-                'studentLevel' => 'U'
-            );
-        }
+        $fn = array('Matt', 'Doug', 'Lorrie', 'Sam', 'Morris', 'Elvis', 'Mike', 'Michelle', 'Lisa');
+        $ln = array('Douglas', 'Smith', 'Jones', 'Ito', 'Sampson', 'Valdez', 'X', 'Simpson', 'Voggler', 'Husslehip');
+        $username = randomString();
+        return array(
+            'userName' => $username,
+            'firstName' => $fn[rand(0, count($fn))],
+            'lastName' => $ln[rand(0, count($ln))],
+            'phoneNumber' => '828' . rand(2620000, 2659999),
+            'emailAddress' => $username . '@appstate.edu',
+            'studentLevel' => 'U'
+        );
     }
 
     public static function pullByBannerId($banner_id)
