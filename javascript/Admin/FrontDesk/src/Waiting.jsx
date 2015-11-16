@@ -1,31 +1,10 @@
 var Waiting = React.createClass({
-    getInitialState: function() {
-        return {
-            emergencyList : null,
-            waitingList : null
-        };
-    },
-
-    componentDidMount : function() {
-        this.loadLists();
-    },
-
-    loadLists : function() {
-        $.getJSON('counseling/Admin/Dashboard/Waiting', {
-        	command : 'list'
-        }).done(function(data){
-            this.setState({
-                emergencyList : data.emergencyList,
-                waitingList : data.waitingList
-            });
-        }.bind(this));
-    },
 
     render: function() {
         return (
             <div>
-                <Emergency list={this.state.emergencyList} reload={this.loadLists}/>
-                <WaitingList list={this.state.waitingList} reload={this.loadLists} />
+                <Emergency list={this.props.emergency} reload={this.props.reload}/>
+                <WaitingList list={this.props.waiting} reload={this.props.reload} />
             </div>
         );
     }
@@ -85,8 +64,8 @@ var WaitingListRow = React.createClass({
         var count = this.props.count + 1;
         return (
             <tr>
-                <td>{count}</td>
-                <td><i className="fa fa-man"></i></td>
+                <td style={{width : '3%'}}>{count}</td>
+                <td style={{width : '3%'}} className="text-center"><CategoryIcon category={this.props.category}/></td>
                 <td>{this.props.visitor.first_name} {this.props.visitor.last_name}</td>
                 <td>{this.props.wait_time} min.</td>
                 <td><WaitingListVisits visitNumber={this.props.total_visits} /></td>
@@ -97,6 +76,24 @@ var WaitingListRow = React.createClass({
                 </td>
                  <td><WaitingAction visitId={this.props.visit_id}/></td>
             </tr>
+        );
+    }
+
+});
+
+var CategoryIcon = React.createClass({
+    getDefaultProps: function() {
+        return {
+            category : 0
+        };
+    },
+
+    render: function() {
+        var icon = null;
+        var _className = 'fa fa-lg ' + categoryIcons[this.props.category];
+        icon = <i className={_className}></i>;
+        return (
+            <div>{icon}</div>
         );
     }
 
@@ -113,7 +110,7 @@ var WaitingListVisits = React.createClass({
     render: function() {
         switch (this.props.visitNumber) {
             case '0':
-                return <span></span>;s
+                return <span></span>;
 
             case '1':
                 return <span className="label label-info">First visit</span>;
