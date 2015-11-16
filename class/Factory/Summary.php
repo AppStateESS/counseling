@@ -8,16 +8,6 @@ namespace counseling\Factory;
  */
 class Summary extends Base
 {
-    public static function getSummaryData()
-    {
-        $data['totalWaiting'] = 3;
-        $data['estimatedWait'] = 40;
-        $data['waitingTally'] = self::waitingTally();
-        $data['totalSeen'] = 13;
-        $data['averageWait'] = 32;
-        return $data;
-    }
-    
     public static function waitingTally()
     {
         // Separate from other reasons
@@ -28,5 +18,25 @@ class Summary extends Base
         // not listed dumped here
         $tally[] = array('title' => 'Other', 'tally'=> 1);
         return $tally;
+    }
+    
+    /**
+     * 
+     * @param array $arrivals
+     */
+    public static function getEstimatedWait(array $arrivals)
+    {
+        if (count($arrivals) == 1) {
+            return $arrivals[0];
+        }
+        
+        $total = count($arrivals);
+        $odd = $total % 2;
+        $middle = ceil($total / 2) + CC_AVERAGE_OFFSET - $odd;
+        $result = array_slice($arrivals, $middle);
+        $remain_count = count($result);
+        $sum = array_sum($result);
+        $mean = floor($sum / $remain_count);
+        return $mean;
     }
 }
