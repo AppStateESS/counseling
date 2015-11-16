@@ -40,13 +40,7 @@ class Reason extends \Resource
     protected $category;
 
     /**
-     * If true, show tally of waiting with that reason
-     * @var \Variable\Bool
-     */
-    protected $admin_menu_show;
-
-    /**
-     * Whether they should be seen on wait list.
+     * Whether they should be put on the wait list.
      * @var \Variable\Bool
      * 
      */
@@ -57,6 +51,8 @@ class Reason extends \Resource
      * @var \Variable\Bool
      */
     protected $ask_for_phone;
+    
+    protected $active;
 
     /**
      * Order listed in check in dialog
@@ -77,10 +73,10 @@ class Reason extends \Resource
         $this->show_emergency = new \Variable\Bool(false, 'show_emergency');
         $this->category = new \Variable\Integer(0, 'category');
         $this->category->setRange(0, 10);
-        $this->admin_menu_show = new \Variable\Bool(false, 'admin_menu_show');
         $this->wait_listed = new \Variable\Bool(false, 'wait_listed');
         $this->ask_for_phone = new \Variable\Bool(false, 'ask_for_phone');
         $this->ordering = new \Variable\Integer(1, 'ordering');
+        $this->active = new \Variable\Bool(true, 'active');
     }
 
     public function getAskForPhone()
@@ -112,10 +108,10 @@ class Reason extends \Resource
     {
         return $this->category->get();
     }
-
-    public function getAdminMenuShow()
+    
+    public function getActive()
     {
-        return $this->admin_menu_show->get();
+        return $this->active->get();
     }
 
     public function getWaitListed()
@@ -158,11 +154,11 @@ class Reason extends \Resource
         $this->category->set($var);
     }
 
-    public function setAdminMenuShow($var)
+    public function setActive($var)
     {
-        $this->admin_menu_show->set($var);
+        $this->active->set($var);
     }
-
+    
     public function setWaitListed($var)
     {
         $this->wait_listed->set($var);
