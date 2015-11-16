@@ -42,8 +42,9 @@ class Settings extends \counseling\Controller\Base
         }
 
         $settings = \Current_User::isDeity() ? 'true' : 'false';
-
+        
         $content = <<<EOF
+<script type="text/javascript">var settingsAllowed = $settings;</script>
 <div id="settings-dashboard"></div>
 EOF;
         $view = new \View\HtmlView($content);
