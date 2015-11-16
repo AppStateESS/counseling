@@ -118,22 +118,12 @@ var ReasonList = React.createClass({
         	}.bind(this));
     },
 
-    flipAdminMenuShow : function (i, event)
-    {
-        $.post('counseling/Admin/Settings/Reason', {
-        	command : 'flipAdminMenuShow',
-            reasonId : this.props.reasons[i].id,
-        }, null, 'json')
-        	.done(function(data){
-                this.props.reload();
-        	}.bind(this));
-    },
-
     flipWaitListed : function (i, event)
     {
+        var reason = this.props.reasons[i];
         $.post('counseling/Admin/Settings/Reason', {
         	command : 'flipWaitListed',
-            reasonId : this.props.reasons[i].id,
+            reasonId : reason.id,
         }, null, 'json')
         	.done(function(data){
                 this.props.reload();
@@ -151,6 +141,17 @@ var ReasonList = React.createClass({
         	}.bind(this));
     },
 
+    deleteReason : function(reason) {
+        var reasonId = this.props.reasons[reason].id;
+        $.post('counseling/Admin/Settings/Reason', {
+        	command : 'delete',
+            reasonId : reasonId
+        }, null, 'json')
+        	.done(function(data){
+                this.props.reload();
+        	}.bind(this));
+    },
+
     render: function() {
         var reasons = null;
         var emergency = null;
@@ -159,6 +160,8 @@ var ReasonList = React.createClass({
         var phone = null;
         var title = null;
         var instruction = null;
+        var deleteButton;
+
 
         var props = {};
         props.reload = this.props.reload;
@@ -167,20 +170,19 @@ var ReasonList = React.createClass({
 
         if (this.props.reasons) {
             reasons = this.props.reasons.map(function(value, key){
+                if (settingsAllowed) {
+                    deleteButton = <button className="pull-right btn btn-danger btn-sm" onClick={this.deleteReason.bind(this, key)}><i className="fa fa-exclamation-triangle"></i> Delete</button>;
+                }
+
                 emergency = <FlipOption handleClick={this.flipEmergency.bind(this,key)}
                     active={value.show_emergency == '1'}
                     title="Reason ask visitor if they have an emergency"
-                    label="Emergency" icon="fa-exclamation-triangle" />;
-
-                show = <FlipOption handleClick={this.flipAdminMenuShow.bind(this,key)}
-                    active={value.admin_menu_show == '1'}
-                    title="Reason will show a tally on the admin screen"
-                    label="Tally" icon="fa-eye" />;
+                    label="Ask emergency" icon="fa-exclamation-triangle" />;
 
                 wait = <FlipOption handleClick={this.flipWaitListed.bind(this,key)}
                     active={value.wait_listed == '1'}
-                    title="Choosing this reason puts visitor in wait queue"
-                    label="Waiting" icon="fa-hourglass-start" />;
+                    title="Choosing this reason puts visitor in the wait queue"
+                    label="Wait list" icon="fa-hourglass-start" />;
 
                 phone = <FlipOption handleClick={this.flipAskForPhone.bind(this,key)}
                     active={value.ask_for_phone == '1'}
@@ -192,6 +194,8 @@ var ReasonList = React.createClass({
                     <div className="panel panel-default" key={key}>
                         <div className="panel-heading">
                             <span className="badge">{value.ordering}</span>
+                            {deleteButton}
+                            <div className="clearfix"></div>
                         </div>
                         <div className="panel-body">
                             <div className="row">
@@ -224,17 +228,14 @@ var ReasonList = React.createClass({
                             </div>
                             <hr />
                             <div className="row">
-                                <div className="col-sm-3">
-                                    {emergency}
-                                </div>
-                                <div className="col-sm-3">
-                                    {phone}
-                                </div>
-                                <div className="col-sm-3">
+                                <div className="col-sm-4 text-center">
                                     {wait}
                                 </div>
-                                <div className="col-sm-3">
-                                    {show}
+                                <div className="col-sm-4 text-center">
+                                    {emergency}
+                                </div>
+                                <div className="col-sm-4 text-center">
+                                    {phone}
                                 </div>
                             </div>
                         </div>
@@ -693,11 +694,10 @@ var ReasonForm = React.createClass({
             title : null,
             description : null,
             instruction : 1,
-            icon : null,
-            showEmergency : 0,
-            adminMenuShow : 0,
+            category : 1,
+            showEmergency : false,
             askForPhone : 0,
-            waitListed : 0,
+            waitListed : true,
             formError : false,
             instructionList : null
         };
@@ -744,9 +744,8 @@ var ReasonForm = React.createClass({
             title : this.state.title,
             description : this.state.description,
             instruction : this.state.instruction,
-            icon : this.state.icon,
+            category : this.state.category,
             showEmergency : this.state.showEmergency,
-            adminMenuShow : this.state.adminMenuShow,
             askForPhone : this.state.askForPhone,
             waitListed : this.state.waitListed
         }, null, 'json')
@@ -779,15 +778,23 @@ var ReasonForm = React.createClass({
         });
     },
 
-    updateEmergency : function(event) {
+    updateCategory : function(event) {
         this.setState({
-            showEmergency: event.target.checked
+            category : event.target.value
         });
     },
 
-    updateAdminMenu : function(event) {
+    updateEmergency : function(event) {
+        var showEmergency = event.target.checked;
+        var waitListed = this.state.waitListed;
+
+        if (showEmergency) {
+            waitListed = true;
+        }
+
         this.setState({
-            adminMenuShow: event.target.checked
+            waitListed: waitListed,
+            showEmergency : showEmergency
         });
     },
 
@@ -798,8 +805,16 @@ var ReasonForm = React.createClass({
     },
 
     updateWaitListed : function(event) {
+        var waitListed = event.target.checked;
+        var showEmergency = this.state.showEmergency;
+
+        if (!waitListed) {
+            showEmergency = false;
+        }
+
         this.setState({
-            waitListed: event.target.checked
+            waitListed: waitListed,
+            showEmergency : showEmergency
         });
     },
 
@@ -838,28 +853,21 @@ var ReasonForm = React.createClass({
                             </div>
                             <div className="form-group">
                                 <label>
-                                    <input type="checkbox" name="showEmergency" value="1" onChange={this.updateEmergency} tabIndex={5}/> Show emergency question
-                                        &nbsp;<i className="fa fa-question-circle" style={{cursor:'pointer'}} data-toggle="tooltip" data-placement="right"
-                                        title="If checked, the visitor will be asked if they have an emergency."></i>
-                                </label>
-                            </div>
-                            <div className="form-group">
-                                <label>
-                                    <input type="checkbox" name="adminMenuShow" value="1" onChange={this.updateAdminMenu} tabIndex={6}/> Track on dashboards
-                                        &nbsp;<i className="fa fa-question-circle" style={{cursor:'pointer'}} data-toggle="tooltip" data-placement="right"
-                                        title="If checked, this reason will have a icon and tally on the dashboard."></i>
-                                </label>
-                            </div>
-                            <div className="form-group">
-                                <label>
-                                    <input type="checkbox" name="waitListed" value="1"  onChange={this.updateWaitListed} tabIndex={7}/> Put on wait list
+                                    <input type="checkbox" name="waitListed" value="1"  checked={this.state.waitListed} onChange={this.updateWaitListed} tabIndex={7}/> Put on wait list
                                         &nbsp;<i className="fa fa-question-circle" style={{cursor:'pointer'}} data-toggle="tooltip" data-placement="right"
                                         title="If checked, the visitor will be placed on the waiting list."></i>
                                 </label>
                             </div>
                             <div className="form-group">
                                 <label>
-                                    <input type="checkbox" name="askForPhone" value="1"  onChange={this.updateAskForPhone} tabIndex={8}/> Ask for phone number
+                                    <input type="checkbox" name="showEmergency" value="1" checked={this.state.showEmergency} onChange={this.updateEmergency} tabIndex={5}/> Show emergency question
+                                        &nbsp;<i className="fa fa-question-circle" style={{cursor:'pointer'}} data-toggle="tooltip" data-placement="right"
+                                        title="If checked, the visitor will be asked if they have an emergency."></i>
+                                </label>
+                            </div>
+                            <div className="form-group">
+                                <label>
+                                    <input type="checkbox" name="askForPhone" value="1" checked={this.state.askForPhone} onChange={this.updateAskForPhone} tabIndex={8}/> Ask for phone number
                                         &nbsp;<i className="fa fa-question-circle" style={{cursor:'pointer'}} data-toggle="tooltip" data-placement="right"
                                         title="If checked, the visitor will be asked for their phone number."></i>
                                 </label>
@@ -888,12 +896,22 @@ var GroupSelect = React.createClass({
     render: function() {
         return (
             <div>
-                <label>Summary group</label>
-                <ul style={{listStyleType : 'none'}}>
-                    <li><label><input type="radio" name="summaryGroup" value="1"/> <i className="fa fa-male fa-lg"></i> Walk-in</label></li>
-                    <li><label><input type="radio" name="summaryGroup" value="2"/> <i className="fa fa-clock-o fa-lg"></i> Appointment</label></li>
-                    <li><label><input type="radio" name="summaryGroup" defaultChecked={true} value="0"/> <i className="fa fa-question-circle fa-lg"></i> Other</label></li>
-                </ul>
+                <label>Category</label>
+                <div>
+                    <label>
+                        <input type="radio" name="summaryGroup" value="1" onClick={this.updateCategory}/> <i className="fa fa-male fa-lg"></i> Walk-in
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="radio" name="summaryGroup" value="2" onClick={this.updateCategory}/> <i className="fa fa-clock-o fa-lg"></i> Appointment
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="radio" name="summaryGroup" defaultChecked={true} value="0" onClick={this.updateCategory}/> <i className="fa fa-question-circle fa-lg"></i> Other
+                    </label>
+                </div>
             </div>
         );
     }
