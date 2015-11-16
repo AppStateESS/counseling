@@ -35,12 +35,15 @@ class Visit extends \counseling\Controller\Base
         $reason_id = Factory::pullPostInteger('reasonId');
         $emergency = Factory::pullPostCheck('emergency');
         
-        $visit = new Resource;
-        $visit->stampArrivalTime();
-        $visit->setHasEmergency($emergency);
-        $visit->setReasonId($reason_id);
-        $visit->setVisitorId($visitor_id);
-        Factory::saveResource($visit);
+        $reason = \counseling\Factory\Reason::build($reason_id);
+        if ($reason->getWaitListed()) {
+            $visit = new Resource;
+            $visit->stampArrivalTime();
+            $visit->setHasEmergency($emergency);
+            $visit->setReasonId($reason_id);
+            $visit->setVisitorId($visitor_id);
+            Factory::saveResource($visit);
+        }
     }
 
 }
