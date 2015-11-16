@@ -4,6 +4,7 @@ namespace counseling\Controller\Admin\Dashboard;
 
 use counseling\Factory\Visitor as VisitorFactory;
 use counseling\Factory\Visit as VisitFactory;
+use counseling\Factory\Summary as SummaryFactory;
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
@@ -40,7 +41,7 @@ class Waiting extends \counseling\Controller\Base
                 VisitorFactory::intakeComplete(VisitorFactory::pullPostInteger('visitorId'));
                 break;
         }
-        
+
         $view = new \View\JsonView(array('success' => true));
         $response = new \Response($view);
         return $response;
@@ -51,8 +52,54 @@ class Waiting extends \counseling\Controller\Base
      */
     private function getLists()
     {
-        $json['emergencyList'] = VisitFactory::getCurrentVisits(true);
-        $json['waitingList'] = VisitFactory::getCurrentVisits(false);
+        $waiting = VisitFactory::getCurrentVisits();
+        if (empty($waiting)) {
+            $json['emergencyList'] = null;
+            $json['waitingList'] = null;
+            $json['summary'] = null;
+        } else {
+            $count = 0;
+            $emergencies = 0;
+            $other = 0;
+            $walkin = 0;
+            $appointment = 0;
+
+            $now = time();
+
+            foreach ($waiting as $visit) {
+                $count++;
+                $id = $visit['id'];
+
+                $arrivals[] = $visit['wait_time'];
+
+                if ($visit['has_emergency']) {
+                    $json['emergencies'][] = $visit;
+                    $emergencies++;
+                } else {
+                    $json['waiting'][] = $visit;
+
+                    switch ($visit['category']) {
+                        case '0':
+                            $other++;
+                            break;
+                        case '1':
+                            $walkin++;
+                            break;
+                        case '2':
+                            $appointment++;
+                    }
+                }
+            }
+
+            $summary['totalWaiting'] = $count;
+            $summary['estimatedWait'] = SummaryFactory::getEstimatedWait($arrivals);
+            $summary['currentTally']['other'] = $other;
+            $summary['currentTally']['walkin'] = $walkin;
+            $summary['currentTally']['appointment'] = $appointment;
+            $summary['currentTally']['emergencies'] = $emergencies;
+
+            $json['summary'] = $summary;
+        }
 
         return $json;
     }
