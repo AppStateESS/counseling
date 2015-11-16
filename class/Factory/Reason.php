@@ -11,11 +11,14 @@ use counseling\Resource\Reason as Resource;
 class Reason extends Base
 {
 
-    public static function listReasons()
+    public static function listReasons($active_only=true)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_reason');
         $tbl->addOrderBy('ordering');
+        if ($active_only) {
+            $tbl->addFieldConditional('active', 1);
+        }
         $result = $db->select();
         foreach ($result as $key => $value) {
             $result[$key]['instruction_full'] = self::getFullInstruction($value['instruction']);
@@ -70,7 +73,7 @@ class Reason extends Base
         $reason->setDescription(self::pullPostString('description'));
         $reason->setInstruction(self::pullPostInteger('instruction'));
         $reason->setShowEmergency(self::pullPostCheck('showEmergency'));
-        $reason->setIcon(self::pullPostString('icon'));
+        $reason->setCategory(self::pullPostInteger('category'));
         $reason->setAdminMenuShow(self::pullPostCheck('adminMenuShow'));
         $reason->setWaitListed(self::pullPostCheck('waitListed'));
         $reason->setAskForPhone(self::pullPostCheck('askForPhone'));
@@ -97,21 +100,29 @@ class Reason extends Base
     public static function flipEmergency($reason_id)
     {
         $reason = self::build($reason_id);
-        $reason->setShowEmergency(!$reason->getShowEmergency());
-        self::saveResource($reason);
-    }
-
-    public static function flipAdminMenuShow($reason_id)
-    {
-        $reason = self::build($reason_id);
-        $reason->setAdminMenuShow(!$reason->getAdminMenuShow());
+        $wait_listed = $reason->getWaitListed();
+        $show_emergency = $reason->getShowEmergency();
+        
+        // if emergency question is asked, they have to be on wait list
+        if (!$wait_listed && !$show_emergency) {
+            $reason->setWaitListed(true);
+        }
+        
+        $reason->setShowEmergency(!$show_emergency);
         self::saveResource($reason);
     }
 
     public static function flipWaitListed($reason_id)
     {
         $reason = self::build($reason_id);
-        $reason->setWaitListed(!$reason->getWaitListed());
+        $wait_listed = $reason->getWaitListed();
+        $show_emergency = $reason->getShowEmergency();
+        
+        // if wait list is off, you can't show the emergency question
+        if ($wait_listed && $show_emergency) {
+            $reason->setShowEmergency(false);
+        }
+        $reason->setWaitListed(!$wait_listed);
         self::saveResource($reason);
     }
 
@@ -119,6 +130,13 @@ class Reason extends Base
     {
         $reason = self::build($reason_id);
         $reason->setAskForPhone(!$reason->getAskForPhone());
+        self::saveResource($reason);
+    }
+    
+    public static function delete($reason_id)
+    {
+        $reason = self::build($reason_id);
+        $reason->setActive(false);
         self::saveResource($reason);
     }
 
