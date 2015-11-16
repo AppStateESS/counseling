@@ -31,7 +31,6 @@ class Dashboard extends \counseling\Controller\Base
 
     public function getHtmlView($data, \Request $request)
     {
-        
         if (COUNSELING_REACT_DEV) {
             \counseling\Factory\React::load('Admin/FrontDesk/', 'Mixins.jsx');
             \counseling\Factory\React::load('Admin/FrontDesk/', 'Summary.jsx');
@@ -41,11 +40,15 @@ class Dashboard extends \counseling\Controller\Base
         }
 
         \Layout::addStyle('counseling', 'Admin/Dashboard/style.css');
-        
+
         $settings = \Current_User::isDeity() ? 'true' : 'false';
 
+        $icons = json_encode(\counseling\Factory\Base::categoryIcons());
         $content = <<<EOF
-<script type="text/javascript">var settingsAllowed = $settings;</script>
+<script type="text/javascript">
+    var settingsAllowed = $settings;
+    var categoryIcons = $icons;
+</script>
 <div id="dashboard"></div>
 EOF;
         $view = new \View\HtmlView($content);
