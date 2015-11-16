@@ -16,8 +16,8 @@ class Banner
         $username = randomString();
         return array(
             'userName' => $username,
-            'firstName' => $fn[rand(0, count($fn))],
-            'lastName' => $ln[rand(0, count($ln))],
+            'firstName' => $fn[rand(0, count($fn) - 1)],
+            'lastName' => $ln[rand(0, count($ln) - 1)],
             'phoneNumber' => '828' . rand(2620000, 2659999),
             'emailAddress' => $username . '@appstate.edu',
             'studentLevel' => 'U'
