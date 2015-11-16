@@ -1,24 +1,15 @@
 var Summary = React.createClass({
     getInitialState: function() {
         return {
-            totalWaiting : 0,
-            estimatedWait : 0,
-            waitingTally : null,
-            totalSeen : null,
-            averageWait : 0,
-            error : false,
-            errorMessage : null,
-            seenTally : null
+            error : null,
+            errorMessage : null
         };
     },
 
     getDefaultProps: function() {
         return {
+            data : null
         };
-    },
-
-    componentDidMount : function() {
-        this.loadData();
     },
 
     serverError : function() {
@@ -28,21 +19,18 @@ var Summary = React.createClass({
         });
     },
 
-    loadData : function() {
-        $.getJSON('counseling/Admin/Dashboard/Summary', {
-        	command : 'getData'
-        }).done(function(data){
-            if (data === null || data.length === 0) {
-                this.serverError();
-            }
-            //console.log(data);
-        }.bind(this)).fail(function(data){
-            this.serverError();
-        });
-
-    },
-
     render: function() {
+        var tally = null;
+        if (this.props.data) {
+            tally = this.props.data.currentTally;
+        } else {
+            tally = {
+                        emergencies : 0,
+                        walkin : 0,
+                        appointment : 0,
+                        other : 0
+                    };
+        }
         return (
             <div className="summary">
                 {this.state.error ? <div className="alert alert-danger">{this.state.errorMessage}</div> : null}
@@ -51,13 +39,13 @@ var Summary = React.createClass({
                         <h3>Current</h3>
                         <div className="row">
                             <div className="col-sm-4">
-                                <SummaryTotalWaiting />
+                                <SummaryTotalWaiting {...this.props.data} />
                             </div>
                             <div className="col-sm-4">
-                                <SummaryEstimatedWait />
+                                <SummaryEstimatedWait {...this.props.data}/>
                             </div>
                             <div className="col-sm-4">
-                                <SummaryWaitingTally />
+                                <SummaryWaitingTally {...tally}/>
                             </div>
                         </div>
                     </div>
@@ -83,20 +71,17 @@ var Summary = React.createClass({
 });
 
 var SummaryTotalWaiting = React.createClass({
-    getInitialState: function() {
-        return {
-        };
-    },
 
     getDefaultProps: function() {
         return {
+            totalWaiting : 0
         };
     },
 
     render: function() {
         return (
             <div className="total-waiting text-center">
-                <div className="big-number">3</div>
+                <div className="big-number">{this.props.totalWaiting}</div>
                 <div>Waiting</div>
             </div>
         );
@@ -105,13 +90,9 @@ var SummaryTotalWaiting = React.createClass({
 });
 
 var SummaryEstimatedWait = React.createClass({
-    getInitialState: function() {
-        return {
-        };
-    },
-
     getDefaultProps: function() {
         return {
+            estimatedWait : 0
         };
     },
 
@@ -119,7 +100,7 @@ var SummaryEstimatedWait = React.createClass({
         return (
             <div className="estimated-wait text-center">
                 <div>
-                    <span className="big-number">40</span>
+                    <span className="big-number">{this.props.estimatedWait}</span>
                     <span>min</span>
                 </div>
                 <div>Est. Wait</div>
@@ -130,45 +111,23 @@ var SummaryEstimatedWait = React.createClass({
 });
 
 var SummaryWaitingTally = React.createClass({
-    getInitialState: function() {
-        return {
-        };
-    },
-
     getDefaultProps: function() {
         return {
-        };
-    },
-
-    render: function() {
-        return (
-            <div className="waiting-tally tally">
-                <SummaryWaitingTallyRow />
-            </div>
-        );
-    }
-
-});
-
-var SummaryWaitingTallyRow = React.createClass({
-    getInitialState: function() {
-        return {
-        };
-    },
-
-    getDefaultProps: function() {
-        return {
+            emergencies : 0,
+            walkin : 0,
+            appointment : 0,
+            other : 0,
         };
     },
 
     render: function() {
         return (
             <div>
-                <ul>
-                    <li><i className="fa fa-exclamation-triangle"></i> Emergency 1</li>
-                    <li><i className="fa fa-male"></i> Walk-in 2</li>
-                    <li><i className="fa fa-clock-o"></i> Appointment 1</li>
-                    <li><i className="fa fa-question-circle"></i> Other 0</li>
+                <ul className="tally">
+                    <li><i className="fa fa-exclamation-triangle"></i> Emergency {this.props.emergencies}</li>
+                    <li><i className="fa fa-male"></i> Walk-in {this.props.walkin}</li>
+                    <li><i className="fa fa-clock-o"></i> Appointment {this.props.appointment}</li>
+                    <li><i className="fa fa-question-circle"></i> Other {this.props.other}</li>
                 </ul>
             </div>
         );
@@ -190,7 +149,7 @@ var SummarySeenTally = React.createClass({
     render: function() {
         return (
             <div className="seen-tally tally">
-                <SummaryWaitingTallyRow />
+                <SummaryWaitingTally />
             </div>
         );
     }
