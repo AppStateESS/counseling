@@ -24,4 +24,13 @@ class Base extends \ResourceFactory
         return filter_input(INPUT_POST, $varname, FILTER_SANITIZE_NUMBER_INT);
     }
 
+    public static function categoryIcons()
+    {
+        $obj = new \stdClass();
+        $obj->{CC_CATEGORY_OTHER} = CC_CATEGORY_OTHER_ICON;
+        $obj->{CC_CATEGORY_WALKIN} = CC_CATEGORY_WALKIN_ICON;
+        $obj->{CC_CATEGORY_APPOINTMENT} = CC_CATEGORY_APPOINTMENT_ICON;
+        return $obj;
+    }
+
 }
