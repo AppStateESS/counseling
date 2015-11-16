@@ -26,8 +26,9 @@
     font-size : 14px;
 }
 
-.tally ul {
+ul.tally {
     padding : 0px;
+    margin : 0px;
 }
 
 .tally li {
