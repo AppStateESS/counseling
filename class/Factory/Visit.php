@@ -11,17 +11,21 @@ use counseling\Resource\Visit as Resource;
 class Visit extends Base
 {
 
-    public static function getCurrentVisits($emergency = false)
+    /**
+     * @return array
+     */
+    public static function getCurrentVisits()
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_visit', 't1');
-        $tbl->addOrderBy('arrival_time', 'desc');
+        $tbl->addOrderBy('arrival_time', 'asc');
         $subselect = new \Database\SubSelect(self::getVisitCountDB($tbl), 'total_visits');
         $tbl->addField($subselect);
         $tbl->forceSplat();
         $tbl->addFieldConditional('complete_time', 0);
-        $tbl->addFieldConditional('has_emergency', $emergency ? '1' : '0');
-        
+        $tbl2 = $db->addTable('cc_reason');
+        $tbl2->addField('category');
+        $tbl->addFieldConditional('reason_id', $tbl2->getField('id'));
         $visits = $db->select();
         if (empty($visits)) {
             return null;
@@ -29,7 +33,7 @@ class Visit extends Base
         $visits = self::addVisitData($visits);
         return $visits;
     }
-    
+
     private static function getVisitCountDB(\Database\Table $sub)
     {
         $db = \Database::getDB();
@@ -60,11 +64,25 @@ class Visit extends Base
         return $visits;
     }
 
+    /**
+     * Returns a count of the total completed visits. Included emergency and non.
+     * @return string
+     */
+    public static function getCurrentVisitCount()
+    {
+        $db = \Database::getDB();
+        $tbl = $db->addTable('cc_visit');
+        $tbl->addField(new \Database\Expression('count(id)', 'count'));
+        $tbl->addFieldConditional('complete_time', 0);
+        $visits = $db->selectColumn();
+        return $visits;
+    }
+
     public static function timeWaited($timestamp)
     {
         $timestamp = intval($timestamp);
         $rel = time() - $timestamp;
-        return (int)floor($rel / 60);
+        return (int) floor($rel / 60);
     }
 
 }
