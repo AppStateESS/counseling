@@ -8,35 +8,66 @@ namespace counseling\Factory;
  */
 class Summary extends Base
 {
+
     public static function waitingTally()
     {
         // Separate from other reasons
-        $tally[] = array('title' => 'Emergency', 'tally'=> 1);
-        
-        $tally[] = array('title' => 'Walk-in', 'tally'=> 2);
-        $tally[] = array('title' => 'Appointment', 'tally'=> 1);
+        $tally[] = array('title' => 'Emergency', 'tally' => 1);
+
+        $tally[] = array('title' => 'Walk-in', 'tally' => 2);
+        $tally[] = array('title' => 'Appointment', 'tally' => 1);
         // not listed dumped here
-        $tally[] = array('title' => 'Other', 'tally'=> 1);
+        $tally[] = array('title' => 'Other', 'tally' => 1);
         return $tally;
     }
-    
+
     /**
      * 
      * @param array $arrivals
      */
     public static function getEstimatedWait(array $arrivals)
     {
+        sort($arrivals);
         if (count($arrivals) == 1) {
             return $arrivals[0];
         }
-        
         $total = count($arrivals);
+        $offset = CC_AVERAGE_OFFSET;
+            
         $odd = $total % 2;
-        $middle = ceil($total / 2) + CC_AVERAGE_OFFSET - $odd;
+        $median = ceil($total / 2);
+        
+        if (abs($offset) >= $median) {
+            $offset = 0;
+        }
+        
+        $middle = $median + $offset - $odd;
         $result = array_slice($arrivals, $middle);
         $remain_count = count($result);
         $sum = array_sum($result);
         $mean = floor($sum / $remain_count);
+        
+        /*
+         * Not too sure about this formula so keeping this test for review.
+        var_dump($arrivals);
+        echo <<<EOF
+<pre>
+total = $total
+odd : $total % 2 = $odd
+median : ceil($total /2) : $median 
+middle : $median + $offset - $odd = $middle
+result: array_slice (arrivals, $middle)
+EOF;
+        var_dump($result);
+        echo <<<EOF
+remain_count: count(result) = $remain_count
+sum : array_sum(result) = $sum
+mean : floor($sum / $remain_count) = $mean
+</pre>
+EOF;
+         * 
+         */
         return $mean;
     }
+
 }
