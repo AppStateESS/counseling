@@ -123,12 +123,30 @@ var SummaryWaitingTally = React.createClass({
     render: function() {
         return (
             <div>
-                <ul className="tally">
-                    <li><i className="fa fa-exclamation-triangle"></i> Emergency {this.props.emergencies}</li>
-                    <li><i className="fa fa-male"></i> Walk-in {this.props.walkin}</li>
-                    <li><i className="fa fa-clock-o"></i> Appointment {this.props.appointment}</li>
-                    <li><i className="fa fa-question-circle"></i> Other {this.props.other}</li>
-                </ul>
+                <table className="tally">
+                    <tbody>
+                        <tr>
+                            <td className="text-center"><i className="fa fa-exclamation-triangle"></i></td>
+                            <td>Emergency</td>
+                            <td>{this.props.emergencies}</td>
+                        </tr>
+                        <tr>
+                            <td className="text-center"><i className="fa fa-male"></i></td>
+                            <td>Walk-in</td>
+                            <td>{this.props.walkin}</td>
+                        </tr>
+                        <tr>
+                            <td className="text-center"><i className="fa fa-clock-o"></i></td>
+                            <td>Appointment</td>
+                            <td>{this.props.appointment}</td>
+                        </tr>
+                        <tr>
+                            <td className="text-center"><i className="fa fa-question-circle"></i></td>
+                            <td>Other</td>
+                            <td>{this.props.other}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         );
     }
