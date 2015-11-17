@@ -56,5 +56,6 @@ class Visitor extends Base
         $visitor = new Resource;
         self::loadByID($visitor, $id);
         $visitor->setIntakeComplete(true);
+        self::saveResource($visitor);
     }
 }
