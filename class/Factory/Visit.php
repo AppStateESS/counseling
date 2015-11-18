@@ -22,7 +22,7 @@ class Visit extends Base
         $subselect = new \Database\SubSelect(self::getVisitCountDB($tbl), 'total_visits');
         $tbl->addField($subselect);
         $tbl->forceSplat();
-        $tbl->addFieldConditional('complete_time', 0);
+        $tbl->addFieldConditional('complete_reason', 0);
         $tbl2 = $db->addTable('cc_reason');
         $tbl2->addField('title', 'reason_title');
         $tbl2->addField('category');
@@ -65,6 +65,16 @@ class Visit extends Base
         return $visits;
     }
 
+    public static function build($id = 0)
+    {
+        $reason = new Resource;
+        if ($id) {
+            $reason->setId($id);
+            parent::loadByID($reason);
+        }
+        return $reason;
+    }
+
     /**
      * Returns a count of the total completed visits. Included emergency and non.
      * @return string
@@ -84,6 +94,20 @@ class Visit extends Base
         $timestamp = intval($timestamp);
         $rel = time() - $timestamp;
         return (int) floor($rel / 60);
+    }
+
+    public static function setCompleteReason($visit_id, $reason)
+    {
+        $visit = self::build($visit_id);
+        $visit->setCompleteReason($reason);
+        $visit->setCompleteStaffId(\Current_User::getId());
+        $visit->stampCompleteTime();
+        self::saveResource($visit);
+        
+        if ($visit->getCompleteReason() == CC_COMPLETE_SEEN) {
+            Visitor::stampVisit($visit->getVisitorId());
+        }
+        
     }
 
 }
