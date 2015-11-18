@@ -24,3 +24,8 @@ define('CC_CATEGORY_WALKIN_ICON', 'fa-male');
 define('CC_CATEGORY_APPOINTMENT_ICON', 'fa-clock-o');
 
 define('CC_AVERAGE_OFFSET', 0);
+
+define('CC_COMPLETE_SEEN', 1);
+define('CC_COMPLETE_LEFT', 2);
+define('CC_COMPLETE_MISSING', 3);
+define('CC_COMPLETE_APPOINTMENT', 4);
