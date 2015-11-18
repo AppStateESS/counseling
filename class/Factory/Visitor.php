@@ -10,6 +10,7 @@ use counseling\Resource\Visitor as Resource;
  */
 class Visitor extends Base
 {
+
     public static function getByBannerId($banner_id)
     {
         $db = \Database::getDB();
@@ -23,7 +24,22 @@ class Visitor extends Base
         $visitor->setVars($visitorArray);
         return $visitor;
     }
-    
+
+    /**
+     * 
+     * @param integer $id
+     * @return \counseling\Resource\Visitor
+     */
+    public static function build($id = 0)
+    {
+        $visitor = new Resource;
+        if ($id) {
+            $visitor->setId($id);
+            parent::loadByID($visitor);
+        }
+        return $visitor;
+    }
+
     public static function createFromBanner($banner_id)
     {
         if (COUNSELING_FAKE_VISITOR) {
@@ -31,11 +47,11 @@ class Visitor extends Base
         } else {
             $vars = Banner::pullByBannerId($banner_id);
         }
-        
+
         if (empty($vars)) {
             return null;
         }
-        
+
         $visitor = new Resource;
         $visitor->setBannerId($banner_id);
         $visitor->setFirstName($vars['firstName']);
@@ -44,18 +60,27 @@ class Visitor extends Base
         $visitor->setLastname($vars['lastName']);
         $visitor->stampLastVisit();
         $visitor->setPhoneNumber($vars['phoneNumber']);
-        $visitor->setVisitCount(1);
         $visitor->setEmail($vars['emailAddress']);
 
         self::saveResource($visitor);
-        
+
         return $visitor;
     }
-    
-    public static function intakeComplete($id) {
+
+    public static function intakeComplete($id)
+    {
         $visitor = new Resource;
         self::loadByID($visitor, $id);
         $visitor->setIntakeComplete(true);
         self::saveResource($visitor);
     }
+
+    public static function stampVisit($visitor_id)
+    {
+        $visitor = self::build($visitor_id);
+        $visitor->setHasBeenSeen(true);
+        $visitor->stampPreviouslySeen();
+        self::saveResource($visitor);
+    }
+
 }
