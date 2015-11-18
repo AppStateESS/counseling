@@ -17,6 +17,11 @@ class Visit extends \Resource
     /**
      * Reason for completion of visit (seen by counselor, left early, etc.)
      * These are hard coded.
+     * 1 - Seen by counselor
+     * 2 - Had to leave
+     * 3 - Missing
+     * 4 - Made appointment
+     * 
      * @var \Variable\Integer
      */
     protected $complete_reason;
@@ -160,6 +165,11 @@ class Visit extends \Resource
 
     public function stampArrivalTime()
     {
-        $this->arrival_time = time();
+        $this->arrival_time->stamp();
+    }
+
+    public function stampCompleteTime()
+    {
+        $this->complete_time->stamp();
     }
 }
