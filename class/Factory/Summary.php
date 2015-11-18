@@ -9,18 +9,6 @@ namespace counseling\Factory;
 class Summary extends Base
 {
 
-    public static function waitingTally()
-    {
-        // Separate from other reasons
-        $tally[] = array('title' => 'Emergency', 'tally' => 1);
-
-        $tally[] = array('title' => 'Walk-in', 'tally' => 2);
-        $tally[] = array('title' => 'Appointment', 'tally' => 1);
-        // not listed dumped here
-        $tally[] = array('title' => 'Other', 'tally' => 1);
-        return $tally;
-    }
-
     /**
      * 
      * @param array $arrivals
@@ -33,41 +21,118 @@ class Summary extends Base
         }
         $total = count($arrivals);
         $offset = CC_AVERAGE_OFFSET;
-            
+
         $odd = $total % 2;
         $median = ceil($total / 2);
-        
+
         if (abs($offset) >= $median) {
             $offset = 0;
         }
-        
+
         $middle = $median + $offset - $odd;
         $result = array_slice($arrivals, $middle);
         $remain_count = count($result);
         $sum = array_sum($result);
         $mean = floor($sum / $remain_count);
-        
+
         /*
          * Not too sure about this formula so keeping this test for review.
-        var_dump($arrivals);
-        echo <<<EOF
-<pre>
-total = $total
-odd : $total % 2 = $odd
-median : ceil($total /2) : $median 
-middle : $median + $offset - $odd = $middle
-result: array_slice (arrivals, $middle)
-EOF;
-        var_dump($result);
-        echo <<<EOF
-remain_count: count(result) = $remain_count
-sum : array_sum(result) = $sum
-mean : floor($sum / $remain_count) = $mean
-</pre>
-EOF;
+          var_dump($arrivals);
+          echo <<<EOF
+          <pre>
+          total = $total
+          odd : $total % 2 = $odd
+          median : ceil($total /2) : $median
+          middle : $median + $offset - $odd = $middle
+          result: array_slice (arrivals, $middle)
+          EOF;
+          var_dump($result);
+          echo <<<EOF
+          remain_count: count(result) = $remain_count
+          sum : array_sum(result) = $sum
+          mean : floor($sum / $remain_count) = $mean
+          </pre>
+          EOF;
          * 
          */
         return $mean;
+    }
+
+    public static function totalCompleteToday()
+    {
+        $starttime = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
+        $endtime = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
+
+        $db = \Database::getDB();
+        $tbl = $db->addTable('cc_visit');
+        $tbl->addFieldConditional('complete_time', $starttime, '>');
+        $tbl->addFieldConditional('complete_time', $endtime, '<');
+        $tbl->addField(new \Database\Expression('count(' . $tbl->getField('id') . ')', 'visitCount'));
+        return $db->selectColumn();
+    }
+
+    public static function averageToday()
+    {
+        $starttime = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
+        $endtime = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
+
+        $db = \Database::getDB();
+        $tbl = $db->addTable('cc_visit');
+        $tbl->addFieldConditional('complete_time', $starttime, '>');
+        $tbl->addFieldConditional('complete_time', $endtime, '<');
+        $tbl->addField('arrival_time');
+        $tbl->addField('complete_time');
+        $result = $db->select();
+        if (empty($result)) {
+            return null;
+        }
+        foreach ($result as $val) {
+            $time_dir = $val['complete_time'] - $val['arrival_time'];
+            $minutes[] = floor($time_dir / 60);
+        }
+        $average = floor(array_sum($minutes) / count($minutes));
+        return $average;
+    }
+
+    public static function completeTally()
+    {
+        $starttime = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
+        $endtime = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
+
+        $db = \Database::getDB();
+        $tbl = $db->addTable('cc_visit');
+        $tbl->addField('has_emergency');
+        $tbl2 = $db->addTable('cc_reason');
+        $category = $tbl2->addField('category');
+        $tbl->addFieldConditional('complete_time', $starttime, '>');
+        $tbl->addFieldConditional('complete_time', $endtime, '<');
+        $db->joinResources($tbl, $tbl2, new \Database\Conditional($db, $tbl->getField('reason_id'), $tbl2->getField('id'), '='));
+
+        $result = $db->select();
+
+        $tally = array('other' => 0, 'walkin' => 0, 'appointment' => 0, 'emergency' => 0);
+
+        if (empty($result)) {
+            return $tally;
+        }
+        foreach ($result as $val) {
+            if ($val['has_emergency'] == '1') {
+                $tally['emergency'] ++;
+            } else {
+                switch ($val['category']) {
+                    case '0':
+                        $tally['other']++;
+                        break;
+                    case '1':
+                        $tally['walkin']++;
+                        break;
+                    case '2':
+                        $tally['appointment']++;
+                        break;
+                }
+            }
+        }
+        return $tally;
     }
 
 }
