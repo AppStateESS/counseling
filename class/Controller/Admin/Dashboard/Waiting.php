@@ -40,6 +40,10 @@ class Waiting extends \counseling\Controller\Base
             case 'intakeComplete':
                 VisitorFactory::intakeComplete(VisitorFactory::pullPostInteger('visitorId'));
                 break;
+
+            case 'setCompleteReason':
+                $this->setCompleteReason();
+                break;
         }
 
         $view = new \View\JsonView(array('success' => true));
@@ -47,6 +51,13 @@ class Waiting extends \counseling\Controller\Base
         return $response;
     }
 
+    private function setCompleteReason()
+    {
+        $visit_id = VisitFactory::pullPostInteger('visitId');
+        $reason = VisitFactory::pullPostInteger('reason');
+        VisitFactory::setCompleteReason($visit_id, $reason);
+    }
+    
     /**
      * Returns waiting and emergency lists
      */
@@ -96,10 +107,15 @@ class Waiting extends \counseling\Controller\Base
             $summary['currentTally']['other'] = $other;
             $summary['currentTally']['walkin'] = $walkin;
             $summary['currentTally']['appointment'] = $appointment;
-            $summary['currentTally']['emergencies'] = $emergencies;
+            $summary['currentTally']['emergency'] = $emergencies;
 
-            $json['summary'] = $summary;
         }
+        $summary['totalComplete'] = SummaryFactory::totalCompleteToday();
+        $summary['averageWait'] = SummaryFactory::averageToday();
+        $summary['completeTally'] = SummaryFactory::completeTally();
+
+
+        $json['summary'] = $summary;
 
         return $json;
     }
