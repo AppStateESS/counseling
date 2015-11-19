@@ -11,7 +11,8 @@ var Phone = React.createClass({
     getDefaultProps: function() {
         return {
             update : null,
-            visitor : null
+            visitor : null,
+            back : null
         };
     },
 
@@ -56,6 +57,7 @@ var Phone = React.createClass({
                     <p className="subtitle">In case we need to reach you later,<br />
                         please enter your cell phone number.</p>
                     {field}
+                    <button className="continue pull-left btn btn-default" onClick={this.props.back}><i className="fa fa-chevron-left fa-sm"> Back </i></button>
                     <button className="continue pull-right btn btn-default" onClick={this.updatePhone}>Continue <i className="fa fa-chevron-right fa-sm"></i></button>
                     <div className="clearfix"></div>
                 </div>
