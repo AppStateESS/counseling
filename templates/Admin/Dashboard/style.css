@@ -26,13 +26,8 @@
     font-size : 14px;
 }
 
-ul.tally {
-    padding : 0px;
-    margin : 0px;
-}
-
-.tally li {
-    list-style-type: none;
+.tally td {
+    padding-right : 8px;
 }
 
 .emergency {
