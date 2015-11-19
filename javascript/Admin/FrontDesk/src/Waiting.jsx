@@ -1,5 +1,4 @@
 var Waiting = React.createClass({
-
     render: function() {
         return (
             <div>
@@ -65,7 +64,7 @@ var WaitingListRow = React.createClass({
         return (
             <tr>
                 <td style={{width : '3%'}}>{count}</td>
-                <td style={{width : '3%'}} className="text-center"><CategoryIcon category={this.props.category}/></td>
+                <td style={{width : '3%'}} className="text-center"><CategoryIcon category={this.props.category} reasonTitle={this.props.reason_title}/></td>
                 <td>{this.props.visitor.first_name} {this.props.visitor.last_name}</td>
                 <td>{this.props.wait_time} min.</td>
                 <td><WaitingListVisits visitNumber={this.props.total_visits} /></td>
@@ -74,7 +73,7 @@ var WaitingListRow = React.createClass({
                      seenLastVisit={this.props.visitor.previously_seen} visitorId={this.props.visitor.id}
                      reload={this.props.reload}/>
                 </td>
-                 <td><WaitingAction visitId={this.props.visit_id}/></td>
+                 <td><WaitingAction visitId={this.props.id} reload={this.props.reload}/></td>
             </tr>
         );
     }
@@ -82,16 +81,29 @@ var WaitingListRow = React.createClass({
 });
 
 var CategoryIcon = React.createClass({
+    getInitialState: function() {
+        return {
+            tooltip : true
+        };
+    },
     getDefaultProps: function() {
         return {
-            category : 0
+            category : 0,
+            reasonTitle : null
         };
+    },
+
+    componentDidMount : function() {
+        if (this.state.tooltip) {
+            $('i.category').tooltip({animation:true, placement:'right'});
+            this.setState({tooltip : false});
+        }
     },
 
     render: function() {
         var icon = null;
-        var _className = 'fa fa-lg ' + categoryIcons[this.props.category];
-        icon = <i className={_className}></i>;
+        var _className = 'category fa fa-lg ' + categoryIcons[this.props.category];
+        icon = <i className={_className} data-toggle="tooltip" title={this.props.reasonTitle}></i>;
         return (
             <div>{icon}</div>
         );
@@ -144,7 +156,7 @@ var WaitingListStatus = React.createClass({
 
     intakeComplete : function()
     {
-        if (confirm('Has the student completed their intake form?')) {
+        if (confirm('Click ok if student completed their intake form.')) {
              $.post('counseling/Admin/Dashboard/Waiting/', {
              	command : 'intakeComplete',
                 visitorId : this.props.visitorId
@@ -178,24 +190,27 @@ var WaitingAction = React.createClass({
         };
     },
 
-    leave : function() {
-
-    },
-
-    missing : function() {
-
-    },
-
-    appointment : function() {
-
-    },
-
-    seen : function() {
-
+    completeReason : function(reason) {
+        $.post('counseling/Admin/Dashboard/Waiting', {
+        	command : 'setCompleteReason',
+            reason : reason,
+            visitId : this.props.visitId
+        }, null, 'json')
+        	.done(function(data){
+                this.props.reload();
+        	}.bind(this));
     },
 
     remove : function() {
-
+        if (confirm('Are you sure you want to remove this visitor?')) {
+            $.post('counseling/Admin/Dashboard/Waiting', {
+            	command : 'delete',
+                visitId : this.props.visitId
+            }, null, 'json')
+            	.done(function(data){
+                    this.props.reload();
+            	}.bind(this));
+        }
     },
 
     getOptions : function() {
@@ -204,17 +219,17 @@ var WaitingAction = React.createClass({
             {
                 label : <div><i className="fa fa-external-link"></i> Had to leave</div>,
                 visitId : this.props.visitId,
-                handleClick : this.leave
+                handleClick : this.completeReason.bind(null, 2)
             },
             {
                 label : <div><i className="fa fa-eye-slash"></i> Missing</div>,
                 visitId : this.props.visitId,
-                handleClick : this.missing
+                handleClick : this.completeReason.bind(null, 3)
             },
             {
                 label : <div><i className="fa fa-clock-o"></i> Made appointment</div>,
                 visitId : this.props.visitId,
-                handleClick : this.appointment
+                handleClick : this.completeReason.bind(null, 4)
             },
             {
                 divider : true
@@ -222,7 +237,7 @@ var WaitingAction = React.createClass({
             {
                 label : <div className="text-success"><i className="fa fa-thumbs-o-up"></i> Seen</div>,
                 visitId : this.props.visitId,
-                handleClick : this.seen
+                handleClick : this.completeReason.bind(null, 1)
             },
             {
                 divider : true
