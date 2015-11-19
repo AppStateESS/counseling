@@ -8,7 +8,8 @@ var Instruction = React.createClass({
     getDefaultProps: function() {
         return {
             instruction : '1',
-            instructionList : null
+            instructionList : null,
+            reset : null
         };
     },
 
@@ -28,6 +29,7 @@ var Instruction = React.createClass({
                     <p className="title">Ok, you're checked in.</p>
                     <p className="subtitle">{instruction}</p>
                 </div>
+                <div className="text-right"><button className="btn btn-default" onClick={this.props.reset}>Finished</button></div>
             </div>
         );
 
