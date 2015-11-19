@@ -109,5 +109,13 @@ class Visit extends Base
         }
         
     }
+    
+    public static function delete($visit_id)
+    {
+        $db = \Database::getDB();
+        $tbl = $db->addTable('cc_visit');
+        $tbl->addFieldConditional('id', $visit_id);
+        $db->delete();
+    }
 
 }
