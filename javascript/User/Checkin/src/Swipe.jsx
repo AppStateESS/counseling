@@ -25,7 +25,7 @@ var Swipe = React.createClass({
     },
 
     logInVisitor : function() {
-        if (this.state.visitor.length > 3) {
+        if (this.state.visitor && this.state.visitor.length > 3) {
             $.getJSON('counseling/User/Checkin', {
             	command : 'loginVisitor',
                 bannerId : this.state.visitor
@@ -60,7 +60,7 @@ var Swipe = React.createClass({
                 </div>
             );
         } else {
-            field = <input type="text" placeholder="Banner ID or ASU Email" onChange={this.handleChange} className="form-control" value={this.state.visitor} />;
+            field = <input type="text" placeholder="Banner ID" onChange={this.handleChange} className="form-control" value={this.state.visitor} />;
         }
 
 
