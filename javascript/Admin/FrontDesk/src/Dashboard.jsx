@@ -1,6 +1,9 @@
+var refreshDashboard = null;
+
 var Dashboard = React.createClass({
     getInitialState: function() {
         return {
+            refresh : true,
             emergencyList : null,
             waitingList : null,
             summary : null
@@ -11,7 +14,16 @@ var Dashboard = React.createClass({
         this.loadData();
     },
 
+    refresh : function() {
+        if (this.state.refresh) {
+            refreshDashboard = setInterval(function(){
+                this.loadData();
+            }.bind(this), 30000);
+        }
+    },
+
     loadData : function() {
+        clearInterval(refreshDashboard);
         $.getJSON('counseling/Admin/Dashboard/Waiting', {
         	command : 'list'
         }).done(function(data){
@@ -20,6 +32,7 @@ var Dashboard = React.createClass({
                 waitingList : data.waiting,
                 summary : data.summary
             });
+            this.refresh();
         }.bind(this));
     },
 
