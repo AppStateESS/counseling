@@ -44,6 +44,11 @@ class Waiting extends \counseling\Controller\Base
             case 'setCompleteReason':
                 $this->setCompleteReason();
                 break;
+            
+            case 'delete':
+                $visit_id = VisitFactory::pullPostInteger('visitId');
+                VisitFactory::delete($visit_id);
+                break;
         }
 
         $view = new \View\JsonView(array('success' => true));
@@ -111,6 +116,7 @@ class Waiting extends \counseling\Controller\Base
 
         }
         $summary['totalComplete'] = SummaryFactory::totalCompleteToday();
+        $summary['totalSeen'] = SummaryFactory::totalCompleteToday(true);
         $summary['averageWait'] = SummaryFactory::averageToday();
         $summary['completeTally'] = SummaryFactory::completeTally();
 
