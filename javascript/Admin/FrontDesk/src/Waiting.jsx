@@ -70,8 +70,9 @@ var WaitingListRow = React.createClass({
                 <td><WaitingListVisits visitNumber={this.props.total_visits} /></td>
                 <td>
                     <WaitingListStatus intakeComplete={this.props.visitor.intake_complete}
-                     seenLastVisit={this.props.visitor.previously_seen} visitorId={this.props.visitor.id}
-                     reload={this.props.reload}/>
+                     previouslySeen={this.props.visitor.previously_seen} seenLastVisit={this.props.visitor.seen_last_visit}
+                     visitorId={this.props.visitor.id}
+                     reload={this.props.reload} visitNumber={this.props.total_visits}/>
                 </td>
                  <td><WaitingAction visitId={this.props.id} reload={this.props.reload}/></td>
             </tr>
@@ -150,7 +151,9 @@ var WaitingListStatus = React.createClass({
             intakeComplete : '0',
             seenLastVisit : '0',
             visitorId : 0,
-            reload : null
+            visitNumber : 0,
+            reload : null,
+            previouslySeen : null
         };
     },
 
@@ -170,8 +173,12 @@ var WaitingListStatus = React.createClass({
 
     render: function() {
         if (this.props.intakeComplete === '1') {
-            if (this.props.seenLastVisit === '0') {
-                return <span className="label label-danger">Unseen last visit</span>
+            if (this.props.visitNumber > 1) {
+                if (this.props.seenLastVisit === '0') {
+                    return <span className="label label-danger">Unseen last visit</span>;
+                } else {
+                    return <span className="label label-primary">Previously seen @ {this.props.previouslySeen}</span>;
+                }
             } else {
                 return <span className="label label-success">Intake complete</span>
             }
@@ -234,6 +241,7 @@ var WaitingAction = React.createClass({
             {
                 divider : true
             },
+            /**/
             {
                 label : <div className="text-success"><i className="fa fa-thumbs-o-up"></i> Seen</div>,
                 visitId : this.props.visitId,
@@ -242,6 +250,7 @@ var WaitingAction = React.createClass({
             {
                 divider : true
             },
+            /**/
             {
                 label : <div className="text-danger"><i className="fa fa-trash-o"></i> Remove</div>,
                 visitId : this.props.visitId,
