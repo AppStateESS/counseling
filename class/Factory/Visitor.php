@@ -56,7 +56,7 @@ class Visitor extends Base
         $visitor->setBannerId($banner_id);
         $visitor->setFirstName($vars['firstName']);
         $visitor->stampFirstVisit();
-        $visitor->setHasBeenSeen(false);
+        $visitor->setSeenLastVisit(false);
         $visitor->setLastname($vars['lastName']);
         $visitor->stampLastVisit();
         $visitor->setPhoneNumber($vars['phoneNumber']);
@@ -74,11 +74,18 @@ class Visitor extends Base
         $visitor->setIntakeComplete(true);
         self::saveResource($visitor);
     }
-
-    public static function stampVisit($visitor_id)
+    
+    public static function stampAsNotSeen($visitor_id)
     {
         $visitor = self::build($visitor_id);
-        $visitor->setHasBeenSeen(true);
+        $visitor->setSeenLastVisit(false);
+        self::saveResource($visitor);
+    }
+    
+    public static function stampAsSeen($visitor_id)
+    {
+        $visitor = self::build($visitor_id);
+        $visitor->setSeenLastVisit(true);
         $visitor->stampPreviouslySeen();
         self::saveResource($visitor);
     }

@@ -31,7 +31,7 @@ class Visitor extends \Resource
      * Tracks if visitor was seen regardless of visits.
      * @var \Variable\Bool 
      */
-    protected $has_been_seen;
+    protected $seen_last_visit;
 
     /**
      * @var \Variable\String
@@ -76,7 +76,7 @@ class Visitor extends \Resource
         $this->first_name->setLimit(50);
         $this->first_visit = new \Variable\DateTime(0, 'first_visit');
         $this->first_visit->setFormat('%Y/%m/%d %l:%M%P');
-        $this->has_been_seen = new \Variable\Bool(false, 'has_been_seen');
+        $this->seen_last_visit = new \Variable\Bool(false, 'has_been_seen');
         $this->last_name = new \Variable\String(null, 'last_name');
         $this->last_name->setLimit(50);
         $this->last_visit = new \Variable\DateTime(null, 'last_visit');
@@ -109,9 +109,9 @@ class Visitor extends \Resource
         $this->first_visit->stamp();
     }
 
-    public function setHasBeenSeen($var)
+    public function setSeenLastVisit($var)
     {
-        $this->has_been_seen->set($var);
+        $this->seen_last_visit->set($var);
     }
 
     public function setLastName($var)
@@ -174,9 +174,9 @@ class Visitor extends \Resource
         return $this->first_visit->get();
     }
 
-    public function getHasBeenSeen()
+    public function getSeenLastVisit()
     {
-        return $this->has_been_seen->get();
+        return $this->seen_last_visit->get();
     }
     
     public function getIntakeComplete()
