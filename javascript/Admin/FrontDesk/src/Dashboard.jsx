@@ -6,7 +6,8 @@ var Dashboard = React.createClass({
             refresh : true,
             emergencyList : null,
             waitingList : null,
-            summary : null
+            summary : null,
+            time : null
         };
     },
 
@@ -30,7 +31,8 @@ var Dashboard = React.createClass({
             this.setState({
                 emergencyList : data.emergencies,
                 waitingList : data.waiting,
-                summary : data.summary
+                summary : data.summary,
+                time : data.time
             });
             this.refresh();
         }.bind(this));
@@ -39,7 +41,7 @@ var Dashboard = React.createClass({
     render: function() {
         return (
             <div className="dashboard">
-                <Summary data={this.state.summary} reload={this.loadData}/>
+                <Summary data={this.state.summary} time={this.state.time} reload={this.loadData}/>
                 <Waiting emergency={this.state.emergencyList} waiting={this.state.waitingList} reload={this.loadData}/>
             </div>
         );
