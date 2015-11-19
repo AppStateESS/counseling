@@ -119,9 +119,11 @@ class Waiting extends \counseling\Controller\Base
         $summary['totalSeen'] = SummaryFactory::totalCompleteToday(true);
         $summary['averageWait'] = SummaryFactory::averageToday();
         $summary['completeTally'] = SummaryFactory::completeTally();
-
+        $summary['leaveReasons'] = SummaryFactory::unseenReasons();
 
         $json['summary'] = $summary;
+        
+        $json['time'] = trim(strftime('%l:%M%P, %h. %e, %Y'));
 
         return $json;
     }
