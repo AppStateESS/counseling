@@ -56,6 +56,7 @@ class Visit extends Base
 
         foreach ($visitors as $visitor) {
             $sorted_visitors[$visitor['id']] = $visitor;
+            $sorted_visitors[$visitor['id']]['previously_seen'] = strftime('%b. %e, %Y', $visitor['previously_seen']);
         }
 
         foreach ($visits as $key => $visit) {
@@ -105,7 +106,9 @@ class Visit extends Base
         self::saveResource($visit);
         
         if ($visit->getCompleteReason() == CC_COMPLETE_SEEN) {
-            Visitor::stampVisit($visit->getVisitorId());
+            Visitor::stampAsSeen($visit->getVisitorId());
+        } else {
+            Visitor::stampAsNotSeen($visit->getVisitorId());
         }
         
     }
