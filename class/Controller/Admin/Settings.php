@@ -41,6 +41,8 @@ class Settings extends \counseling\Controller\Base
             \counseling\Factory\React::load('Admin/Settings/', 'Dashboard.jsx');
         }
 
+        \Layout::addStyle('counseling', 'Admin/Settings/style.css');
+        
         $settings = \Current_User::isDeity() ? 'true' : 'false';
         
         $content = <<<EOF
