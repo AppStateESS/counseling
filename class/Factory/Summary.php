@@ -58,7 +58,7 @@ class Summary extends Base
         return $mean;
     }
 
-    public static function totalCompleteToday($seen_only=false)
+    public static function totalCompleteToday($seen_only = false)
     {
         $starttime = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
         $endtime = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
@@ -124,18 +124,54 @@ class Summary extends Base
             } else {
                 switch ($val['category']) {
                     case '0':
-                        $tally['other']++;
+                        $tally['other'] ++;
                         break;
                     case '1':
-                        $tally['walkin']++;
+                        $tally['walkin'] ++;
                         break;
                     case '2':
-                        $tally['appointment']++;
+                        $tally['appointment'] ++;
                         break;
                 }
             }
         }
         return $tally;
+    }
+
+    public static function unseenReasons()
+    {
+        $starttime = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
+        $endtime = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
+
+        $db = \Database::getDB();
+        $tbl = $db->addTable('cc_visit');
+        $complete_reason = $tbl->addField('complete_reason');
+        $tbl->addFieldConditional('complete_time', $starttime, '>');
+        $tbl->addFieldConditional('complete_time', $endtime, '<');
+        $tbl->addFieldConditional('complete_reason', CC_COMPLETE_SEEN, '!=');
+        $tbl->addField(new \Database\Expression('count(' . $tbl->getField('id') . ')', 'visitCount'));
+        $db->setGroupBy($complete_reason);
+        $result = $db->select();
+
+        if (empty($result)) {
+            return null;
+        }
+        foreach ($result as $key => $val) {
+            switch ((int) $val['complete_reason']) {
+                case CC_COMPLETE_LEFT:
+                    $reasons[] = '(' . $val['visitCount'] . ') Had to leave';
+                    break;
+                
+                case CC_COMPLETE_MISSING:
+                    $reasons[] = '(' . $val['visitCount'] . ') Missing when called';
+                    break;
+
+                case CC_COMPLETE_APPOINTMENT:
+                     $reasons[] = '(' . $val['visitCount'] . ') Made an later appointment';
+                    break;
+            }
+        }
+        return $reasons;
     }
 
 }
