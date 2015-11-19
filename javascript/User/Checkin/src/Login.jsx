@@ -1,5 +1,7 @@
 'use strict';
 
+var resetTimeout = null;
+
 var Login = React.createClass({
     getInitialState: function() {
         return {
@@ -122,12 +124,15 @@ var Stage = React.createClass({
                 emergency : this.state.emergency
             }, null, 'json')
             	.done(function(data){
-                    setTimeout(this.resetLogin, 5000);
+                    resetTimeout = setTimeout(this.resetLogin, 5000);
             	}.bind(this));
+        } else {
+            resetTimeout = setTimeout(this.resetLogin, 5000);
         }
     },
 
     resetLogin : function() {
+        clearTimeout(resetTimeout);
         this.props.updateStage('swipe');
         this.setState({
             visitor : null,
@@ -135,6 +140,13 @@ var Stage = React.createClass({
             phone : null,
             emergency : false,
         });
+    },
+
+    backToReason : function() {
+        this.setState({
+            reason : null
+        });
+        this.props.updateStage('reason');
     },
 
     render: function() {
@@ -149,7 +161,7 @@ var Stage = React.createClass({
             break;
 
             case 'phone':
-                return <Phone update={this.updatePhone} visitor={this.state.visitor}/>;
+                return <Phone update={this.updatePhone} visitor={this.state.visitor} back={this.backToReason}/>;
             break;
 
             case 'emergency':
@@ -157,7 +169,7 @@ var Stage = React.createClass({
             break;
 
             case 'instruction':
-                return <Instruction update={this.resetLogin} instruction={this.state.reason.instruction} instructionList={this.state.instructionList}/>
+                return <Instruction reset={this.resetLogin} instruction={this.state.reason.instruction} instructionList={this.state.instructionList}/>
             break;
         }
     }
