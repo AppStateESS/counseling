@@ -18,7 +18,7 @@ var Emergency = React.createClass({
         }
         var rows = this.props.list.map(function(value, key){
             return (
-                <EmergencyRow key={key} visit={value} />
+                <EmergencyRow key={key} visit={value} reload={this.props.reload}/>
             );
         }.bind(this));
 
@@ -32,14 +32,10 @@ var Emergency = React.createClass({
 });
 
 var EmergencyRow = React.createClass({
-    getInitialState: function() {
-        return {
-        };
-    },
-
     getDefaultProps: function() {
         return {
             visit : null,
+            reload : null
         };
     },
 
@@ -56,7 +52,7 @@ var EmergencyRow = React.createClass({
                     {this.props.visit.wait_time} min
                 </div>
                 <div className="col-sm-3">
-                    <WaitingAction visitId={this.props.visit.id}/>
+                    <WaitingAction visitId={this.props.visit.id} reload={this.props.reload}/>
                 </div>
             </div>
         );
