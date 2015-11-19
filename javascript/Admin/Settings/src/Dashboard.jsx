@@ -16,7 +16,7 @@ var SettingsDashboard = React.createClass({
 
     render: function() {
         return (
-            <div>
+            <div className="settingsDashboard">
                 <h2>Counseling Check-In Settings</h2>
                 <ul className="nav nav-tabs">
                     <Tab active={this.state.tab == 'Reasons'} label={'Reasons'} handleClick={this.selectTab.bind(this, 'Reasons')}/>
