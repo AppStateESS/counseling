@@ -52,12 +52,6 @@ class Visitor extends \Resource
     protected $phone_number;
 
     /**
-     * Number of visits to office
-     * @var \Variable\Integer
-     */
-    protected $visit_count;
-    
-    /**
      * @var \Variable\Email
      */
     protected $email;
@@ -68,7 +62,7 @@ class Visitor extends \Resource
     protected $intake_complete;
 
     /**
-     * @var \Variable\Bool
+     * @var \Variable\DateTime
      */
     protected $previously_seen;
     
@@ -89,11 +83,10 @@ class Visitor extends \Resource
         $this->last_visit->setFormat('%Y/%m/%d %l:%M%P');
         $this->phone_number = new \Variable\PhoneNumber(null, 'phone_number');
         $this->phone_number->formatNumber(true);
-        $this->visit_count = new \Variable\Integer(null, 'visit_count');
         $this->email = new \Variable\Email(null, 'email');
         $this->email->setLimit(100);
         $this->intake_complete = new \Variable\Bool(false, 'intake_complete');
-        $this->previously_seen = new \Variable\Bool(false, 'previously_seen');
+        $this->previously_seen = new \Variable\DateTime(0, 'previously_seen');
     }
 
     public function setBannerId($var)
@@ -140,10 +133,15 @@ class Visitor extends \Resource
     {
         $this->phone_number->set($var);
     }
-
-    public function setVisitCount($var)
+    
+    public function setPreviouslySeen($var)
     {
-        $this->visit_count->set($var);
+        $this->previously_seen->set($var);
+    }
+    
+    public function stampPreviouslySeen()
+    {
+        $this->previously_seen->stamp();
     }
 
     public function setEmail($var)
@@ -200,10 +198,10 @@ class Visitor extends \Resource
     {
         return $this->phone_number->get();
     }
-
-    public function getVisitCount()
+    
+    public function getPreviouslySeen()
     {
-        return $this->visit_count->get();
+        return $this->previously_seen->get();
     }
 
 }
