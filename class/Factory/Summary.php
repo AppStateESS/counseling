@@ -58,7 +58,7 @@ class Summary extends Base
         return $mean;
     }
 
-    public static function totalCompleteToday()
+    public static function totalCompleteToday($seen_only=false)
     {
         $starttime = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
         $endtime = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
@@ -67,6 +67,9 @@ class Summary extends Base
         $tbl = $db->addTable('cc_visit');
         $tbl->addFieldConditional('complete_time', $starttime, '>');
         $tbl->addFieldConditional('complete_time', $endtime, '<');
+        if ($seen_only) {
+            $tbl->addFieldConditional('complete_reason', CC_COMPLETE_SEEN);
+        }
         $tbl->addField(new \Database\Expression('count(' . $tbl->getField('id') . ')', 'visitCount'));
         return $db->selectColumn();
     }
@@ -84,7 +87,7 @@ class Summary extends Base
         $tbl->addField('complete_time');
         $result = $db->select();
         if (empty($result)) {
-            return null;
+            return 0;
         }
         foreach ($result as $val) {
             $time_dir = $val['complete_time'] - $val['arrival_time'];
