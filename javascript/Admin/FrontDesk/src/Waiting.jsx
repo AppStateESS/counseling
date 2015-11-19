@@ -170,7 +170,7 @@ var WaitingListStatus = React.createClass({
 
     render: function() {
         if (this.props.intakeComplete === '1') {
-            if (this.props.seenLastVisit === '1') {
+            if (this.props.seenLastVisit === '0') {
                 return <span className="label label-danger">Unseen last visit</span>
             } else {
                 return <span className="label label-success">Intake complete</span>
