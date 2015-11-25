@@ -35,6 +35,7 @@ class Settings extends \counseling\Controller\Base
         if (COUNSELING_REACT_DEV) {
             \counseling\Factory\React::load('Admin/Settings/', 'Mixins.jsx');
             \counseling\Factory\React::load('Admin/Settings/', 'Visitors.jsx');
+            \counseling\Factory\React::load('Admin/Settings/', 'Clinicians.jsx');
             \counseling\Factory\React::load('Admin/Settings/', 'Visits.jsx');
             \counseling\Factory\React::load('Admin/Settings/', 'Reasons.jsx');
             \counseling\Factory\React::load('Admin/Settings/', 'Dispositions.jsx');
@@ -51,11 +52,6 @@ class Settings extends \counseling\Controller\Base
 EOF;
         $view = new \View\HtmlView($content);
         return $view;
-    }
-
-    public function getJsonView($data, \Request $request)
-    {
-        return parent::getJsonView($data, $request);
     }
 
     private function routeCommand($request)
