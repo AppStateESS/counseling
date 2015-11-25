@@ -3,27 +3,85 @@
 namespace counseling\Resource;
 
 /**
- * The counselors seeing people. This is a superflous class as the moment.
- * You could just use user admin accounts. That said, the clinician role
- * and functionality might require it. It is best to have at the start
- * rather than force it in later.
+ * The counselors seeing people.
+ * Initially was going to pair to user accounts, but no longer required.
  * 
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
 class Clinician extends \Resource
 {
-    protected $user_id;
-    protected $name;
+    /**
+     * @var \Variable\String
+     */
+    protected $first_name;
+ 
+    /**
+     * @var \Variable\String
+     */
+    protected $last_name;
+    
+    /**
+     * @var \Variable\Integer
+     */
+    protected $visitors_seen;
+    
+    protected $active;
     
     protected $table = 'cc_clinician';
 
     public function __construct()
     {
         parent::__construct();
-        $this->user_id = new \Variable\Integer(null, 'user_id');
-        $this->name = new \Variable\String(null, 'name');
-        $this->name->setLimit(100);
+        $this->first_name = new \Variable\String(null, 'first_name');
+        $this->first_name->setLimit(50);
+        $this->last_name = new \Variable\String(null, 'last_name');
+        $this->last_name->setLimit(50);
+        $this->active = new \Variable\Bool(true, 'active');
+        $this->visitors_seen = new \Variable\Integer(0, 'visitors_seen');
+    }
+    
+    public function setLastName($var) {
+        $this->last_name->set($var);
+    }
+    
+    public function getLastName()
+    {
+        return $this->last_name->get();
+    }
+
+    public function setFirstName($var) {
+        $this->first_name->set($var);
+    }
+    
+    public function getFirstName()
+    {
+        return $this->first_name->get();
+    }
+
+    public function setActive($var)
+    {
+        $this->active->set($var);
+    }  
+    
+    public function getActive()
+    {
+        return $this->active->get();
+    }
+    
+    public function setVisitorsSeen($var)
+    {
+        $this->visitors_seen->set($var);
+    }
+    
+    public function getVisitorsSeen()
+    {
+        $this->visitors_seen->get();
+    }
+    
+    public function incrementVisitorsSeen()
+    {
+        $this->visitors_seen->increase();
     }
 
 }
