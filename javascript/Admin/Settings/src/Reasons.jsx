@@ -1,4 +1,6 @@
 var Reasons = React.createClass({
+    mixins : [FormMixin],
+
     getInitialState: function() {
         return {
             showForm : false,
@@ -8,12 +10,7 @@ var Reasons = React.createClass({
         };
     },
 
-    componentDidMount : function() {
-        this.loadReasons();
-    },
-
-    loadReasons : function()
-    {
+    loadData : function() {
         $.getJSON('counseling/Admin/Settings/Reason', {
         	command : 'list'
         }).done(function(data) {
@@ -21,27 +18,6 @@ var Reasons = React.createClass({
                 reasons : data,
             });
         }.bind(this));
-    },
-
-    closeForm : function()
-    {
-        this.setState({
-            showForm : false
-        });
-    },
-
-    showForm : function()
-    {
-        this.setState({
-            showForm : true
-        });
-    },
-
-    saveFailure : function()
-    {
-        this.setState({
-            saveFail : true
-        });
     },
 
     setCurrentEdit : function(reasonId, section)
@@ -62,7 +38,7 @@ var Reasons = React.createClass({
         var reasons = null;
 
         if (this.state.showForm) {
-            form = <ReasonForm closeForm={this.closeForm} reload={this.loadReasons} fail={this.saveFailure}/>;
+            form = <ReasonForm closeForm={this.closeForm} reload={this.loadData} fail={this.saveFailure}/>;
         } else {
             button = <button className="btn btn-success" onClick={this.showForm} style={{marginBottom:'1em'}}>Add reason <i className="fa fa-caret-down"></i></button>;
         }
@@ -80,7 +56,7 @@ var Reasons = React.createClass({
                 </div>
                 {alert}
                 <div className="settings-listing">
-                    <ReasonList reasons={this.state.reasons} reload={this.loadReasons} currentEdit={this.state.currentEdit} setCurrentEdit={this.setCurrentEdit}/>
+                    <ReasonList reasons={this.state.reasons} reload={this.loadData} currentEdit={this.state.currentEdit} setCurrentEdit={this.setCurrentEdit}/>
                 </div>
             </div>
         );
