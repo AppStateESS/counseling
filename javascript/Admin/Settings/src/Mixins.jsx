@@ -8,8 +8,8 @@ var TextInput = React.createClass({
             handlePress : null,
             handleChange : null,
             inputId : null,
-            defaultValue : null,
-            tabIndex : null
+            value : null,
+            tabIndex : null,
         };
     },
 
@@ -42,8 +42,36 @@ var TextInput = React.createClass({
                 {label} {required}
                 <input type="text" className="form-control" id={this.props.inputId}
                     name={this.props.inputId} placeholder={this.props.placeholder} onFocus={this.handleFocus}
-                    onChange={this.props.handleChange} onBlur={this.handleBlur} onKeyPress={this.props.handlePress} defaultValue={this.props.defaultValue} tabIndex={this.props.tabIndex}/>
+                    onChange={this.props.handleChange} onBlur={this.handleBlur} onKeyPress={this.props.handlePress}
+                    value={this.props.value} tabIndex={this.props.tabIndex}/>
             </div>
         );
     }
 });
+
+var FormMixin = {
+    componentDidMount: function() {
+        this.loadData();
+    },
+
+    closeForm : function()
+    {
+        this.setState({
+            showForm : false
+        });
+    },
+
+    showForm : function()
+    {
+        this.setState({
+            showForm : true
+        });
+    },
+
+    saveFailure : function()
+    {
+        this.setState({
+            saveFail : true
+        });
+    },
+};
