@@ -1,7 +1,7 @@
 var SettingsDashboard = React.createClass({
     getInitialState: function() {
         return {
-            tab : 'Reasons'
+            tab : 'Clinicians'
         };
     },
 
@@ -19,6 +19,7 @@ var SettingsDashboard = React.createClass({
             <div className="settingsDashboard">
                 <h2>Counseling Check-In Settings</h2>
                 <ul className="nav nav-tabs">
+                    <Tab active={this.state.tab == 'Clinicians'} label={'Clinicians'} handleClick={this.selectTab.bind(this, 'Clinicians')}/>
                     <Tab active={this.state.tab == 'Reasons'} label={'Reasons'} handleClick={this.selectTab.bind(this, 'Reasons')}/>
                     <Tab active={this.state.tab == 'Visitors'} label={'Visitors'}  handleClick={this.selectTab.bind(this, 'Visitors')}/>
                     <Tab active={this.state.tab == 'Visits'} label={'Visits'}  handleClick={this.selectTab.bind(this, 'Visits')}/>
@@ -68,6 +69,10 @@ var Content = React.createClass({
     render: function() {
         var content = null;
         switch (this.props.tab) {
+            case 'Clinicians':
+            content = <Clinicians />
+            break;
+
             case 'Reasons':
             content = <Reasons />
             break;
