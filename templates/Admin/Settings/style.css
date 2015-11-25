@@ -1,3 +1,13 @@
 .settingsDashboard ul.nav li:hover {
     cursor : pointer;
 }
+
+.form-box {
+    position: absolute;
+    width: 600px;
+    background-color: white;
+    border: 1px solid black;
+    padding: 1em;
+    border-radius: 10px;
+    z-index: 50;
+}
