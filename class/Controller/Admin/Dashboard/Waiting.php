@@ -49,6 +49,9 @@ class Waiting extends \counseling\Controller\Base
                 $visit_id = VisitFactory::pullPostInteger('visitId');
                 VisitFactory::delete($visit_id);
                 break;
+            
+            default:
+            throw new \Exception('Unknown post command');
         }
 
         $view = new \View\JsonView(array('success' => true));
