@@ -35,7 +35,9 @@ class Visitor extends Base
         $visitor = new Resource;
         if ($id) {
             $visitor->setId($id);
-            parent::loadByID($visitor);
+            if (!parent::loadByID($visitor)) {
+                throw new \Exception('Visitor id not found:' . $id);
+            }
         }
         return $visitor;
     }
@@ -74,18 +76,20 @@ class Visitor extends Base
         $visitor->setIntakeComplete(true);
         self::saveResource($visitor);
     }
-    
+
     public static function stampAsNotSeen($visitor_id)
     {
         $visitor = self::build($visitor_id);
         $visitor->setSeenLastVisit(false);
+        $visitor->stampLastVisit();
         self::saveResource($visitor);
     }
-    
+
     public static function stampAsSeen($visitor_id)
     {
         $visitor = self::build($visitor_id);
         $visitor->setSeenLastVisit(true);
+        $visitor->stampLastVisit();
         $visitor->stampPreviouslySeen();
         self::saveResource($visitor);
     }
