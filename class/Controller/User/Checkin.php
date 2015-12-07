@@ -5,6 +5,7 @@ namespace counseling\Controller\User;
 use counseling\Factory\Banner;
 use counseling\Factory\Reason;
 use counseling\Factory\Visitor;
+use counseling\Factory\Visit;
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
@@ -37,6 +38,11 @@ class Checkin extends \counseling\Controller\Base
     private function loginVisitor()
     {
         $banner_id = filter_input(INPUT_GET, 'bannerId', FILTER_SANITIZE_STRING);
+        $waiting = Visit::getWaitingByBanner($banner_id);
+        
+        if (!empty($waiting)) {
+            return array('waiting'=>true);
+        }
 
         $visitor = Visitor::getByBannerId($banner_id);
         if (empty($visitor)) {
