@@ -1,28 +1,12 @@
-.dim {
-    color : #c6c6c6;
-}
-
-.editItem {
-    border : 1px solid white;
-    border-radius: 6px;
-    padding : 6px;
-    font-family : arial;
-}
-
-.editItem:hover {
-    cursor : pointer;
-    border-color : #d6d6d6;
-}
-
-.settings-listing .section {
-    margin-bottom : 1em;
-}
-
 button.clinician {
     margin-right : 1em;
     margin-bottom : 1em;
 }
 
 .clinician-container {
+    margin-top : 2em;
+}
+
+.go-back {
     margin-top : 2em;
 }
