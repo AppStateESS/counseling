@@ -11,6 +11,9 @@ class Banner
 
     public static function pullByFakeBannerId($banner_id)
     {
+        if (preg_match('/\D/', $banner_id)) {
+            throw new \Exception('Improperly formatted Banner Id');
+        }
         $fn = array('Matt', 'Doug', 'Lorrie', 'Sam', 'Morris', 'Elvis', 'Mike', 'Michelle', 'Lisa');
         $ln = array('Douglas', 'Smith', 'Jones', 'Ito', 'Sampson', 'Valdez', 'X', 'Simpson', 'Voggler', 'Husslehip');
         $username = randomString();
