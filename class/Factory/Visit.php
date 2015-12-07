@@ -23,6 +23,7 @@ class Visit extends Base
         $tbl->addField($subselect);
         $tbl->forceSplat();
         $tbl->addFieldConditional('complete_reason', 0);
+        //$tbl->addFieldConditional('clinician_id', 0);
         $tbl2 = $db->addTable('cc_reason');
         $tbl2->addField('title', 'reason_title');
         $tbl2->addField('category');
@@ -68,12 +69,14 @@ class Visit extends Base
 
     public static function build($id = 0)
     {
-        $reason = new Resource;
+        $visit = new Resource;
         if ($id) {
-            $reason->setId($id);
-            parent::loadByID($reason);
+            $visit->setId($id);
+            if (!parent::loadByID($visit)) {
+                 throw new \Exception('Visit id not found:' . $id);
+            }
         }
-        return $reason;
+        return $visit;
     }
 
     /**
@@ -104,21 +107,51 @@ class Visit extends Base
         $visit->setCompleteStaffId(\Current_User::getId());
         $visit->stampCompleteTime();
         self::saveResource($visit);
-        
+
         if ($visit->getCompleteReason() == CC_COMPLETE_SEEN) {
             Visitor::stampAsSeen($visit->getVisitorId());
         } else {
             Visitor::stampAsNotSeen($visit->getVisitorId());
         }
-        
     }
-    
+
     public static function delete($visit_id)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_visit');
         $tbl->addFieldConditional('id', $visit_id);
         $db->delete();
+    }
+
+    public static function attachClinician($visit_id, $clinician_id)
+    {
+        $visit = self::build($visit_id);
+        $visit->setClinicianId($clinician_id);
+        $visit->setCompleteReason(CC_COMPLETE_SEEN);
+        $visit->stampCompleteTime();
+
+        self::saveResource($visit);
+
+        \counseling\Factory\Visitor::stampAsSeen($visit->getVisitorId());
+    }
+    
+    public static function setDisposition($visit_id, $disposition_id)
+    {
+        $visit = self::build($visit_id);
+        $visit->setDispositionId($disposition_id);
+        self::saveResource($visit);
+    }
+    
+    public static function getWaitingByBanner($banner_id)
+    {
+        $db = \Database::getDB();
+        $visit = $db->addTable('cc_visit');
+        $visit->addFieldConditional('complete_reason', 0);
+        $visitor = $db->addTable('cc_visitor', null, false);
+        $visitor->addFieldConditional('banner_id', $banner_id);
+        $db->joinResources($visitor, $visit, 
+                $db->createConditional($visit->getField('visitor_id'), $visitor->getField('id')));
+        return $db->selectOneRow();
     }
 
 }
