@@ -21,9 +21,9 @@ var SettingsDashboard = React.createClass({
                 <ul className="nav nav-tabs">
                     <Tab active={this.state.tab == 'Clinicians'} label={'Clinicians'} handleClick={this.selectTab.bind(this, 'Clinicians')}/>
                     <Tab active={this.state.tab == 'Reasons'} label={'Reasons'} handleClick={this.selectTab.bind(this, 'Reasons')}/>
-                    <Tab active={this.state.tab == 'Visitors'} label={'Visitors'}  handleClick={this.selectTab.bind(this, 'Visitors')}/>
-                    <Tab active={this.state.tab == 'Visits'} label={'Visits'}  handleClick={this.selectTab.bind(this, 'Visits')}/>
                     <Tab active={this.state.tab == 'Dispositions'} label={'Dispositions'} handleClick={this.selectTab.bind(this, 'Dispositions')}/>
+                    {/* <Tab active={this.state.tab == 'Visitors'} label={'Visitors'}  handleClick={this.selectTab.bind(this, 'Visitors')}/>*/}
+                    {/*}<Tab active={this.state.tab == 'Visits'} label={'Visits'}  handleClick={this.selectTab.bind(this, 'Visits')}/>*/}
                 </ul>
                 <div style={{marginTop:'1em'}}>
                     <Content tab={this.state.tab} />
