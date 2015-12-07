@@ -39,10 +39,10 @@ class Visit extends \Resource
     protected $complete_time;
 
     /**
-     * Array of dispositions associated with completed visit. 
+     * Id of disposition
      * @var array
      */
-    protected $disposition_array;
+    protected $disposition_id;
 
     /**
      * If true, the visitor has an emergency that requires attention.
@@ -61,7 +61,12 @@ class Visit extends \Resource
      * @var \Variable\Integer
      */
     protected $visitor_id;
-    
+
+    /**
+     * Id of clinician from cc_clinician table
+     * @var \Variable\Integer
+     */
+    protected $clinician_id;
     protected $table = 'cc_visit';
 
     public function __construct()
@@ -71,11 +76,11 @@ class Visit extends \Resource
         $this->complete_reason = new \Variable\Integer(0, 'complete_reason');
         $this->complete_staff_id = new \Variable\Integer(0, 'complete_staff_id');
         $this->complete_time = new \Variable\DateTime(0, 'complete_time');
-        $this->disposition_array = new \Variable\Arr(null, 'disposition_array');
-        $this->disposition_array->allowNull(true);
+        $this->disposition_id = new \Variable\Integer(0, 'disposition_id');
         $this->has_emergency = new \Variable\Bool(null, 'has_emergency');
         $this->reason_id = new \Variable\Integer(null, 'reason_id');
         $this->visitor_id = new \Variable\Integer(null, 'visitor_id');
+        $this->clinician_id = new \Variable\Integer(null, 'clinician_id');
     }
 
     public function getArrivalTime()
@@ -98,9 +103,9 @@ class Visit extends \Resource
         return $this->complete_time->get();
     }
 
-    public function getDispostionArray()
+    public function getDispositionId()
     {
-        return $this->disposition_array->get();
+        return $this->disposition_id->get();
     }
 
     public function getHasEmergency()
@@ -138,21 +143,21 @@ class Visit extends \Resource
         $this->complete_time->set($var);
     }
 
-    public function setDispostionArray($var)
+    public function setDispositionId($var)
     {
-        $this->disposition_array->set($var);
+        $this->disposition_id->set($var);
     }
 
     public function setHasEmergency($var)
     {
         $this->has_emergency->set($var);
     }
-    
+
     public function setFullName($var)
     {
         $this->full_name->set($var);
     }
-    
+
     public function setReasonId($var)
     {
         $this->reason_id->set($var);
@@ -172,4 +177,15 @@ class Visit extends \Resource
     {
         $this->complete_time->stamp();
     }
+    
+    public function setClinicianId($var)
+    {
+        $this->clinician_id->set($var);
+    }
+    
+    public function getClinicianId()
+    {
+        return $this->clinician_id->get();
+    }
+
 }
