@@ -159,7 +159,7 @@ var WaitingListStatus = React.createClass({
 
     intakeComplete : function()
     {
-        if (confirm('Click ok if student completed their intake form.')) {
+        if (confirm('Click OK if student completed their intake form.')) {
              $.post('counseling/Admin/Dashboard/Waiting/', {
              	command : 'intakeComplete',
                 visitorId : this.props.visitorId
@@ -241,16 +241,6 @@ var WaitingAction = React.createClass({
             {
                 divider : true
             },
-            /**/
-            {
-                label : <div className="text-success"><i className="fa fa-thumbs-o-up"></i> Seen</div>,
-                visitId : this.props.visitId,
-                handleClick : this.completeReason.bind(null, 1)
-            },
-            {
-                divider : true
-            },
-            /**/
             {
                 label : <div className="text-danger"><i className="fa fa-trash-o"></i> Remove</div>,
                 visitId : this.props.visitId,
