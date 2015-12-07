@@ -9,15 +9,38 @@ namespace counseling\Resource;
  */
 class Disposition extends \Resource
 {
-    protected $label;
+    protected $title;
 
+    protected $active;
+    
     protected $table = 'cc_disposition';
     
     public function __construct()
     {
         parent::__construct();
-        $this->label = new \Variable\String(null, 'label');
-        $this->label->setLimit(100);
+        $this->title = new \Variable\String(null, 'title');
+        $this->title->setLimit(100);
+        $this->active = new \Variable\Bool(1, 'active');
+    }
+    
+    public function setTitle($title)
+    {
+        $this->title->set($title);
+    }
+    
+    public function getTitle($title)
+    {
+        return $this->title->get();
+    }
+    
+    public function setActive($active)
+    {
+        $this->active->set($active);
+    }
+    
+    public function getActive()
+    {
+        return $this->active->get();
     }
 
 }
