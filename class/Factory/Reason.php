@@ -11,7 +11,7 @@ use counseling\Resource\Reason as Resource;
 class Reason extends Base
 {
 
-    public static function listReasons($active_only=true)
+    public static function listReasons($active_only = true)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_reason');
@@ -60,7 +60,9 @@ class Reason extends Base
         $reason = new Resource;
         if ($id) {
             $reason->setId($id);
-            parent::loadByID($reason);
+            if (!parent::loadByID($reason)) {
+                throw new \Exception('Reason id not found:' . $id);
+            }
         }
         return $reason;
     }
@@ -102,12 +104,12 @@ class Reason extends Base
         $reason = self::build($reason_id);
         $wait_listed = $reason->getWaitListed();
         $show_emergency = $reason->getShowEmergency();
-        
+
         // if emergency question is asked, they have to be on wait list
         if (!$wait_listed && !$show_emergency) {
             $reason->setWaitListed(true);
         }
-        
+
         $reason->setShowEmergency(!$show_emergency);
         self::saveResource($reason);
     }
@@ -117,7 +119,7 @@ class Reason extends Base
         $reason = self::build($reason_id);
         $wait_listed = $reason->getWaitListed();
         $show_emergency = $reason->getShowEmergency();
-        
+
         // if wait list is off, you can't show the emergency question
         if ($wait_listed && $show_emergency) {
             $reason->setShowEmergency(false);
@@ -132,7 +134,7 @@ class Reason extends Base
         $reason->setAskForPhone(!$reason->getAskForPhone());
         self::saveResource($reason);
     }
-    
+
     public static function delete($reason_id)
     {
         $reason = self::build($reason_id);
