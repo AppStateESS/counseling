@@ -24,6 +24,11 @@ class Base extends \ResourceFactory
         return filter_input(INPUT_POST, $varname, FILTER_SANITIZE_NUMBER_INT);
     }
 
+    public static function pullGetInteger($varname)
+    {
+        return filter_input(INPUT_GET, $varname, FILTER_SANITIZE_NUMBER_INT);
+    }
+
     public static function categoryIcons()
     {
         $obj = new \stdClass();
