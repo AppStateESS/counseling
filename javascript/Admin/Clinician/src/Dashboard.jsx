@@ -1,39 +1,17 @@
+var ClinicianTimeout = null;
+
 var ClinicianDashboard = React.createClass({
     getInitialState: function() {
         return {
             clinicians : null,
-            timeframe : null,
             currentClinician : null,
-            stage : 'choose'
+            stage : 'choose',
+            currentlySeen : null
         };
     },
 
     componentDidMount : function() {
         this.loadData();
-        this.setTimeframe();
-    },
-
-    setTimeframe : function() {
-        var timeframe;
-        var date = new Date();
-        var hours = date.getHours();
-
-        switch (hours) {
-            case hours < 12:
-            timeframe = 'Morning';
-            break;
-
-            case hours > 17:
-            timeframe = 'Evening';
-            break;
-
-            default:
-            timeframe = 'Afternoon';
-        }
-
-        this.setState({
-            timeframe : timeframe
-        });
     },
 
     loadData : function() {
@@ -44,14 +22,52 @@ var ClinicianDashboard = React.createClass({
                 clinicians : data
             });
         }.bind(this));
+    },
+
+    loadSeen : function(clinician) {
+        $.getJSON('counseling/Admin/Clinician', {
+        	command : 'currentlySeen',
+            clinicianId : clinician.id
+        }).done(function(data){
+            if (data !== false) {
+                this.setState({
+                    currentlySeen : data,
+                    stage : 'completeVisit',
+                    currentClinician : clinician
+                });
+            } else {
+                this.setState({
+                    currentlySeen : null,
+                    stage : 'selectVisitor',
+                    currentClinician : clinician
+                });
+            }
+        }.bind(this));
 
     },
 
     choose : function(key) {
+        var clinician = this.state.clinicians[key];
+        this.loadSeen(clinician);
+    },
+
+    setStage : function(stage) {
         this.setState({
-            currentClinician : this.state.clinicians[key],
-            stage : 'selectVisitor'
+            stage : stage
         });
+    },
+
+    componentDidUpdate: function(prevProps, prevState) {
+        if (this.state.stage == 'reset') {
+            ClinicianTimeout = setTimeout(function(){
+                this.setStage('choose');
+            }.bind(this), 5000);
+        }
+    },
+
+    goBack : function() {
+        clearTimeout(ClinicianTimeout);
+        this.setStage('choose');
     },
 
     render: function() {
@@ -61,13 +77,23 @@ var ClinicianDashboard = React.createClass({
             break;
 
             case 'selectVisitor':
-            return <SelectVisitor clinician={this.state.currentClinician} />
+            return <SelectVisitor clinician={this.state.currentClinician} setStage={this.setStage}/>
+            break;
+
+            case 'completeVisit':
+            return <CompleteVisit clinician={this.state.currentClinician} seen={this.state.currentlySeen} goBack={this.goBack} setStage={this.setStage}/>
+            break;
+
+            case 'reset':
+            return (
+                <div className="well text-center">
+                    <h2>Thank you.</h2>
+                    <h3>Return on completion of your consultation.</h3>
+                    <button className="btn btn-default btn-lg" onClick={this.goBack}><i className="fa fa-undo"></i> Go Back</button>
+                </div>);
         }
-
-
     }
 
 });
-
 
 ReactDOM.render(<ClinicianDashboard/>, document.getElementById('clinician-dashboard'));

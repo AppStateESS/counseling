@@ -2,11 +2,18 @@ var Clinicians = React.createClass({
     mixins: [FormMixin],
 
     getInitialState: function() {
-        return {showForm: false, clinicians: null, saveFail: false, currentEdit: null};
+        return {
+            showForm: false,
+            clinicians: null,
+            saveFail: false,
+            currentEdit: null
+        };
     },
 
     loadData: function() {
-        $.getJSON('counseling/Admin/Settings/Clinician', {command: 'list'}).done(function(data) {
+        $.getJSON('counseling/Admin/Settings/Clinician', {
+            command: 'list'
+        }).done(function(data) {
             this.setState({clinicians: data});
         }.bind(this));
     },
