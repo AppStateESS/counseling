@@ -60,8 +60,8 @@ class Summary extends Base
 
     public static function totalCompleteToday($seen_only = false)
     {
-        $starttime = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
-        $endtime = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
+        $starttime = parent::getStartTime();
+        $endtime = parent::getEndTime();
 
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_visit');
@@ -76,8 +76,8 @@ class Summary extends Base
 
     public static function averageToday()
     {
-        $starttime = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
-        $endtime = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
+        $starttime = parent::getStartTime();
+        $endtime = parent::getEndTime();
 
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_visit');
@@ -99,8 +99,8 @@ class Summary extends Base
 
     public static function completeTally()
     {
-        $starttime = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
-        $endtime = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
+        $starttime = parent::getStartTime();
+        $endtime = parent::getEndTime();
 
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_visit');
@@ -140,8 +140,8 @@ class Summary extends Base
 
     public static function unseenReasons()
     {
-        $starttime = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
-        $endtime = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
+        $starttime = parent::getStartTime();
+        $endtime = parent::getEndTime();
 
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_visit');
