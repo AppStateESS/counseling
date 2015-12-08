@@ -46,7 +46,7 @@ var Summary = React.createClass({
                         </div>
                     </div>
                     <div className="col-sm-6 right">
-                        <h4 className="pull-right">{this.props.time}</h4><h3>Today</h3>
+                        <h4 className="pull-right">{this.props.time}</h4><h3>Today <a href="counseling/Admin/Report"><i className="fa fa-area-chart"></i></a></h3>
                         <div className="row">
                             <div className="col-sm-2">
                                 <SummaryTotalSeen {...this.props.data}/>
