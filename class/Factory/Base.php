@@ -37,5 +37,15 @@ class Base extends \ResourceFactory
         $obj->{CC_CATEGORY_APPOINTMENT} = CC_CATEGORY_APPOINTMENT_ICON;
         return $obj;
     }
+    
+    public static function getStartTime()
+    {
+        return mktime(0, 0, 0, date('n'), date('j'), date('Y'));
+    }
+
+    public static function getEndTime()
+    {
+        return mktime(23, 59, 59, date('n'), date('j'), date('Y'));
+    }
 
 }
