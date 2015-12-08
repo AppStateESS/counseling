@@ -23,7 +23,32 @@ class Visit extends Base
         $tbl->addField($subselect);
         $tbl->forceSplat();
         $tbl->addFieldConditional('complete_reason', 0);
-        //$tbl->addFieldConditional('clinician_id', 0);
+        $tbl2 = $db->addTable('cc_reason');
+        $tbl2->addField('title', 'reason_title');
+        $tbl2->addField('category');
+        $tbl->addFieldConditional('reason_id', $tbl2->getField('id'));
+        $visits = $db->select();
+        if (empty($visits)) {
+            return null;
+        }
+        $visits = self::addVisitData($visits);
+        return $visits;
+    }
+
+    public static function getTodaysVisits()
+    {
+        $start_time = parent::getStartTime();
+        $end_time = parent::getEndTime();
+
+        $db = \Database::getDB();
+        $tbl = $db->addTable('cc_visit', 't1');
+        $tbl->addOrderBy('arrival_time', 'asc');
+        $subselect = new \Database\SubSelect(self::getVisitCountDB($tbl), 'total_visits');
+        $tbl->addField($subselect);
+        $tbl->forceSplat();
+        $tbl->addFieldConditional('complete_reason', 0, '!=');
+        $tbl->addFieldConditional('complete_time', $start_time, '>=');
+        $tbl->addFieldConditional('complete_time', $end_time, '<');
         $tbl2 = $db->addTable('cc_reason');
         $tbl2->addField('title', 'reason_title');
         $tbl2->addField('category');
@@ -59,10 +84,16 @@ class Visit extends Base
             $sorted_visitors[$visitor['id']] = $visitor;
             $sorted_visitors[$visitor['id']]['previously_seen'] = strftime('%b. %e, %Y', $visitor['previously_seen']);
         }
-
         foreach ($visits as $key => $visit) {
             $visits[$key]['visitor'] = $sorted_visitors[$visit['visitor_id']];
-            $visits[$key]['wait_time'] = self::timeWaited($visit['arrival_time']);
+            if ($visit['complete_reason'] > 0) {
+                $visits[$key]['clinician'] = self::getClinician($visit['clinician_id']);
+                $visits[$key]['wait_time'] = self::timeWaited($visit['arrival_time'], $visit['complete_time']);
+                $visits[$key]['complete_reason_title'] = self::getCompleteReason($visit['complete_reason']);
+                $visits[$key]['disposition'] = self::getDisposition($visit['disposition_id']);
+            } else {
+                $visits[$key]['wait_time'] = self::timeWaited($visit['arrival_time']);
+            }
         }
         return $visits;
     }
@@ -73,10 +104,91 @@ class Visit extends Base
         if ($id) {
             $visit->setId($id);
             if (!parent::loadByID($visit)) {
-                 throw new \Exception('Visit id not found:' . $id);
+                throw new \Exception('Visit id not found:' . $id);
             }
         }
         return $visit;
+    }
+
+    
+    public static function getDisposition($disposition_id)
+    {
+        if (empty($disposition_id)) {
+            return 'No disposition set';
+        }
+        $disp_list = self::dispositionList();
+        if (empty($disp_list)) {
+            throw new \Exception('No dispositions');
+        }
+        return $disp_list[$disposition_id];
+    }
+
+    public static function getClinician($clinician_id)
+    {
+        if (empty($clinician_id)) {
+            return 'No clinician set';
+        }
+        $clin_list = self::clinicianList();
+        if (empty($clin_list)) {
+            throw new \Exception('No clinicians');
+        }
+        $clinician = $clin_list[$clinician_id];
+        $clinician_name = $clinician['first_name'] . ' ' . $clinician['last_name'];
+        return $clinician_name;
+    }
+
+    private static function dispositionList()
+    {
+        static $disp_list = null;
+        if (empty($disp_list)) {
+            $db = \Database::getDB();
+            $tbl = $db->addTable('cc_disposition');
+            $result = $db->select();
+            if (empty($result)) {
+                return null;
+            }
+            foreach ($result as $d) {
+                $disp_list[$d['id']] = $d['title'];
+            }
+        }
+        return $disp_list;
+    }
+
+    private static function clinicianList()
+    {
+        static $clin_list = null;
+        if (empty($clin_list)) {
+            $db = \Database::getDB();
+            $tbl = $db->addTable('cc_clinician');
+            $result = $db->select();
+            if (empty($result)) {
+                return null;
+            }
+            foreach ($result as $d) {
+                $clin_list[$d['id']] = $d;
+            }
+        }
+        return $clin_list;
+    }
+
+    public static function getCompleteReason($reason)
+    {
+        switch ($reason) {
+            case CC_COMPLETE_SEEN:
+                return 'Seen by clinician';
+
+            case CC_COMPLETE_LEFT:
+                return 'Had to leave';
+
+            case CC_COMPLETE_MISSING:
+                return 'Missing without notice';
+
+            case CC_COMPLETE_APPOINTMENT:
+                return 'Made appointment for later';
+
+            default:
+                return 'Unknown reason';
+        }
     }
 
     /**
@@ -93,10 +205,13 @@ class Visit extends Base
         return $visits;
     }
 
-    public static function timeWaited($timestamp)
+    public static function timeWaited($timestamp, $final = null)
     {
+        if (empty($final)) {
+            $final = time();
+        }
         $timestamp = intval($timestamp);
-        $rel = time() - $timestamp;
+        $rel = $final - $timestamp;
         return (int) floor($rel / 60);
     }
 
@@ -134,14 +249,14 @@ class Visit extends Base
 
         \counseling\Factory\Visitor::stampAsSeen($visit->getVisitorId());
     }
-    
+
     public static function setDisposition($visit_id, $disposition_id)
     {
         $visit = self::build($visit_id);
         $visit->setDispositionId($disposition_id);
         self::saveResource($visit);
     }
-    
+
     public static function getWaitingByBanner($banner_id)
     {
         $db = \Database::getDB();
@@ -149,8 +264,7 @@ class Visit extends Base
         $visit->addFieldConditional('complete_reason', 0);
         $visitor = $db->addTable('cc_visitor', null, false);
         $visitor->addFieldConditional('banner_id', $banner_id);
-        $db->joinResources($visitor, $visit, 
-                $db->createConditional($visit->getField('visitor_id'), $visitor->getField('id')));
+        $db->joinResources($visitor, $visit, $db->createConditional($visit->getField('visitor_id'), $visitor->getField('id')));
         return $db->selectOneRow();
     }
 
