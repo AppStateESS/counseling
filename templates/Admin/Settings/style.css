@@ -11,3 +11,11 @@
     border-radius: 10px;
     z-index: 50;
 }
+
+.active-form {
+    margin : 2em 0;
+    background-color: white;
+    border: 1px solid black;
+    padding: 1em;
+    border-radius: 10px;
+}
