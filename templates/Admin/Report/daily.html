@@ -1,0 +1,80 @@
+<h2>Check In Daily Report</h2>
+
+<?php if (empty($seen) && empty($unseen)):?>
+<p>No visitors recorded for today.</p>
+return;
+<?php endif;?>
+
+<h3>Left without being seen</h3>
+<?php if (empty($unseen)):?>
+<p>No visitors left without being seen</p>
+<?php endif; if (!empty($unseen)):?>
+<table class='table table-striped'>
+    <tr>
+        <th>&nbsp;</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Reason left</th>
+        <th>Arrived</th>
+        <th>Waited</th>
+    </tr>
+<?php foreach($unseen as $vus):?>
+    <tr>
+        <td>
+            <?=$vus['has_emergency']?'<i class="text-danger fa-lg fa ' . CC_CATEGORY_EMERGENCY_ICON . '"></i>':null?>
+        </td>
+        <td>
+            <?=$vus['visitor']['first_name'], ' ', $vus['visitor']['last_name']?>
+        </td>
+        <td>
+            <?=$vus['visitor']['phone_number']?>
+        </td>
+        <td>
+            <?=$vus['complete_reason_title']?>
+        </td>
+        <td>
+            <?=strftime('%l:%M%p', $vus['arrival_time'])?>
+        </td>
+        <td>
+            <?=$vus['wait_time']?> mins.
+        </td>
+    </tr>
+<?php endforeach;endif;?>
+</table>
+
+<h3>Visitors seen</h3>
+<?php if (empty($seen)):?>
+<p>No visitors seen today.</p>
+<?php endif; if (!empty($seen)):?>
+<table class='table table-striped'>
+    <tr>
+        <th>&nbsp;</th>
+        <th>Name</th>
+        <th>Clinician</th>
+        <th>Disposition</th>
+        <th>Arrived</th>
+        <th>Waited</th>
+    </tr>
+<?php foreach($seen as $vs):?>
+    <tr>
+        <td>
+            <?=$vs['has_emergency']?'<i class="text-danger fa-lg fa ' . CC_CATEGORY_EMERGENCY_ICON . '"></i>':null?>
+        </td>
+        <td>
+            <?=$vs['visitor']['first_name'], ' ', $vs['visitor']['last_name']?>
+        </td>
+        <td>
+            <?=$vs['clinician']?>
+        </td>
+        <td>
+            <?=$vs['disposition']?>
+        </td>
+        <td>
+            <?=strftime('%l:%M%p', $vs['arrival_time'])?>
+        </td>
+        <td>
+            <?=$vs['wait_time']?> mins.
+        </td>
+    </tr>
+<?php endforeach;endif;?>
+</table>
