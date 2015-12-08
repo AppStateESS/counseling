@@ -10,8 +10,14 @@ namespace counseling\Resource;
 class Disposition extends \Resource
 {
     protected $title;
+    
+    protected $color;
 
+    protected $icon;
+    
     protected $active;
+    
+    protected $sorting;
     
     protected $table = 'cc_disposition';
     
@@ -20,6 +26,11 @@ class Disposition extends \Resource
         parent::__construct();
         $this->title = new \Variable\String(null, 'title');
         $this->title->setLimit(100);
+        $this->color = new \Variable\Attribute(null, 'color');
+        $this->color->setLimit(30);
+        $this->icon = new \Variable\String(null, 'icon');
+        $this->icon->setLimit(30);
+        $this->sorting = new \Variable\Integer(1, 'sorting');
         $this->active = new \Variable\Bool(1, 'active');
     }
     
@@ -33,6 +44,26 @@ class Disposition extends \Resource
         return $this->title->get();
     }
     
+    public function setColor($color)
+    {
+        $this->color->set($color);
+    }
+    
+    public function getColor()
+    {
+        return $this->color->get();
+    }
+    
+    public function setIcon($icon)
+    {
+        $this->icon->set($icon);
+    }
+    
+    public function getIcon()
+    {
+        return $this->icon->get();
+    }
+    
     public function setActive($active)
     {
         $this->active->set($active);
@@ -42,5 +73,15 @@ class Disposition extends \Resource
     {
         return $this->active->get();
     }
-
+    
+    public function setSorting($var)
+    {
+        $this->sorting->set($var);
+    }
+    
+    public function getSorting()
+    {
+        return $this->sorting->get();
+    }
+    
 }

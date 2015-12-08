@@ -6,7 +6,8 @@ var Dispositions = React.createClass({
             dispositions : null,
             saveFail: false,
             currentEdit: null,
-            showForm: false
+            showForm: false,
+            currentDisposition : null
         };
     },
 
@@ -31,7 +32,6 @@ var Dispositions = React.createClass({
     render: function() {
         var form = null;
         var button = null;
-
         if (this.state.showForm) {
             form = (
                 <div className="form-box">
@@ -40,17 +40,19 @@ var Dispositions = React.createClass({
                 </div>
             );
         } else {
-            button = <button className="btn btn-success" onClick={this.showForm}
-                style={{marginBottom: '1em'}}>Add disposition&nbsp;
-                <i className="fa fa-caret-down"></i>
-            </button>;
+            button = (
+                <button className="btn btn-success" onClick={this.showForm} style={{marginBottom: '1em'}}>Add disposition&nbsp;
+                    <i className="fa fa-caret-down"></i>
+                </button>
+            );
         }
         if (this.state.saveFail) {
-            alert = <div className="alert alert-danger">
+            alert = (<div className="alert alert-danger">
                 <strong>
                     <i className="fa fa-exclamation-triangle"></i>
                     Error:</strong>
-                Disposition save failed</div>;
+                Disposition save failed</div>
+            );
         }
         return (
             <div>
@@ -65,7 +67,8 @@ var Dispositions = React.createClass({
                 {alert}
                 <div className="disposition-listing">
                     <DispositionList dispositions={this.state.dispositions} reload={this.loadData}
-                        currentEdit={this.state.currentEdit} setCurrentEdit={this.setCurrentEdit}/>
+                        currentEdit={this.state.currentEdit} setCurrentEdit={this.setCurrentEdit}
+                        showForm={this.showForm} setCurrent={this.setCurrentEdit}/>
                 </div>
             </div>
         );
@@ -74,6 +77,7 @@ var Dispositions = React.createClass({
 });
 
 var DispositionList = React.createClass({
+
     getInitialState: function() {
         return {
             editRow: null,
@@ -117,18 +121,15 @@ var DispositionList = React.createClass({
     render: function() {
         var rows = null;
         var failure = null;
-
         if (this.props.dispositions !== null) {
             rows = this.props.dispositions.map(function(value, key) {
                 if (this.state.editRow === key) {
                     return <DispositionEditRow key={key} {...value} cancel={this.cancel} reload={this.props.reload} fail={this.fail}/>
                 } else {
-                    return <DispositionListRow key={key} {...value} edit={this.edit.bind(null, key)}
-                        delete={this.delete}/>;
+                    return <DispositionListRow key={key} {...value} edit={this.edit.bind(null, key)} delete={this.delete}/>;
                 }
             }.bind(this));
         }
-
         if (this.state.fail) {
             failure = (
                 <div className="alert alert-danger">
@@ -143,7 +144,7 @@ var DispositionList = React.createClass({
                 <table className="table table-striped">
                     <thead>
                         <tr>
-                            <th>&nbsp;</th>
+                            <th>Action</th>
                             <th>Name</th>
                         </tr>
                     </thead>
@@ -159,28 +160,38 @@ var DispositionList = React.createClass({
 var DispositionListRow = React.createClass({
     getDefaultProps: function() {
         return {
-            first_name: null,
-            last_name: null,
+            title: null,
+            icon : 'fa-times',
+            color : 'btn-danger',
             id:null,
             edit: null,
             delete: null
         };
     },
 
+    deleteCheck : function() {
+        if (window.confirm('Are you sure you want to remove this disposition?')) {
+            this.props.delete(this.props.id);
+        }
+    },
+
     render: function() {
+        var iconClass = 'fa fa-' + this.props.icon;
+        var buttonClass = 'btn btn-block ' + this.props.color;
+
         return (
             <tr>
-                <td className='col-sm-2'>
+                <td className='col-xs-2'>
                     <button className="btn btn-primary btn-sm" onClick={this.props.edit} title="Edit disposition">
                         <i className="fa fa-edit"></i>
                     </button>&nbsp;
                     <button className="btn btn-danger btn-sm"
-                        onClick={this.props.delete.bind(null, this.props.id)} title="Delete disposition">
+                        onClick={this.deleteCheck} title="Delete disposition">
                         <i className="fa fa-times"></i>
                     </button>
                 </td>
                 <td>
-                    {this.props.title}
+                    <button className={buttonClass}><i className={iconClass}></i>&nbsp;{this.props.title}</button>
                 </td>
             </tr>
         );
@@ -189,8 +200,14 @@ var DispositionListRow = React.createClass({
 });
 
 var DispositionForm = React.createClass({
+
     getInitialState: function() {
-        return {title: null, formError: ''};
+        return {
+            title: null,
+            color : null,
+            icon : null,
+            formError: ''
+        };
     },
 
     getDefaultProps: function() {
@@ -199,6 +216,8 @@ var DispositionForm = React.createClass({
             reload: null,
             fail: null,
             title : null,
+            color : null,
+            icon : null,
             dispositionId : 0
         };
     },
@@ -206,11 +225,14 @@ var DispositionForm = React.createClass({
     componentWillMount: function(prevProps, prevState) {
         this.setState({
             title : this.props.title,
+            color : this.props.color,
+            icon : this.props.icon,
             dispositionId : this.props.dispositionId
         });
     },
 
     componentDidMount: function() {
+        $('.form-anchor')[0].scrollIntoView({behavior : 'smooth'});
         $('#title').focus();
     },
 
@@ -237,6 +259,8 @@ var DispositionForm = React.createClass({
             command: 'save',
             dispositionId: this.state.dispositionId,
             title: this.state.title,
+            icon : this.state.icon,
+            color : this.state.color
         }, null, 'json').done(function(data) {
             this.props.reload();
         }.bind(this)).fail(function() {
@@ -245,6 +269,20 @@ var DispositionForm = React.createClass({
             this.props.closeForm();
         }.bind(this));
 
+    },
+
+    pickColor: function(color, event) {
+        event.preventDefault();
+        this.setState({
+            color : color
+        });
+    },
+
+    pickIcon: function(icon, event) {
+        event.preventDefault();
+        this.setState({
+            icon : icon
+        });
     },
 
     render: function() {
@@ -256,12 +294,20 @@ var DispositionForm = React.createClass({
 
         return (
             <div>
+
+            <div className="disposition-form">
                 {alert}
+                <CurrentIcon icon={this.state.icon} color={this.state.color} title={this.state.title}/>
                 <form method="post" action="counseling/Admin/Settings/Disposition">
                     <input type="hidden" name="command" value="add"/>
                     <TextInput inputId="title" label="Disposition title"
                         handleChange={this.updateTitle} required={true}
                         tabIndex={1} value={this.state.title}/>
+                    <label>Button color</label>
+                    <DispositionColor handleClick={this.pickColor}/>
+                    <label>Icon</label>
+                    <DispositionIcons handleClick={this.pickIcon}/>
+                    <hr />
                     <button className="pull-left btn btn-primary" onClick={this.save} tabIndex={2}>
                         <i className="fa fa-check"></i>
                         Save Disposition</button>&nbsp;
@@ -270,16 +316,158 @@ var DispositionForm = React.createClass({
                         Cancel</button>
                 </form>
             </div>
+            </div>
         );
     }
 });
 
+var DispositionColor = React.createClass({
+    getDefaultProps: function() {
+        return {
+        };
+    },
 
+    render: function() {
+        return (
+            <div>
+                <button className="btn btn-default" onClick={this.props.handleClick.bind(null, 'btn-default')}>&nbsp;</button>&nbsp;
+                <button className="btn btn-primary" onClick={this.props.handleClick.bind(null, 'btn-primary')}>&nbsp;</button>&nbsp;
+                <button className="btn btn-success" onClick={this.props.handleClick.bind(null, 'btn-success')}>&nbsp;</button>&nbsp;
+                <button className="btn btn-info" onClick={this.props.handleClick.bind(null, 'btn-info')}>&nbsp;</button>&nbsp;
+                <button className="btn btn-warning" onClick={this.props.handleClick.bind(null, 'btn-warning')}>&nbsp;</button>&nbsp;
+                <button className="btn btn-danger" onClick={this.props.handleClick.bind(null, 'btn-danger')}>&nbsp;</button>
+            </div>
+        );
+    }
+
+});
+
+var CurrentIcon = React.createClass({
+    getDefaultProps: function() {
+        return {
+            color : null,
+            icon : null,
+            title : ''
+        };
+    },
+
+    render: function() {
+        var buttonClass = 'btn btn-block btn-lg ' + this.props.color;
+        var iconClass = 'fa fa-' + this.props.icon;
+        var title = (this.props.title === null || this.props.title.length === 0) ? 'Sample' : this.props.title;
+
+        return (
+            <div className="text-center">
+                <button className={buttonClass}><i className={iconClass}></i> {title}</button>
+            </div>
+        );
+    }
+
+});
+
+var DispositionIcons = React.createClass({
+
+    getDefaultProps: function() {
+        return {
+        };
+    },
+
+    render: function() {
+        return (
+            <div>
+                <table className="table">
+                    <tbody>
+                        <tr>
+                            <td><IconButton label="archive" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="automobile" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="balance-scale" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="ban" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="bank" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="bed" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="bell" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="binoculars" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="book" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="briefcase" handleClick={this.props.handleClick}/></td>
+                        </tr>
+                        <tr>
+                            <td><IconButton label="building" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="bullhorn" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="camera" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="coffee" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="cog" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="comment" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="envelope" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="exclamation-circle" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="eye" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="flag" handleClick={this.props.handleClick}/></td>
+                        </tr>
+                        <tr>
+                            <td><IconButton label="flask" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="folder-o" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="gavel" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="globe" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="users" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="heart" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="home" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="hourglass-1" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="institution" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="life-ring" handleClick={this.props.handleClick}/></td>
+                        </tr>
+                        <tr>
+                            <td><IconButton label="lightbulb-o" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="male" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="female" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="map-o" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="microphone" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="money" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="music" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="paint-brush" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="pencil" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="phone" handleClick={this.props.handleClick}/></td>
+                        </tr>
+                        <tr>
+                            <td><IconButton label="plug" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="print" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="puzzle-piece" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="trophy" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="umbrella" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="user-plus" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="warning" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="wrench" handleClick={this.props.handleClick}/></td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+
+});
+
+var IconButton = React.createClass({
+    getDefaultProps: function() {
+        return {
+            label : null,
+            handleClick : null
+        };
+    },
+
+    render: function() {
+        var iconClassName = 'fa fa-' + this.props.label;
+        return (
+            <button className="btn btn-default" onClick={this.props.handleClick.bind(null, this.props.label)}><i className={iconClassName}></i></button>
+        );
+    }
+
+});
 
 var DispositionEditRow = React.createClass({
     getDefaultProps: function() {
         return {
             title : null,
+            color : null,
+            icon : null,
             cancel : null,
             reload : null
         };
@@ -289,13 +477,18 @@ var DispositionEditRow = React.createClass({
         return (
             <tr>
                 <td colSpan="2">
-                    <DispositionForm
-                        closeForm={this.props.cancel}
-                        reload={this.props.reload}
-                        fail={this.props.fail}
-                        title={this.props.title}
-                        dispositionId={this.props.id}
-                        />
+                    <div className="form-anchor"></div>
+                    <div className="active-form">
+                        <DispositionForm
+                            closeForm={this.props.cancel}
+                            reload={this.props.reload}
+                            fail={this.props.fail}
+                            title={this.props.title}
+                            icon={this.props.icon}
+                            color={this.props.color}
+                            dispositionId={this.props.id}
+                            />
+                    </div>
                 </td>
             </tr>
         );

@@ -16,7 +16,7 @@ class Disposition extends Base
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_disposition');
         $tbl->addFieldConditional('active', 1);
-        $tbl->addOrderBy('title');
+        $tbl->addOrderBy('sorting');
         return $db->select();
     }
 
@@ -25,6 +25,8 @@ class Disposition extends Base
         $disposition_id = filter_input(INPUT_POST, 'dispositionId', FILTER_SANITIZE_NUMBER_INT);
         $disposition = self::build($disposition_id);
         $disposition->setTitle(self::pullPostString('title'));
+        $disposition->setIcon(self::pullPostString('icon'));
+        $disposition->setColor(self::pullPostString('color'));
 
         self::saveResource($disposition);
     }
@@ -45,7 +47,13 @@ class Disposition extends Base
     {
         $disposition = self::build($id);
         $disposition->setActive(false);
+        $disposition->setSorting(0);
         self::saveResource($disposition);
+    }
+    
+    public static function decreaseSorting($dis_id)
+    {
+        
     }
 
 }
