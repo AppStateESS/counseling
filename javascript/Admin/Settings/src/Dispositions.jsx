@@ -3,6 +3,7 @@ var Dispositions = React.createClass({
 
     getInitialState: function() {
         return {
+            dispositions : null,
             saveFail: false,
             currentEdit: null,
             showForm: false,
