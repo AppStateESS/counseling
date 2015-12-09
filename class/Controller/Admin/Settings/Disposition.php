@@ -49,6 +49,11 @@ class Disposition extends \counseling\Controller\Base
             case 'delete':
                 Factory::delete(Factory::pullPostInteger('dispositionId'));
                 break;
+            
+            case 'sort':
+                Factory::sort(Factory::pullPostInteger('moved'), Factory::pullPostInteger('prev'),
+                        Factory::pullPostInteger('next'));
+                break;
 
             default:
                 throw new \Exception('Unknown Disposition command');

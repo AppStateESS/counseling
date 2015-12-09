@@ -1,7 +1,7 @@
 var SettingsDashboard = React.createClass({
     getInitialState: function() {
         return {
-            tab : 'Clinicians'
+            tab : 'Dispositions'
         };
     },
 

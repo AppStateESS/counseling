@@ -3,16 +3,11 @@ var Dispositions = React.createClass({
 
     getInitialState: function() {
         return {
-            dispositions : null,
             saveFail: false,
             currentEdit: null,
             showForm: false,
             currentDisposition : null
         };
-    },
-
-    componentDidMount: function() {
-        this.loadData();
     },
 
     loadData : function() {
@@ -65,7 +60,7 @@ var Dispositions = React.createClass({
                     </div>
                 </div>
                 {alert}
-                <div className="disposition-listing">
+                <div>
                     <DispositionList dispositions={this.state.dispositions} reload={this.loadData}
                         currentEdit={this.state.currentEdit} setCurrentEdit={this.setCurrentEdit}
                         showForm={this.showForm} setCurrent={this.setCurrentEdit}/>
@@ -80,6 +75,7 @@ var DispositionList = React.createClass({
 
     getInitialState: function() {
         return {
+            dispositions : null,
             editRow: null,
             fail: false
          };
@@ -118,6 +114,51 @@ var DispositionList = React.createClass({
         });
     },
 
+    componentDidUpdate: function() {
+        this.loadSortable();
+    },
+
+    loadSortable : function() {
+        $(this.refs.sortRows).sortable({
+            handle : '.handle',
+            helper : this.fixHelper,
+            cancel : '',
+            stop : this.updateSort,
+            axis : 'y',
+            containment : '#disposition-listing'
+        }).disableSelection();
+    },
+
+    fixHelper : function(e, ui) {
+    	ui.children().each(function() {
+    		$(this).width($(this).width());
+    	});
+    	return ui;
+    },
+
+    updateSort : function(event, ui) {
+        var moved = ui.item;
+        var movedId = moved.data('did');
+
+        var prevRow = ui.item.prev('tr.disposition-row');
+        var prevRowId = prevRow.data('did');
+
+        var nextRow = ui.item.next('tr.disposition-row');
+        var nextRowId = nextRow.data('did');
+
+        $(this.refs.sortRows).sortable('cancel');
+
+        $.post('counseling/Admin/Settings/Disposition', {
+        	command : 'sort',
+            moved : movedId,
+            next : nextRowId,
+            prev : prevRowId
+        }, null, 'json')
+        	.done(function(data){
+                this.props.reload();
+        	}.bind(this));
+    },
+
     render: function() {
         var rows = null;
         var failure = null;
@@ -126,7 +167,7 @@ var DispositionList = React.createClass({
                 if (this.state.editRow === key) {
                     return <DispositionEditRow key={key} {...value} cancel={this.cancel} reload={this.props.reload} fail={this.fail}/>
                 } else {
-                    return <DispositionListRow key={key} {...value} edit={this.edit.bind(null, key)} delete={this.delete}/>;
+                    return <DispositionListRow key={value.id} {...value} edit={this.edit.bind(null, key)} delete={this.delete}/>;
                 }
             }.bind(this));
         }
@@ -139,16 +180,17 @@ var DispositionList = React.createClass({
             );
         }
         return (
-            <div>
+            <div id="disposition-listing">
                 {failure}
                 <table className="table table-striped">
                     <thead>
                         <tr>
                             <th>Action</th>
+                            <th>#</th>
                             <th>Name</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody ref="sortRows">
                         {rows}
                     </tbody>
                 </table>
@@ -164,6 +206,7 @@ var DispositionListRow = React.createClass({
             icon : 'fa-times',
             color : 'btn-danger',
             id:null,
+            sorting : null,
             edit: null,
             delete: null
         };
@@ -180,8 +223,9 @@ var DispositionListRow = React.createClass({
         var buttonClass = 'btn btn-block ' + this.props.color;
 
         return (
-            <tr>
-                <td className='col-xs-2'>
+            <tr className="disposition-row" data-did={this.props.id} id={this.props.id}>
+                <td className='col-xs-3'>
+                    <button className="btn btn-default handle"><i className="fa fa-arrows"></i></button>&nbsp;
                     <button className="btn btn-primary btn-sm" onClick={this.props.edit} title="Edit disposition">
                         <i className="fa fa-edit"></i>
                     </button>&nbsp;
@@ -190,6 +234,7 @@ var DispositionListRow = React.createClass({
                         <i className="fa fa-times"></i>
                     </button>
                 </td>
+                <td>{this.props.sorting}</td>
                 <td>
                     <button className={buttonClass}><i className={iconClass}></i>&nbsp;{this.props.title}</button>
                 </td>
@@ -293,8 +338,6 @@ var DispositionForm = React.createClass({
         }
 
         return (
-            <div>
-
             <div className="disposition-form">
                 {alert}
                 <CurrentIcon icon={this.state.icon} color={this.state.color} title={this.state.title}/>
@@ -315,7 +358,6 @@ var DispositionForm = React.createClass({
                         <i className="fa fa-exclamation-triangle"></i>
                         Cancel</button>
                 </form>
-            </div>
             </div>
         );
     }
@@ -493,5 +535,4 @@ var DispositionEditRow = React.createClass({
             </tr>
         );
     }
-
 });

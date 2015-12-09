@@ -50,9 +50,11 @@ var TextInput = React.createClass({
 });
 
 var FormMixin = {
+
     componentDidMount: function() {
         this.loadData();
     },
+
 
     closeForm : function()
     {
