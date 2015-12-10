@@ -60,8 +60,8 @@ class Summary extends Base
 
     public static function totalCompleteToday($seen_only = false)
     {
-        $starttime = parent::getStartTime();
-        $endtime = parent::getEndTime();
+        $starttime = parent::getTodayStartTime();
+        $endtime = parent::getTodayEndTime();
 
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_visit');
@@ -76,8 +76,8 @@ class Summary extends Base
 
     public static function averageToday()
     {
-        $starttime = parent::getStartTime();
-        $endtime = parent::getEndTime();
+        $starttime = parent::getTodayStartTime();
+        $endtime = parent::getTodayEndTime();
 
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_visit');
@@ -99,8 +99,8 @@ class Summary extends Base
 
     public static function completeTally()
     {
-        $starttime = parent::getStartTime();
-        $endtime = parent::getEndTime();
+        $starttime = parent::getTodayStartTime();
+        $endtime = parent::getTodayEndTime();
 
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_visit');
@@ -140,8 +140,8 @@ class Summary extends Base
 
     public static function unseenReasons()
     {
-        $starttime = parent::getStartTime();
-        $endtime = parent::getEndTime();
+        $starttime = parent::getTodayStartTime();
+        $endtime = parent::getTodayEndTime();
 
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_visit');

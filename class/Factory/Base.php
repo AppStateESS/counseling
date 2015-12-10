@@ -38,12 +38,12 @@ class Base extends \ResourceFactory
         return $obj;
     }
     
-    public static function getStartTime()
+    public static function getTodayStartTime()
     {
         return mktime(0, 0, 0, date('n'), date('j'), date('Y'));
     }
 
-    public static function getEndTime()
+    public static function getTodayEndTime()
     {
         return mktime(23, 59, 59, date('n'), date('j'), date('Y'));
     }
