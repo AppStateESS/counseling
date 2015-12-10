@@ -1,11 +1,18 @@
 var Waiting = React.createClass({
     render: function() {
-        return (
-            <div>
-                <Emergency list={this.props.emergency} reload={this.props.reload}/>
-                <WaitingList list={this.props.waiting} reload={this.props.reload} />
-            </div>
-        );
+        if ( this.props.emergency === undefined && this.props.waiting === undefined ) {
+            return <div className="text-muted text-center">
+                <i style={{fontSize : '200px'}} className="fa fa-smile-o"></i>
+                <p style={{fontSize : '100px'}}>All clear!</p>
+            </div>;
+        } else {
+            return (
+                <div>
+                    <Emergency list={this.props.emergency} reload={this.props.reload}/>
+                    <WaitingList list={this.props.waiting} reload={this.props.reload} />
+                </div>
+            );
+        }
     }
 });
 
