@@ -35,11 +35,8 @@ class Visit extends Base
         return $visits;
     }
 
-    public static function getTodaysVisits()
+    public static function getDaysVisits($start_time, $end_time)
     {
-        $start_time = parent::getStartTime();
-        $end_time = parent::getEndTime();
-
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_visit', 't1');
         $tbl->addOrderBy('arrival_time', 'asc');
