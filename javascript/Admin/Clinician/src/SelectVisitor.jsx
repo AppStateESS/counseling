@@ -38,7 +38,12 @@ var SelectVisitor = React.createClass({
         var listing = null;
         if (this.state.waiting === null && this.state.emergencies === null) {
             listing = (
-                <div className="alert alert-info">No visitors are currently waiting.</div>
+                <div>
+                    <div className="alert alert-info">No visitors are currently waiting.</div>
+                    <div className="go-back text-center">
+                        <button className="btn btn-default btn-lg" onClick={this.goBack}><i className="fa fa-undo"></i> Go Back</button>
+                    </div>
+                </div>
             );
         } else {
             listing = <SelectVisitorListing waiting={this.state.waiting} emergencies={this.state.emergencies}
