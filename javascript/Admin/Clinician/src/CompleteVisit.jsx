@@ -41,9 +41,14 @@ var CompleteVisit = React.createClass({
     render: function() {
 
         var dispositions = null;
+        var buttonClass = null;
+        var icon = null;
+
         dispositions = this.state.dispositions.map(function(value, key){
+            buttonClass = 'btn btn-lg btn-block ' + value.color;
+            iconClass = 'fa fa-' + value.icon;
             return (
-                <button key={key} className="btn btn-lg btn-block btn-success" onClick={this.handleClick.bind(null, value.id)}>{value.title}</button>
+                <button key={key} className={buttonClass} onClick={this.handleClick.bind(null, value.id)}><i className={iconClass}></i> {value.title}</button>
             );
         }.bind(this));
 
