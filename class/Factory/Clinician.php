@@ -16,7 +16,7 @@ class Clinician extends Base
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_clinician');
         $tbl->addFieldConditional('active', 1);
-        $tbl->addOrderBy('last_name');
+        $tbl->addOrderBy('sorting');
         return $db->select();
     }
 
@@ -48,7 +48,7 @@ class Clinician extends Base
         $clinician->setActive(false);
         self::saveResource($clinician);
     }
-    
+
     public static function getCurrentlySeen($clinician_id)
     {
         $db = \Database::getDB();
@@ -59,9 +59,54 @@ class Clinician extends Base
         $tbl2->addField('first_name');
         $tbl2->addField('last_name');
         $db->joinResources($tbl, $tbl2, $db->createConditional($tbl->getField('visitor_id'), $tbl2->getField('id'), '='));
-        
+
         $result = $db->selectOneRow();
         return $result;
+    }
+
+    public static function sort($moved_id, $prev_id, $next_id)
+    {
+        // decrement sorting number of all previous up to moved
+
+        $moved_obj = self::build($moved_id);
+        $moved_sort = $moved_obj->getSorting();
+
+        if (!empty($prev_id)) {
+            $prev_obj = self::build($prev_id);
+            $prev_sort = $prev_obj->getSorting();
+        } else {
+            $prev_sort = 0;
+        }
+
+        if (!empty($next_id)) {
+            $next_obj = self::build($next_id);
+            $next_sort = $next_obj->getSorting();
+        } else {
+            $next_sort = 999;
+        }
+
+        $db = \Database::getDB();
+        $tbl = $db->addTable('cc_clinician');
+        $tbl->addFieldConditional('active', 1);
+
+        if ($moved_sort > $prev_sort) {
+            // moved downward, increase all above
+            $tbl->addFieldConditional('sorting', $next_sort, '>=');
+            $tbl->addFieldConditional('sorting', $moved_sort, '<');
+            $exp = $db->getExpression('sorting + 1');
+            $moved_obj->setSorting($next_sort);
+        } else {
+            // moved upward, decrease all below
+            $tbl->addFieldConditional('sorting', $prev_sort, '<=');
+            $tbl->addFieldConditional('sorting', $moved_sort, '>');
+            $exp = $db->getExpression('sorting - 1');
+            $moved_obj->setSorting($prev_sort);
+        }
+
+        $tbl->addValue('sorting', $exp);
+        $db->update();
+
+        self::saveResource($moved_obj);
     }
 
 }

@@ -22,6 +22,10 @@ var Clinicians = React.createClass({
         this.setState({currentEdit: value});
     },
 
+    setClinicians : function(value) {
+        this.setState({clinicians : value});
+    },
+
     render: function() {
         var form = null;
         var button = null;
@@ -59,7 +63,8 @@ var Clinicians = React.createClass({
                 {alert}
                 <div className="clinician-listing">
                     <ClinicianList clinicians={this.state.clinicians} reload={this.loadData}
-                        currentEdit={this.state.currentEdit} setCurrentEdit={this.setCurrentEdit}/>
+                        currentEdit={this.state.currentEdit} setCurrentEdit={this.setCurrentEdit}
+                        setClinicians={this.setClinicians}/>
                 </div>
             </div>
         );
@@ -118,7 +123,6 @@ var ClinicianForm = React.createClass({
         }
         if (this.state.lastName === null || this.state.lastName.length === 0) {
             var splitString = this.state.firstName.split(' ');
-            console.log(splitString);
             if (splitString.length === 2) {
                 this.setState({
                     firstName : splitString[0],
@@ -187,6 +191,9 @@ var ClinicianForm = React.createClass({
 });
 
 var ClinicianList = React.createClass({
+
+    mixins : [sortable],
+
     getInitialState: function() {
         return {
             editRow: null,
@@ -199,8 +206,13 @@ var ClinicianList = React.createClass({
             clinicians: null,
             reload : null,
             currentEdit : null,
-            setCurrentEdit : null
+            setCurrentEdit : null,
+            setClinicians : null
         };
+    },
+
+    componentDidMount: function() {
+        this.loadSortable();
     },
 
     edit: function(key) {
@@ -227,6 +239,31 @@ var ClinicianList = React.createClass({
         });
     },
 
+    updateSort : function(event, ui) {
+        var moved = ui.item;
+        var movedId = parseInt(moved.data('rowid'), 10);
+
+        var prevRow = ui.item.prev('tr.sorting-row');
+        var prevRowId = parseInt(prevRow.data('rowid'), 10);
+
+        var nextRow = ui.item.next('tr.sorting-row');
+        var nextRowId = parseInt(nextRow.data('rowid'), 10);
+
+        $(this.refs.sortRows).sortable('cancel');
+
+        var newList = this.resortReact(this.props.clinicians, movedId, prevRowId, nextRowId);
+        this.props.setClinicians(newList);
+
+        $.post('counseling/Admin/Settings/Clinician', {
+        	command : 'sort',
+            moved : movedId,
+            next : nextRowId,
+            prev : prevRowId
+        }, null, 'json')
+        	.done(function(data){
+        	}.bind(this));
+    },
+
     render: function() {
         var rows = null;
         var failure = null;
@@ -236,7 +273,7 @@ var ClinicianList = React.createClass({
                 if (this.state.editRow === key) {
                     return <ClinicianEditRow key={key} {...value} cancel={this.cancel} reload={this.props.reload} fail={this.fail}/>
                 } else {
-                    return <ClinicianListRow key={key} {...value} edit={this.edit.bind(null, key)}
+                    return <ClinicianListRow key={value.id} {...value} edit={this.edit.bind(null, key)}
                         delete={this.delete}/>;
                 }
             }.bind(this));
@@ -251,17 +288,16 @@ var ClinicianList = React.createClass({
             );
         }
         return (
-            <div>
+            <div id="sortBox">
                 {failure}
                 <table className="table table-striped">
                     <thead>
                         <tr>
                             <th>&nbsp;</th>
                             <th>Name</th>
-                            <th>Total visitors seen</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody ref="sortRows">
                         {rows}
                     </tbody>
                 </table>
@@ -283,8 +319,9 @@ var ClinicianListRow = React.createClass({
 
     render: function() {
         return (
-            <tr>
-                <td className='col-sm-2'>
+            <tr className="sorting-row" data-rowid={this.props.id} id={this.props.id}>
+                <td className='col-sm-3'>
+                    <button className="btn btn-default handle"><i className="fa fa-arrows"></i></button>&nbsp;
                     <button className="btn btn-primary btn-sm" onClick={this.props.edit} title="Edit clinician">
                         <i className="fa fa-edit"></i>
                     </button>&nbsp;
@@ -297,7 +334,6 @@ var ClinicianListRow = React.createClass({
                     {this.props.first_name}&nbsp;
                     {this.props.last_name}
                 </td>
-                <td>{this.props.visitors_seen}</td>
             </tr>
         );
     }
