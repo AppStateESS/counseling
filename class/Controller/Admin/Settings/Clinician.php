@@ -43,13 +43,18 @@ class Clinician extends \counseling\Controller\Base
             case 'delete':
                 Factory::delete(Factory::pullPostInteger('clinicianId'));
                 break;
-            
+
+            case 'sort':
+                Factory::sort(Factory::pullPostInteger('moved'), Factory::pullPostInteger('prev'), Factory::pullPostInteger('next'));
+                break;
+
             default:
-            throw new \Exception('Unknown Clinician command');
+                throw new \Exception('Unknown Clinician command');
         }
 
         $view = new \View\JsonView(array('success' => true));
         $response = new \Response($view);
         return $response;
     }
+
 }
