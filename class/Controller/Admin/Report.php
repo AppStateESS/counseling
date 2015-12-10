@@ -12,7 +12,16 @@ class Report extends \counseling\Controller\Base
 {
     public function getHtmlView($data, \Request $request)
     {
-        $content = Factory::view();
+        $command = $request->shiftCommand();
+        if (empty($command)) {
+            $command = 'Daily';
+        }
+
+        switch ($command) {
+            case 'Daily':
+                $content = Factory::daily($request);
+                break;
+        }
         $view = new \View\HtmlView($content);
         return $view;
     }
