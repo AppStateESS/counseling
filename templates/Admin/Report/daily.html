@@ -1,9 +1,9 @@
-<h2>Check In Daily Report</h2>
-
+<h2>Daily Report - <?php echo $date?> 
+    <button id="pick-date" class="btn btn-default"><i style="cursor:pointer" class="fa fa-calendar"></i></button>
+</h2>
 <?php if (empty($seen) && empty($unseen)):?>
 <p>No visitors recorded for today.</p>
-return;
-<?php endif;?>
+<?php return; endif;?>
 
 <h3>Left without being seen</h3>
 <?php if (empty($unseen)):?>
