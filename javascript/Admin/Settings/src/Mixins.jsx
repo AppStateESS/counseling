@@ -75,3 +75,63 @@ var FormMixin = {
         });
     },
 };
+
+var sortable = {
+    fixHelper : function(e, ui) {
+    	ui.children().each(function() {
+    		$(this).width($(this).width());
+    	});
+    	return ui;
+    },
+
+    loadSortable : function() {
+        $(this.refs.sortRows).sortable({
+            handle : '.handle',
+            helper : this.fixHelper,
+            cancel : '',
+            stop : this.updateSort,
+            axis : 'y',
+            containment : '#sortBox'
+        }).disableSelection();
+    },
+
+    resortReact : function(rows, movedId, prevRowId, nextRowId) {
+        var RPrev = null;
+        var RMoved = null;
+        var RNext = null;
+        var newRows = [];
+        var count = 0;
+
+        rows.forEach(function(value, index){
+            valId = parseInt(value.id, 10);
+
+            if (prevRowId !== undefined && valId === prevRowId) {
+                RPrev = value;
+            } else if(valId === movedId) {
+                RMoved = value;
+            } else if (nextRowId !== undefined && valId === nextRowId) {
+                RNext = value;
+            }
+        });
+
+        if (RPrev === null) {
+            RMoved.sorting = 1;
+            count++;
+            newRows.push(RMoved);
+        }
+
+        rows.forEach(function(value, index){
+            if (RMoved.id !== value.id) {
+                count++;
+                value.sorting = count;
+                newRows.push(value);
+            }
+            if (RPrev !== null && RPrev.id === value.id) {
+                count++;
+                RMoved.sorting = count;
+                newRows.push(RMoved);
+            }
+        });
+        return newRows;
+    }
+};
