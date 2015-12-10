@@ -25,6 +25,10 @@ var Dispositions = React.createClass({
         this.setState({currentEdit: value});
     },
 
+    setDispositions : function(value) {
+        this.setState({dispositions:value});
+    },
+
     render: function() {
         var form = null;
         var button = null;
@@ -64,7 +68,8 @@ var Dispositions = React.createClass({
                 <div>
                     <DispositionList dispositions={this.state.dispositions} reload={this.loadData}
                         currentEdit={this.state.currentEdit} setCurrentEdit={this.setCurrentEdit}
-                        showForm={this.showForm} setCurrent={this.setCurrentEdit}/>
+                        showForm={this.showForm} setCurrent={this.setCurrentEdit}
+                        setDispositions={this.setDispositions}/>
                 </div>
             </div>
         );
@@ -73,6 +78,8 @@ var Dispositions = React.createClass({
 });
 
 var DispositionList = React.createClass({
+
+    mixins : [sortable],
 
     getInitialState: function() {
         return {
@@ -87,7 +94,8 @@ var DispositionList = React.createClass({
             dispositions: null,
             reload : null,
             currentEdit : null,
-            setCurrentEdit : null
+            setCurrentEdit : null,
+            setDispositions : null
         };
     },
 
@@ -115,39 +123,24 @@ var DispositionList = React.createClass({
         });
     },
 
-    componentDidUpdate: function() {
-        this.loadSortable();
-    },
-
-    loadSortable : function() {
-        $(this.refs.sortRows).sortable({
-            handle : '.handle',
-            helper : this.fixHelper,
-            cancel : '',
-            stop : this.updateSort,
-            axis : 'y',
-            containment : '#disposition-listing'
-        }).disableSelection();
-    },
-
-    fixHelper : function(e, ui) {
-    	ui.children().each(function() {
-    		$(this).width($(this).width());
-    	});
-    	return ui;
+    componentDidMount: function() {
+        this.loadSortable('#disposition-listing');
     },
 
     updateSort : function(event, ui) {
         var moved = ui.item;
-        var movedId = moved.data('did');
+        var movedId = parseInt(moved.data('rowid'), 10);
 
-        var prevRow = ui.item.prev('tr.disposition-row');
-        var prevRowId = prevRow.data('did');
+        var prevRow = ui.item.prev('tr.sorting-row');
+        var prevRowId = parseInt(prevRow.data('rowid'), 10);
 
-        var nextRow = ui.item.next('tr.disposition-row');
-        var nextRowId = nextRow.data('did');
+        var nextRow = ui.item.next('tr.sorting-row');
+        var nextRowId = parseInt(nextRow.data('rowid'), 10);
 
         $(this.refs.sortRows).sortable('cancel');
+
+        var newList = this.resortReact(this.props.dispositions, movedId, prevRowId, nextRowId);
+        this.props.setDispositions(newList);
 
         $.post('counseling/Admin/Settings/Disposition', {
         	command : 'sort',
@@ -156,7 +149,6 @@ var DispositionList = React.createClass({
             prev : prevRowId
         }, null, 'json')
         	.done(function(data){
-                this.props.reload();
         	}.bind(this));
     },
 
@@ -181,13 +173,12 @@ var DispositionList = React.createClass({
             );
         }
         return (
-            <div id="disposition-listing">
+            <div id="sortBox">
                 {failure}
                 <table className="table table-striped">
                     <thead>
                         <tr>
                             <th>Action</th>
-                            <th>#</th>
                             <th>Name</th>
                         </tr>
                     </thead>
@@ -207,8 +198,8 @@ var DispositionListRow = React.createClass({
             icon : 'fa-times',
             color : 'btn-danger',
             id:null,
-            sorting : null,
             edit: null,
+            sorting : null,
             delete: null
         };
     },
@@ -224,7 +215,7 @@ var DispositionListRow = React.createClass({
         var buttonClass = 'btn btn-block ' + this.props.color;
 
         return (
-            <tr className="disposition-row" data-did={this.props.id} id={this.props.id}>
+            <tr className="sorting-row" data-rowid={this.props.id} id={this.props.id}>
                 <td className='col-xs-3'>
                     <button className="btn btn-default handle"><i className="fa fa-arrows"></i></button>&nbsp;
                     <button className="btn btn-primary btn-sm" onClick={this.props.edit} title="Edit disposition">
@@ -235,7 +226,6 @@ var DispositionListRow = React.createClass({
                         <i className="fa fa-times"></i>
                     </button>
                 </td>
-                <td>{this.props.sorting}</td>
                 <td>
                     <button className={buttonClass}><i className={iconClass}></i>&nbsp;{this.props.title}</button>
                 </td>
