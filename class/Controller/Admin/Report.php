@@ -21,6 +21,18 @@ class Report extends \counseling\Controller\Base
             case 'Daily':
                 $content = Factory::daily($request);
                 break;
+            
+            case 'Weekly':
+                $content = Factory::weekly($request);
+                break;
+            
+            case 'DailyCSV':
+                $content = Factory::dailyCSV($request);
+                break;
+
+            case 'WeeklyCSV':
+                Factory::weeklyCSV($request);
+                break;
         }
         $view = new \View\HtmlView($content);
         return $view;

@@ -117,7 +117,11 @@ class Visit extends Base
         if (empty($disp_list)) {
             throw new \Exception('No dispositions');
         }
-        return $disp_list[$disposition_id];
+        if (isset($disp_list[$disposition_id])) {
+            return $disp_list[$disposition_id];
+        } else {
+            return '[Disposition type deleted]';
+        }
     }
 
     public static function getClinician($clinician_id)
@@ -129,8 +133,12 @@ class Visit extends Base
         if (empty($clin_list)) {
             throw new \Exception('No clinicians');
         }
-        $clinician = $clin_list[$clinician_id];
-        $clinician_name = $clinician['first_name'] . ' ' . $clinician['last_name'];
+        if (isset($clin_list[$clinician_id])) {
+            $clinician = $clin_list[$clinician_id];
+            $clinician_name = $clinician['first_name'] . ' ' . $clinician['last_name'];
+        } else {
+            $clinician_name = '[Clinician deleted]';
+        }
         return $clinician_name;
     }
 

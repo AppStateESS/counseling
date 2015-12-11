@@ -29,3 +29,5 @@ define('CC_COMPLETE_SEEN', 1);
 define('CC_COMPLETE_LEFT', 2);
 define('CC_COMPLETE_MISSING', 3);
 define('CC_COMPLETE_APPOINTMENT', 4);
+
+define('COUNCELING_TEMP_FOLDER', '/tmp/');

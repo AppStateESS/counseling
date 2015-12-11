@@ -1,7 +1,10 @@
-<h2>Daily Report - <?php echo $date?> 
-    <button title="Pick different day" id="pick-date" class="btn btn-default"><i style="cursor:pointer" class="fa fa-calendar"></i></button>
-    <a href="counseling/Admin/Report/DailyCSV/<?php echo $startTime?>" title="Download CSV file" class="btn btn-default"><i class="fa fa-download"></i></a>
-    <a href="counseling/Admin/Report/Weekly/<?php echo $startTime?>" title=View weekly report" class="btn btn-default"><i class="fa fa-bar-chart"></i> Weekly report</a>
+<h2>Weekly Report for the week beginning <?php echo $date?> 
+    <button id="pick-date" class="btn btn-default" title="Pick different week">
+        <i style="cursor:pointer" class="fa fa-calendar"></i>
+    </button>
+    <a href="counseling/Admin/Report/WeeklyCSV/<?php echo $startTime?>" class="btn btn-default" title="Download weekly report">
+        <i class="fa fa-download"></i>
+    </a>
 </h2>
 <?php if (empty($seen) && empty($unseen)):?>
 <p>No visitors recorded for today.</p>
@@ -11,6 +14,8 @@
 <?php if (empty($unseen)):?>
 <p>No visitors left without being seen</p>
 <?php endif; if (!empty($unseen)):?>
+<?php foreach($unseen as $date => $rows):?>
+<h4><?php echo strftime('%m/%d/%Y', strtotime($date)) ?> <a href="counseling/Admin/Report/DailyCSV/<?php echo $date?>" class="btn btn-default"><i class="fa fa-download"></i></a> </h4>
 <table class='table table-striped'>
     <tr>
         <th>&nbsp;</th>
@@ -20,7 +25,7 @@
         <th>Arrived</th>
         <th>Waited</th>
     </tr>
-<?php foreach($unseen as $vus):?>
+<?php foreach($rows as $vus):?>
     <tr>
         <td>
             <?=$vus['has_emergency']?'<i class="text-danger fa-lg fa ' . CC_CATEGORY_EMERGENCY_ICON . '"></i>':null?>
@@ -41,13 +46,16 @@
             <?=$vus['wait_time']?> mins.
         </td>
     </tr>
-<?php endforeach;endif;?>
+<?php endforeach;?>
 </table>
-
+<?php endforeach;endif;?>
+<hr />
 <h3>Visitors seen</h3>
 <?php if (empty($seen)):?>
-<p>No visitors seen today.</p>
+<p>No visitors seen this week.</p>
 <?php endif; if (!empty($seen)):?>
+<?php foreach($seen as $date => $rows):?>
+<h4><?php echo strftime('%m/%d/%Y', strtotime($date)) ?> <a href="counseling/Admin/Report/DailyCSV/<?php echo $date?>" class="btn btn-default"><i class="fa fa-download"></i></a> </h4>
 <table class='table table-striped'>
     <tr>
         <th>&nbsp;</th>
@@ -57,7 +65,7 @@
         <th>Arrived</th>
         <th>Waited</th>
     </tr>
-<?php foreach($seen as $vs):?>
+<?php foreach($rows as $vs):?>
     <tr>
         <td>
             <?=$vs['has_emergency']?'<i class="text-danger fa-lg fa ' . CC_CATEGORY_EMERGENCY_ICON . '"></i>':null?>
@@ -78,5 +86,6 @@
             <?=$vs['wait_time']?> mins.
         </td>
     </tr>
-<?php endforeach;endif;?>
+<?php endforeach;?>
 </table>
+<?php endforeach;endif;?>
