@@ -5,6 +5,8 @@
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
 
+define('COUNSELING_DEFINE_VERSION', '1.0');
+
 define('COUNSELING_REACT_DEV', true);
 
 define('COUNSELING_FAKE_VISITOR', true);
@@ -30,4 +32,6 @@ define('CC_COMPLETE_LEFT', 2);
 define('CC_COMPLETE_MISSING', 3);
 define('CC_COMPLETE_APPOINTMENT', 4);
 
-define('COUNCELING_TEMP_FOLDER', '/tmp/');
+define('COUNSELING_TEMP_FOLDER', '/tmp/');
+
+define('COUNSELING_BANNER_URL', 'http://url.to.banner.api/');
