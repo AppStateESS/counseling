@@ -11,6 +11,9 @@ class Settings extends \counseling\Controller\Base
 
     public function get(\Request $request)
     {
+        if (!\Current_User::isDeity()) {
+            throw new \Http\NotAcceptableException($request);
+        }
         $command = $this->routeCommand($request);
         if (empty($command)) {
             return parent::get($request);
@@ -21,6 +24,9 @@ class Settings extends \counseling\Controller\Base
 
     public function post(\Request $request)
     {
+        if (!\Current_User::isDeity()) {
+            throw new \Http\NotAcceptableException($request);
+        }
         $command = $this->routeCommand($request);
         if (empty($command)) {
             return parent::post($request);
@@ -44,9 +50,9 @@ class Settings extends \counseling\Controller\Base
         }
 
         \Layout::addStyle('counseling', 'Admin/Settings/style.css');
-        
+
         $settings = \Current_User::isDeity() ? 'true' : 'false';
-        
+
         $content = <<<EOF
 <script type="text/javascript">var settingsAllowed = $settings;</script>
 <div id="settings-dashboard"></div>
