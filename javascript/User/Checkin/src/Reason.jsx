@@ -46,7 +46,7 @@ var Reason = React.createClass({
             content = (
                 <div>
                     <div className="text-center">
-                        <p className="title">Hello, {this.props.visitor.first_name}.</p>
+                        <p className="title">Hello, {this.props.visitor.preferred_name}.</p>
                         <p className="title">Why are you visiting today?</p>
                     </div>
                     <ul className="list-group">
