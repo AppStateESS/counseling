@@ -158,7 +158,7 @@ var DispositionList = React.createClass({
         if (this.props.dispositions !== null) {
             rows = this.props.dispositions.map(function(value, key) {
                 if (this.state.editRow === key) {
-                    return <DispositionEditRow key={key} {...value} cancel={this.cancel} reload={this.props.reload} fail={this.fail}/>
+                    return <DispositionEditRow key={value.id} {...value} cancel={this.cancel} reload={this.props.reload} fail={this.fail}/>
                 } else {
                     return <DispositionListRow key={value.id} {...value} edit={this.edit.bind(null, key)} delete={this.delete}/>;
                 }
@@ -268,7 +268,6 @@ var DispositionForm = React.createClass({
     },
 
     componentDidMount: function() {
-        $('.form-anchor')[0].scrollIntoView({behavior : 'smooth'});
         $('#title').focus();
     },
 
@@ -496,6 +495,10 @@ var IconButton = React.createClass({
 });
 
 var DispositionEditRow = React.createClass({
+    componentDidMount: function() {
+        $('.form-anchor')[0].scrollIntoView({behavior : 'smooth'});
+    },
+
     getDefaultProps: function() {
         return {
             title : null,
