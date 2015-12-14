@@ -37,7 +37,7 @@ class Base extends \ResourceFactory
         $obj->{CC_CATEGORY_APPOINTMENT} = CC_CATEGORY_APPOINTMENT_ICON;
         return $obj;
     }
-    
+
     public static function getTodayStartTime()
     {
         return mktime(0, 0, 0, date('n'), date('j'), date('Y'));
@@ -46,6 +46,21 @@ class Base extends \ResourceFactory
     public static function getTodayEndTime()
     {
         return mktime(23, 59, 59, date('n'), date('j'), date('Y'));
+    }
+
+    public static function getLastSorting($table_name)
+    {
+        $db = \Database::getDB();
+        $tbl = $db->addTable($table_name, null, false);
+        $col = $tbl->getField('sorting');
+        $exp = new \Database\Expression("max($col)", 'max');
+        $db->addExpression($exp);
+        $result = $db->selectOneRow();
+        if (empty($result)) {
+            return 0;
+        } else {
+            return $result['max'];
+        }
     }
 
 }
