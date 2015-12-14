@@ -89,7 +89,7 @@ var sortable = {
             handle : '.handle',
             helper : this.fixHelper,
             cancel : '',
-            stop : this.updateSort,
+            update : this.updateSort,
             axis : 'y',
             containment : '#sortBox'
         }).disableSelection();
