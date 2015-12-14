@@ -83,7 +83,7 @@ class Visitor extends \Resource
         $this->preferred_name->setLimit(50);
         $this->first_visit = new \Variable\DateTime(0, 'first_visit');
         $this->first_visit->setFormat('%Y/%m/%d %l:%M%P');
-        $this->seen_last_visit = new \Variable\Bool(false, 'has_been_seen');
+        $this->seen_last_visit = new \Variable\Bool(false, 'seen_last_visit');
         $this->last_name = new \Variable\String(null, 'last_name');
         $this->last_name->setLimit(50);
         $this->last_visit = new \Variable\DateTime(null, 'last_visit');
