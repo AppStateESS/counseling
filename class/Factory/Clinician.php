@@ -26,6 +26,9 @@ class Clinician extends Base
         $clinician = self::build($clinician_id);
         $clinician->setFirstName(self::pullPostString('firstName'));
         $clinician->setLastName(self::pullPostString('lastName'));
+        if (empty($clinician_id)) {
+            $clinician->setSorting(self::countClinicians() + 1);
+        }
 
         self::saveResource($clinician);
     }
@@ -57,11 +60,22 @@ class Clinician extends Base
         $tbl->addFieldConditional('disposition_id', 0);
         $tbl2 = $db->addTable('cc_visitor');
         $tbl2->addField('first_name');
+        $tbl2->addField('preferred_name');
         $tbl2->addField('last_name');
         $db->joinResources($tbl, $tbl2, $db->createConditional($tbl->getField('visitor_id'), $tbl2->getField('id'), '='));
 
         $result = $db->selectOneRow();
         return $result;
+    }
+
+    private static function countClinicians()
+    {
+        $db = \Database::getDB();
+        $tbl = $db->addTable('cc_clinician');
+        $tbl->addFieldConditional('active', 1);
+        $tbl->addField(new \Database\Expression('count(' . $tbl->getField('id') . ')', 'count'));
+        $count = $db->selectColumn();
+        return $count;
     }
 
     public static function sort($moved_id, $prev_id, $next_id)
@@ -75,14 +89,14 @@ class Clinician extends Base
             $prev_obj = self::build($prev_id);
             $prev_sort = $prev_obj->getSorting();
         } else {
-            $prev_sort = 0;
+            $prev_sort = 1;
         }
 
         if (!empty($next_id)) {
             $next_obj = self::build($next_id);
             $next_sort = $next_obj->getSorting();
         } else {
-            $next_sort = 999;
+            $next_sort = self::countClinicians();
         }
 
         $db = \Database::getDB();
