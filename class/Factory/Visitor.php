@@ -50,13 +50,14 @@ class Visitor extends Base
             $vars = Banner::pullByBannerId($banner_id);
         }
 
-        if (empty($vars)) {
+        if (Banner::isError($vars)) {
             return null;
         }
 
         $visitor = new Resource;
         $visitor->setBannerId($banner_id);
         $visitor->setFirstName($vars['firstName']);
+        $visitor->setPreferredName($vars['preferredName']);
         $visitor->stampFirstVisit();
         $visitor->setSeenLastVisit(false);
         $visitor->setLastname($vars['lastName']);
