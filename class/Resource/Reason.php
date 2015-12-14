@@ -42,7 +42,6 @@ class Reason extends \Resource
     /**
      * Whether they should be put on the wait list.
      * @var \Variable\Bool
-     * 
      */
     protected $wait_listed;
     
@@ -58,7 +57,7 @@ class Reason extends \Resource
      * Order listed in check in dialog
      * @var \Variable\Integer
      */
-    protected $ordering;
+    protected $sorting;
     protected $table = 'cc_reason';
 
     public function __construct()
@@ -75,7 +74,7 @@ class Reason extends \Resource
         $this->category->setRange(0, 10);
         $this->wait_listed = new \Variable\Bool(false, 'wait_listed');
         $this->ask_for_phone = new \Variable\Bool(false, 'ask_for_phone');
-        $this->ordering = new \Variable\Integer(1, 'ordering');
+        $this->sorting = new \Variable\Integer(1, 'sorting');
         $this->active = new \Variable\Bool(true, 'active');
     }
 
@@ -119,9 +118,9 @@ class Reason extends \Resource
         return $this->wait_listed->get();
     }
 
-    public function getOrdering()
+    public function getSorting()
     {
-        return $this->ordering->get();
+        return $this->sorting->get();
     }
 
     public function setAskForPhone($var)
@@ -164,9 +163,9 @@ class Reason extends \Resource
         $this->wait_listed->set($var);
     }
 
-    public function setOrdering($var)
+    public function setSorting($var)
     {
-        $this->ordering->set($var);
+        $this->sorting->set($var);
     }
 
 }
