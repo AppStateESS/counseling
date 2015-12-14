@@ -27,7 +27,7 @@ class Clinician extends Base
         $clinician->setFirstName(self::pullPostString('firstName'));
         $clinician->setLastName(self::pullPostString('lastName'));
         if (empty($clinician_id)) {
-            $clinician->setSorting(self::countClinicians() + 1);
+            $clinician->setSorting(self::getLastSorting('cc_clinician') + 1);
         }
 
         self::saveResource($clinician);
