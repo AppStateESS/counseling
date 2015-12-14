@@ -28,7 +28,7 @@ class Disposition extends Base
         $disposition->setIcon(self::pullPostString('icon'));
         $disposition->setColor(self::pullPostString('color'));
         if (empty($disposition_id)) {
-            $disposition->setSorting(self::countDispositions() + 1);
+            $disposition->setSorting(self::getLastSorting('cc_disposition') + 1);
         }
 
         self::saveResource($disposition);
