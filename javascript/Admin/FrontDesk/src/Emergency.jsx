@@ -18,7 +18,7 @@ var Emergency = React.createClass({
         }
         var rows = this.props.list.map(function(value, key){
             return (
-                <EmergencyRow key={key} visit={value} reload={this.props.reload}/>
+                <EmergencyRow key={key} {...value} reload={this.props.reload}/>
             );
         }.bind(this));
 
@@ -40,19 +40,25 @@ var EmergencyRow = React.createClass({
     },
 
     render: function() {
+        var intakeComplete = null;
+
         return (
             <div className="row">
                 <div className="col-sm-1">
                     <i className="fa fa-lg fa-exclamation-triangle"></i>
                 </div>
-                <div className="col-sm-5 visitor-name">
-                    {this.props.visit.visitor.first_name} {this.props.visit.visitor.last_name}
+                <div className="col-sm-4 visitor-name">
+                    {this.props.visitor.preferred_name} {this.props.visitor.last_name}
+                </div>
+                <div className="col-sm-2">
+                    {this.props.wait_time} min
                 </div>
                 <div className="col-sm-3">
-                    {this.props.visit.wait_time} min
+                    <WaitingListStatus visitor={this.props.visitor} reload={this.props.reload}
+                        visitNumber={this.props.total_visits}/>
                 </div>
-                <div className="col-sm-3">
-                    <WaitingAction visitId={this.props.visit.id} reload={this.props.reload}/>
+                <div className="col-sm-2">
+                    <WaitingAction visitId={this.props.id} reload={this.props.reload}/>
                 </div>
             </div>
         );
