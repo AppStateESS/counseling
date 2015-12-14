@@ -45,11 +45,14 @@ var ClinicianChoose = React.createClass({
             rows = this.props.clinicians.map(function(value, key){
                 return <ClinicianRow key={key} {...value} choose={this.props.choose.bind(null, key)}/>;
             }.bind(this));
+        } else {
+            rows = <p>No clinicians found in system.</p>;
         }
 
         return (
             <div>
                 <h2>Good {this.state.timeframe}!</h2>
+                <hr />
                 <h3>Please click/touch your name to continue...</h3>
                 <div className="row clinician-container">
                     {rows}
