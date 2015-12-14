@@ -53,7 +53,7 @@ var Phone = React.createClass({
         var content =  (
             <div>
                 <div className="text-center">
-                    <p className="title">Ok, {this.props.visitor.first_name}.</p>
+                    <p className="title">Ok, {this.props.visitor.preferred_name}.</p>
                     <p className="subtitle">In case we need to reach you later,<br />
                         please enter your cell phone number.</p>
                     {field}
