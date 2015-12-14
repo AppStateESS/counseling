@@ -20,6 +20,11 @@ class Visitor extends \Resource
     protected $first_name;
 
     /**
+     * @var \Variable\String
+     */
+    protected $preferred_name;
+
+    /**
      * Timestamp of first visit
      * This variable could be derived from the visit records.
      * Adding here for quick access
@@ -74,6 +79,8 @@ class Visitor extends \Resource
         $this->banner_id = new \Variable\Integer(null, 'banner_id');
         $this->first_name = new \Variable\String(null, 'first_name');
         $this->first_name->setLimit(50);
+        $this->preferred_name = new \Variable\String(null, 'preferred_name');
+        $this->preferred_name->setLimit(50);
         $this->first_visit = new \Variable\DateTime(0, 'first_visit');
         $this->first_visit->setFormat('%Y/%m/%d %l:%M%P');
         $this->seen_last_visit = new \Variable\Bool(false, 'has_been_seen');
@@ -97,6 +104,11 @@ class Visitor extends \Resource
     public function setFirstName($var)
     {
         $this->first_name->set($var);
+    }
+
+    public function setPreferredName($var)
+    {
+        $this->preferred_name->set($var);
     }
 
     public function setFirstVisit($var)
@@ -167,6 +179,11 @@ class Visitor extends \Resource
     public function getFirstName()
     {
         return $this->first_name->get();
+    }
+
+    public function getPreferredName()
+    {
+        return $this->preferred_name->get();
     }
 
     public function getFirstVisit()
