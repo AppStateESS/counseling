@@ -99,7 +99,7 @@ class Report extends Base
             $csvRow[] = '"' . implode('","', $sub) . '"';
         }
         $content = implode("\n", $csvRow);
-        $filename = COUNCELING_TEMP_FOLDER . time() . '.csv';
+        $filename = COUNSELING_TEMP_FOLDER . time() . '.csv';
 
         file_put_contents($filename, $content);
 
