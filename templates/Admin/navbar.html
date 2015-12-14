@@ -13,14 +13,17 @@
     <ul class="nav navbar-nav">
       <li><a href="counseling/Admin/Dashboard"><i class="fa fa-inbox"></i> Front desk</a></li>
       <li><a href="counseling/Admin/Clinician"><i class="fa fa-clipboard"></i> Clinician</a></li>
+      <li><a href="counseling/Admin/Report/Daily"><i class="fa fa-area-chart"></i> Report</a></li>
     </ul>
 
 
     <ul class="nav navbar-nav navbar-right">
       <!-- BEGIN admin_links -->
+      <?php if ($is_deity): ?>
       <li class="dropdown">
         <a href="counseling/Admin/Settings" class=""><i class="fa fa-cog"></i> Settings</a>
       </li>
+      <?php endif; ?>
       <!-- END admin_links -->
       <li>
         <a href="index.php?module=controlpanel"><?=$username?></a>
