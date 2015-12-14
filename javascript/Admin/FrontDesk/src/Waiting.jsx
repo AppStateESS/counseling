@@ -62,7 +62,8 @@ var WaitingListRow = React.createClass({
         return {
             value : {},
             count : 0,
-            reload : null
+            reload : null,
+            visitor : null
         };
     },
 
@@ -72,18 +73,51 @@ var WaitingListRow = React.createClass({
             <tr>
                 <td style={{width : '3%'}}>{count}</td>
                 <td style={{width : '3%'}} className="text-center"><CategoryIcon category={this.props.category} reasonTitle={this.props.reason_title}/></td>
-                <td>{this.props.visitor.first_name} {this.props.visitor.last_name}</td>
+                <td><VisitorName visitor={this.props.visitor}/></td>
                 <td>{this.props.wait_time} min.</td>
                 <td><WaitingListVisits visitNumber={this.props.total_visits} /></td>
                 <td>
-                    <WaitingListStatus intakeComplete={this.props.visitor.intake_complete}
-                     previouslySeen={this.props.visitor.previously_seen} seenLastVisit={this.props.visitor.seen_last_visit}
-                     visitorId={this.props.visitor.id}
-                     reload={this.props.reload} visitNumber={this.props.total_visits}/>
+                    <WaitingListStatus visitor={this.props.visitor} reload={this.props.reload}
+                        visitNumber={this.props.total_visits}/>
                 </td>
                  <td><WaitingAction visitId={this.props.id} reload={this.props.reload}/></td>
             </tr>
         );
+    }
+
+});
+
+var VisitorName = React.createClass({
+    getInitialState: function() {
+        return {
+            tooltip : true
+        };
+    },
+
+    getDefaultProps: function() {
+        return {
+            visitor : null
+        };
+    },
+
+    componentDidMount : function() {
+        if (this.state.tooltip) {
+            $('span.visitor-name').tooltip({animation:true, placement:'right'});
+            this.setState({tooltip : false});
+        }
+    },
+
+    render: function() {
+        if (this.props.visitor.first_name !== this.props.visitor.preferred_name) {
+            var fullName = this.props.visitor.first_name + ' "' + this.props.visitor.preferred_name + '" ' + this.props.visitor.last_name;
+            return (
+                <span className='visitor-name' data-toggle="tooltip" title={fullName}>{this.props.visitor.preferred_name} {this.props.visitor.last_name}</span>
+            );
+        } else {
+            return (
+                <span>{this.props.visitor.preferred_name} {this.props.visitor.last_name}</span>
+            );
+        }
     }
 
 });
@@ -147,51 +181,6 @@ var WaitingListVisits = React.createClass({
                 return <span className="label label-danger">{this.props.visitNumber} visits</span>;
         }
 
-    }
-
-});
-
-var WaitingListStatus = React.createClass({
-
-    getDefaultProps: function() {
-        return {
-            intakeComplete : '0',
-            seenLastVisit : '0',
-            visitorId : 0,
-            visitNumber : 0,
-            reload : null,
-            previouslySeen : null
-        };
-    },
-
-    intakeComplete : function()
-    {
-        if (confirm('Click OK if student completed their intake form.')) {
-             $.post('counseling/Admin/Dashboard/Waiting/', {
-             	command : 'intakeComplete',
-                visitorId : this.props.visitorId
-             }, null, 'json')
-             	.done(function(data){
-                    this.props.reload();
-             	}.bind(this));
-        }
-
-    },
-
-    render: function() {
-        if (this.props.intakeComplete === '1') {
-            if (this.props.visitNumber > 1) {
-                if (this.props.seenLastVisit === '0') {
-                    return <span className="label label-danger">Unseen last visit</span>;
-                } else {
-                    return <span className="label label-primary">Previously seen @ {this.props.previouslySeen}</span>;
-                }
-            } else {
-                return <span className="label label-success">Intake complete</span>
-            }
-        } else {
-            return <span className="label label-danger" style={{cursor:'pointer'}} title="Click to acknowledge intake completion" onClick={this.intakeComplete}>Intake incomplete</span>
-        }
     }
 
 });
