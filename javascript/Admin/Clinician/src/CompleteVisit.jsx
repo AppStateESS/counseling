@@ -54,7 +54,7 @@ var CompleteVisit = React.createClass({
 
         return (
             <div>
-                <h2>{this.props.clinician.first_name} {this.props.clinician.last_name} meeting with {this.props.seen.first_name} {this.props.seen.last_name}</h2>
+                <h2>{this.props.clinician.first_name} {this.props.clinician.last_name} meeting with {this.props.seen.preferred_name} {this.props.seen.last_name}</h2>
                 <h3>If your consultation is complete, choose a disposition below.</h3>
                 {dispositions}
                 <hr />
