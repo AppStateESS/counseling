@@ -15,7 +15,7 @@ class Reason extends Base
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_reason');
-        $tbl->addOrderBy('ordering');
+        $tbl->addOrderBy('sorting');
         if ($active_only) {
             $tbl->addFieldConditional('active', 1);
         }
@@ -76,27 +76,13 @@ class Reason extends Base
         $reason->setInstruction(self::pullPostInteger('instruction'));
         $reason->setShowEmergency(self::pullPostCheck('showEmergency'));
         $reason->setCategory(self::pullPostInteger('category'));
-        $reason->setAdminMenuShow(self::pullPostCheck('adminMenuShow'));
         $reason->setWaitListed(self::pullPostCheck('waitListed'));
         $reason->setAskForPhone(self::pullPostCheck('askForPhone'));
-        $reason->setOrdering(self::getLastOrder() + 1);
+        if (empty($reason_id)) {
+            $reason->setSorting(self::getLastSorting('cc_reason') + 1);
+        }
 
         self::saveResource($reason);
-    }
-
-    public static function getLastOrder()
-    {
-        $db = \Database::getDB();
-        $tbl = $db->addTable('cc_reason', null, false);
-        $col = $tbl->getField('ordering');
-        $exp = new \Database\Expression("max($col)", 'max');
-        $db->addExpression($exp);
-        $result = $db->selectOneRow();
-        if (empty($result)) {
-            return 0;
-        } else {
-            return $result['max'];
-        }
     }
 
     public static function flipEmergency($reason_id)
