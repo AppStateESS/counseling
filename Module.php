@@ -2,6 +2,7 @@
 
 namespace counseling;
 
+
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
@@ -11,6 +12,11 @@ class Module extends \Module implements \SettingDefaults
 
     public function __construct()
     {
+        $autoload = PHPWS_SOURCE_DIR . 'mod/counseling/vendor/autoload.php';
+        if (!is_file($autoload)) {
+            exit('Counseling requires "composer install" to be run in module directory');
+        }
+        require_once $autoload;
         parent::__construct();
         $this->setTitle('counseling');
         $this->setProperName('Counseling Center Check-In');
@@ -18,7 +24,11 @@ class Module extends \Module implements \SettingDefaults
 
     public function beforeRun(\Request $request, \Controller $controller)
     {
-        require_once PHPWS_SOURCE_DIR . 'mod/counseling/conf/defines.php';
+        $define_file = PHPWS_SOURCE_DIR . 'mod/counseling/conf/defines.php';
+        if (!is_file($define_file)) {
+            exit('Counseling requires a copy of conf/defines.php to be created.');
+        }
+        require_once $define_file;
     }
 
     public function getController(\Request $request)
