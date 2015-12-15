@@ -271,7 +271,7 @@ var ClinicianList = React.createClass({
         if (this.props.clinicians !== null) {
             rows = this.props.clinicians.map(function(value, key) {
                 if (this.state.editRow === key) {
-                    return <ClinicianEditRow key={key} {...value} cancel={this.cancel} reload={this.props.reload} fail={this.fail}/>
+                    return <ClinicianEditRow key={value.id} {...value} cancel={this.cancel} reload={this.props.reload} fail={this.fail}/>
                 } else {
                     return <ClinicianListRow key={value.id} {...value} edit={this.edit.bind(null, key)}
                         delete={this.delete}/>;

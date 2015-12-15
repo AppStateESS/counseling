@@ -58,3 +58,49 @@ var ButtonGroupOption = React.createClass({
     }
 
 });
+
+var WaitingListStatus = React.createClass({
+
+    getDefaultProps: function() {
+        return {
+            visitor : null,
+            visitNumber : 0,
+            reload : null,
+        };
+    },
+
+    intakeComplete : function()
+    {
+        if (confirm('Click OK if student completed their intake form.')) {
+             $.post('counseling/Admin/Dashboard/Waiting/', {
+             	command : 'intakeComplete',
+                visitorId : this.props.visitor.id
+             }, null, 'json')
+             	.done(function(data){
+                    this.props.reload();
+             	}.bind(this));
+        }
+
+    },
+
+    render: function() {
+        if (this.props.visitor.intake_complete === '1') {
+            if (this.props.visitNumber > 1) {
+                if (this.props.visitor.seen_last_visit === '0') {
+                    return <span className="label label-danger">Unseen last visit</span>;
+                } else {
+                    return (
+                        <span className="label label-primary">
+                            Previously seen @ {this.props.visitor.previously_seen}
+                        </span>
+                    );
+                }
+            } else {
+                return <span className="label label-success">Intake complete</span>
+            }
+        } else {
+            return <span className="label label-danger" style={{cursor:'pointer'}} title="Click to acknowledge intake completion" onClick={this.intakeComplete}>Intake incomplete</span>
+        }
+    }
+
+});
