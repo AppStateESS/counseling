@@ -19,10 +19,12 @@ class Clinician extends \counseling\Controller\Base
         $icons = json_encode(\counseling\Factory\Base::categoryIcons());
 
         if (COUNSELING_REACT_DEV) {
-            \counseling\Factory\React::load('Admin/Clinician/', 'CompleteVisit.jsx');
-            \counseling\Factory\React::load('Admin/Clinician/', 'SelectVisitor.jsx');
-            \counseling\Factory\React::load('Admin/Clinician/', 'ClinicianChoose.jsx');
-            \counseling\Factory\React::load('Admin/Clinician/', 'Dashboard.jsx');
+            \counseling\Factory\React::development('Admin/Clinician/', 'CompleteVisit.jsx');
+            \counseling\Factory\React::development('Admin/Clinician/', 'SelectVisitor.jsx');
+            \counseling\Factory\React::development('Admin/Clinician/', 'ClinicianChoose.jsx');
+            \counseling\Factory\React::development('Admin/Clinician/', 'Dashboard.jsx');
+        } else {
+            \counseling\Factory\React::production('Admin/Clinician/', 'script.min.js');
         }
 
         $content = <<<EOF
