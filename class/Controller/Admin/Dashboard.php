@@ -32,11 +32,11 @@ class Dashboard extends \counseling\Controller\Base
     public function getHtmlView($data, \Request $request)
     {
         if (COUNSELING_REACT_DEV) {
-            \counseling\Factory\React::load('Admin/FrontDesk/', 'Mixins.jsx');
-            \counseling\Factory\React::load('Admin/FrontDesk/', 'Summary.jsx');
-            \counseling\Factory\React::load('Admin/FrontDesk/', 'Emergency.jsx');
-            \counseling\Factory\React::load('Admin/FrontDesk/', 'Waiting.jsx');
-            \counseling\Factory\React::load('Admin/FrontDesk/', 'Dashboard.jsx');
+            \counseling\Factory\React::development('Admin/FrontDesk/', 'Mixins.jsx');
+            \counseling\Factory\React::development('Admin/FrontDesk/', 'Summary.jsx');
+            \counseling\Factory\React::development('Admin/FrontDesk/', 'Emergency.jsx');
+            \counseling\Factory\React::development('Admin/FrontDesk/', 'Waiting.jsx');
+            \counseling\Factory\React::development('Admin/FrontDesk/', 'Dashboard.jsx');
         }
 
         \Layout::addStyle('counseling', 'Admin/Dashboard/style.css');

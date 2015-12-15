@@ -40,13 +40,13 @@ class Settings extends \counseling\Controller\Base
         javascript('jquery_ui');
         \Layout::addStyle('counseling', 'Admin/style.css');
         if (COUNSELING_REACT_DEV) {
-            \counseling\Factory\React::load('Admin/Settings/', 'Mixins.jsx');
-            \counseling\Factory\React::load('Admin/Settings/', 'Visitors.jsx');
-            \counseling\Factory\React::load('Admin/Settings/', 'Clinicians.jsx');
-            \counseling\Factory\React::load('Admin/Settings/', 'Visits.jsx');
-            \counseling\Factory\React::load('Admin/Settings/', 'Reasons.jsx');
-            \counseling\Factory\React::load('Admin/Settings/', 'Dispositions.jsx');
-            \counseling\Factory\React::load('Admin/Settings/', 'Dashboard.jsx');
+            \counseling\Factory\React::development('Admin/Settings/', 'Mixins.jsx');
+            \counseling\Factory\React::development('Admin/Settings/', 'Visitors.jsx');
+            \counseling\Factory\React::development('Admin/Settings/', 'Clinicians.jsx');
+            \counseling\Factory\React::development('Admin/Settings/', 'Visits.jsx');
+            \counseling\Factory\React::development('Admin/Settings/', 'Reasons.jsx');
+            \counseling\Factory\React::development('Admin/Settings/', 'Dispositions.jsx');
+            \counseling\Factory\React::development('Admin/Settings/', 'Dashboard.jsx');
         }
 
         \Layout::addStyle('counseling', 'Admin/Settings/style.css');

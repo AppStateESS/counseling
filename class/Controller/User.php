@@ -42,13 +42,13 @@ class User extends \Http\Controller
     public function checkin()
     {
         if (COUNSELING_REACT_DEV) {
-            \counseling\Factory\React::load('User/Checkin/', 'Mixins.jsx');
-            \counseling\Factory\React::load('User/Checkin/', 'Swipe.jsx');
-            \counseling\Factory\React::load('User/Checkin/', 'Reason.jsx');
-            \counseling\Factory\React::load('User/Checkin/', 'Phone.jsx');
-            \counseling\Factory\React::load('User/Checkin/', 'Emergency.jsx');
-            \counseling\Factory\React::load('User/Checkin/', 'Instruction.jsx');
-            \counseling\Factory\React::load('User/Checkin/', 'Login.jsx');
+            \counseling\Factory\React::development('User/Checkin/', 'Mixins.jsx');
+            \counseling\Factory\React::development('User/Checkin/', 'Swipe.jsx');
+            \counseling\Factory\React::development('User/Checkin/', 'Reason.jsx');
+            \counseling\Factory\React::development('User/Checkin/', 'Phone.jsx');
+            \counseling\Factory\React::development('User/Checkin/', 'Emergency.jsx');
+            \counseling\Factory\React::development('User/Checkin/', 'Instruction.jsx');
+            \counseling\Factory\React::development('User/Checkin/', 'Login.jsx');
         }
 
         \Layout::addStyle('counseling', 'User/style.css');
