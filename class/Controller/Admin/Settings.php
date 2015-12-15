@@ -40,14 +40,17 @@ class Settings extends \counseling\Controller\Base
         javascript('jquery_ui');
         \Layout::addStyle('counseling', 'Admin/style.css');
         if (COUNSELING_REACT_DEV) {
-            \counseling\Factory\React::development('Admin/Settings/', 'Mixins.jsx');
-            \counseling\Factory\React::development('Admin/Settings/', 'Visitors.jsx');
-            \counseling\Factory\React::development('Admin/Settings/', 'Clinicians.jsx');
-            \counseling\Factory\React::development('Admin/Settings/', 'Visits.jsx');
-            \counseling\Factory\React::development('Admin/Settings/', 'Reasons.jsx');
-            \counseling\Factory\React::development('Admin/Settings/', 'Dispositions.jsx');
-            \counseling\Factory\React::development('Admin/Settings/', 'Dashboard.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/Settings/', 'Mixins.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/Settings/', 'Visitors.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/Settings/', 'Clinicians.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/Settings/', 'Visits.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/Settings/', 'Reasons.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/Settings/', 'Dispositions.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/Settings/', 'Dashboard.jsx');
+        } else {
+            $script[] = \counseling\Factory\React::production('Admin/Settings/', 'script.min.js');
         }
+        $react = implode("\n", $script);
 
         \Layout::addStyle('counseling', 'Admin/Settings/style.css');
 
@@ -56,6 +59,7 @@ class Settings extends \counseling\Controller\Base
         $content = <<<EOF
 <script type="text/javascript">var settingsAllowed = $settings;</script>
 <div id="settings-dashboard"></div>
+$react
 EOF;
         $view = new \View\HtmlView($content);
         return $view;

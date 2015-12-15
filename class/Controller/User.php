@@ -42,19 +42,22 @@ class User extends \Http\Controller
     public function checkin()
     {
         if (COUNSELING_REACT_DEV) {
-            \counseling\Factory\React::development('User/Checkin/', 'Mixins.jsx');
-            \counseling\Factory\React::development('User/Checkin/', 'Swipe.jsx');
-            \counseling\Factory\React::development('User/Checkin/', 'Reason.jsx');
-            \counseling\Factory\React::development('User/Checkin/', 'Phone.jsx');
-            \counseling\Factory\React::development('User/Checkin/', 'Emergency.jsx');
-            \counseling\Factory\React::development('User/Checkin/', 'Instruction.jsx');
-            \counseling\Factory\React::development('User/Checkin/', 'Login.jsx');
+            $script[] = \counseling\Factory\React::development('User/Checkin/', 'Mixins.jsx');
+            $script[] = \counseling\Factory\React::development('User/Checkin/', 'Swipe.jsx');
+            $script[] = \counseling\Factory\React::development('User/Checkin/', 'Reason.jsx');
+            $script[] = \counseling\Factory\React::development('User/Checkin/', 'Phone.jsx');
+            $script[] = \counseling\Factory\React::development('User/Checkin/', 'Emergency.jsx');
+            $script[] = \counseling\Factory\React::development('User/Checkin/', 'Instruction.jsx');
+            $script[] = \counseling\Factory\React::development('User/Checkin/', 'Login.jsx');
+        } else {
+            $script[] = \counseling\Factory\React::production('User/Checkin/', 'script.js');
         }
-
+        $react = implode("\n", $script);
         \Layout::addStyle('counseling', 'User/style.css');
         
         $content = <<<EOF
 <div id="Login"></div>
+$react
 EOF;
         return $content;
     }

@@ -19,19 +19,21 @@ class Clinician extends \counseling\Controller\Base
         $icons = json_encode(\counseling\Factory\Base::categoryIcons());
 
         if (COUNSELING_REACT_DEV) {
-            \counseling\Factory\React::development('Admin/Clinician/', 'CompleteVisit.jsx');
-            \counseling\Factory\React::development('Admin/Clinician/', 'SelectVisitor.jsx');
-            \counseling\Factory\React::development('Admin/Clinician/', 'ClinicianChoose.jsx');
-            \counseling\Factory\React::development('Admin/Clinician/', 'Dashboard.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/Clinician/', 'CompleteVisit.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/Clinician/', 'SelectVisitor.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/Clinician/', 'ClinicianChoose.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/Clinician/', 'Dashboard.jsx');
         } else {
-            \counseling\Factory\React::production('Admin/Clinician/', 'script.min.js');
+            $script[] = \counseling\Factory\React::production('Admin/Clinician/', 'script.min.js');
         }
 
+        $react = implode("\n", $script);
         $content = <<<EOF
 <script type="text/javascript">
     var categoryIcons = $icons;
 </script>
 <div id="clinician-dashboard"></div>
+$react
 EOF;
         $view = new \View\HtmlView($content);
         return $view;

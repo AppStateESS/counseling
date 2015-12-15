@@ -12,7 +12,8 @@ var Summary = React.createClass({
     },
 
     render: function() {
-        var tally = null;
+        var currentTally = null;
+        var totalTally = null;
         if (this.props.data) {
             currentTally = this.props.data.currentTally;
             totalTally = this.props.data.completeTally;
@@ -82,7 +83,9 @@ var SummaryCompleted = React.createClass({
     },
 
     componentDidMount : function() {
-        this.loadTooltip();
+        $(window).load(function(){
+            this.loadTooltip();
+        }.bind(this));
     },
 
     loadTooltip : function() {

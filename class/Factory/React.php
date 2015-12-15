@@ -16,8 +16,8 @@ class React
         $data['addons'] = true;
         javascript('react', $data);
         $root_directory = PHPWS_SOURCE_HTTP . 'mod/counseling/javascript/';
-        $script_header = "<script type='text/jsx' src='$root_directory$directory$script_file'></script>";
-        \Layout::addJSHeader($script_header, md5($directory . $script_file));
+        $script = "<script type='text/jsx' src='$root_directory$directory$script_file'></script>";
+        return $script;
     }
     
     public static function production($directory, $filename)
@@ -28,8 +28,8 @@ class React
         javascript('react', $data);
         $root_directory = PHPWS_SOURCE_HTTP . 'mod/counseling/javascript/';
         $hash = md5($directory . $script_file);
-        $script_header = "<script type='text/javascript' src='$root_directory$directory$script_file'></script>";
-        \Layout::addJSHeader($script_header, $hash);
+        $script = "<script type='text/javascript' src='$root_directory$directory$script_file'></script>";
+        return $script;
     }
 
 }

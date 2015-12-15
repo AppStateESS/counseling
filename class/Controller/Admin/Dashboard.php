@@ -32,13 +32,15 @@ class Dashboard extends \counseling\Controller\Base
     public function getHtmlView($data, \Request $request)
     {
         if (COUNSELING_REACT_DEV) {
-            \counseling\Factory\React::development('Admin/FrontDesk/', 'Mixins.jsx');
-            \counseling\Factory\React::development('Admin/FrontDesk/', 'Summary.jsx');
-            \counseling\Factory\React::development('Admin/FrontDesk/', 'Emergency.jsx');
-            \counseling\Factory\React::development('Admin/FrontDesk/', 'Waiting.jsx');
-            \counseling\Factory\React::development('Admin/FrontDesk/', 'Dashboard.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/FrontDesk/', 'Mixins.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/FrontDesk/', 'Summary.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/FrontDesk/', 'Emergency.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/FrontDesk/', 'Waiting.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/FrontDesk/', 'Dashboard.jsx');
+        } else {
+            $script[] = \counseling\Factory\React::production('Admin/FrontDesk/', 'script.min.js');
         }
-
+        $react = implode("\n", $script);
         \Layout::addStyle('counseling', 'Admin/Dashboard/style.css');
 
         $settings = \Current_User::isDeity() ? 'true' : 'false';
@@ -50,6 +52,7 @@ class Dashboard extends \counseling\Controller\Base
     var categoryIcons = $icons;
 </script>
 <div id="dashboard"></div>
+$react
 EOF;
         $view = new \View\HtmlView($content);
         return $view;
