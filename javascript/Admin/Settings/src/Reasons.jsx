@@ -586,6 +586,7 @@ var ReasonValue = React.createClass({
     },
 
     render: function() {
+        var value = null;
         if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId && this.props.currentEdit.section == this.props.section) {
             value = (
                 <LineEdit

@@ -101,8 +101,10 @@ var sortable = {
         var RNext = null;
         var newRows = [];
         var count = 0;
+        var valId = 0;
 
         rows.forEach(function(value, index){
+
             valId = parseInt(value.id, 10);
 
             if (prevRowId !== undefined && valId === prevRowId) {
