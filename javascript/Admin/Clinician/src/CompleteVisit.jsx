@@ -42,7 +42,7 @@ var CompleteVisit = React.createClass({
 
         var dispositions = null;
         var buttonClass = null;
-        var icon = null;
+        var iconClass = null;
 
         dispositions = this.state.dispositions.map(function(value, key){
             buttonClass = 'btn btn-lg btn-block ' + value.color;
