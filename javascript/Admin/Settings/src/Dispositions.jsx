@@ -442,7 +442,7 @@ var DispositionIcons = React.createClass({
                             <td><IconButton label="heart" handleClick={this.props.handleClick}/></td>
                             <td><IconButton label="home" handleClick={this.props.handleClick}/></td>
                             <td><IconButton label="hourglass-1" handleClick={this.props.handleClick}/></td>
-                            <td><IconButton label="institution" handleClick={this.props.handleClick}/></td>
+                            <td><IconButton label="calendar" handleClick={this.props.handleClick}/></td>
                             <td><IconButton label="life-ring" handleClick={this.props.handleClick}/></td>
                         </tr>
                         <tr>
@@ -466,7 +466,7 @@ var DispositionIcons = React.createClass({
                             <td><IconButton label="user-plus" handleClick={this.props.handleClick}/></td>
                             <td><IconButton label="warning" handleClick={this.props.handleClick}/></td>
                             <td><IconButton label="wrench" handleClick={this.props.handleClick}/></td>
-                            <td>&nbsp;</td>
+                            <td><IconButton label="comments-o" handleClick={this.props.handleClick}/></td>
                             <td>&nbsp;</td>
                         </tr>
                     </tbody>

@@ -2413,7 +2413,7 @@ var DispositionIcons = React.createClass({
                         React.createElement(
                             'td',
                             null,
-                            React.createElement(IconButton, { label: 'institution', handleClick: this.props.handleClick })
+                            React.createElement(IconButton, { label: 'calendar', handleClick: this.props.handleClick })
                         ),
                         React.createElement(
                             'td',
@@ -2521,7 +2521,7 @@ var DispositionIcons = React.createClass({
                         React.createElement(
                             'td',
                             null,
-                            ' '
+                            React.createElement(IconButton, { label: 'comments-o', handleClick: this.props.handleClick })
                         ),
                         React.createElement(
                             'td',

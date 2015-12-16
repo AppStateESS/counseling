@@ -14,8 +14,8 @@ class Banner
         if (preg_match('/\D/', $banner_id)) {
             throw new \Exception('Improperly formatted Banner Id');
         }
-        $fn = array('Matt', 'Doug', 'Lorrie', 'Sam', 'Morris', 'Elvis', 'Mike', 'Michelle', 'Lisa');
-        $ln = array('Douglas', 'Smith', 'Jones', 'Ito', 'Sampson', 'Valdez', 'X', 'Simpson', 'Voggler', 'Husslehip');
+        $fn = array('Matt', 'Doug', 'Lorrie', 'Sam', 'Morris', 'Elvis', 'Mike', 'Michelle', 'Lisa', 'Greg', 'Juan', 'Jacob');
+        $ln = array('Douglas', 'Smith', 'Jones', 'Ito', 'Sampson', 'Valdez', 'Dallas', 'Simpson', 'Voggler', 'Husslehip', 'Nichols');
         $username = randomString();
         return array(
             'userName' => $username,
