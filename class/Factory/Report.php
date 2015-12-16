@@ -114,7 +114,6 @@ class Report extends Base
     public static function weekly(\Request $request)
     {
         javascript('datepicker');
-        $script = '<script type="text/javascript" src="' . PHPWS_HOME_HTTP . 'mod/counseling/javascript/Admin/Report/script.js"></script>';
 
         $datestamp = $request->shiftCommand();
         if (empty($datestamp) || !is_numeric($datestamp)) {

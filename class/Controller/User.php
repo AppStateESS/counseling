@@ -50,7 +50,7 @@ class User extends \Http\Controller
             $script[] = \counseling\Factory\React::development('User/Checkin/', 'Instruction.jsx');
             $script[] = \counseling\Factory\React::development('User/Checkin/', 'Login.jsx');
         } else {
-            $script[] = \counseling\Factory\React::production('User/Checkin/', 'script.js');
+            $script[] = \counseling\Factory\React::production('User/Checkin/', 'script.min.js');
         }
         $react = implode("\n", $script);
         \Layout::addStyle('counseling', 'User/style.css');
