@@ -80,7 +80,7 @@ var ClinicianRow = React.createClass({
 
     render: function() {
         return (
-            <div className="col-sm-6 col-md-4">
+            <div className="col-sm-12 col-md-6">
                 <button className="clinician btn btn-primary btn-lg btn-block" onClick={this.props.choose}>{this.props.first_name}&nbsp;{this.props.last_name}</button>
             </div>
         );
