@@ -1,7 +1,9 @@
 button.clinician {
     margin-right : 1em;
     margin-bottom : 1em;
+    font-size : 2em;
 }
+
 
 .clinician-container {
     margin-top : 2em;
@@ -10,3 +12,4 @@ button.clinician {
 .go-back {
     margin-top : 2em;
 }
+
