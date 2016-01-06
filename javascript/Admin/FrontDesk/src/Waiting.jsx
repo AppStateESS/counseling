@@ -43,6 +43,7 @@ var WaitingList = React.createClass({
                             <th>#</th>
                             <th>&nbsp;</th>
                             <th>Name</th>
+                            <th>Banner id</th>
                             <th>Wait time</th>
                             <th>Visits</th>
                             <th>Status</th>
@@ -67,6 +68,11 @@ var WaitingListRow = React.createClass({
         };
     },
 
+    saveToClipboard: function() {
+        $(this.refs.bannerId).select();
+        document.execCommand('copy');
+    },
+
     render: function() {
         var count = this.props.count + 1;
         return (
@@ -74,6 +80,9 @@ var WaitingListRow = React.createClass({
                 <td style={{width : '3%'}}>{count}</td>
                 <td style={{width : '3%'}} className="text-center"><CategoryIcon category={this.props.category} reasonTitle={this.props.reason_title}/></td>
                 <td><VisitorName visitor={this.props.visitor}/></td>
+                <td><input size="11" ref="bannerId" value={this.props.visitor.banner_id} />&nbsp;
+                    <button title="Copy to clipboard" onClick={this.saveToClipboard}><i className="glyphicon glyphicon-copy"></i></button>
+                </td>
                 <td>{this.props.wait_time} min.</td>
                 <td><WaitingListVisits visitNumber={this.props.total_visits} /></td>
                 <td>
