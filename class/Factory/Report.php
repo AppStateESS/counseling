@@ -63,8 +63,8 @@ class Report extends Base
         $end_of_week = mktime(23, 59, 59, $start_month, $end_day, $start_year);
         $visits = Visit::getDaysVisits($start_of_week, $end_of_week);
 
-        $download_file = 'Weekly Report ' . strftime('%Y%m%d', $start_of_week) . ' to ' . 
-                strftime('%Y%m%d', $end_of_week)  . '.csv';
+        $download_file = 'Weekly Report ' . strftime('%Y%m%d', $start_of_week) . ' to ' .
+                strftime('%Y%m%d', $end_of_week) . '.csv';
         return self::produceCSVReport($visits, $download_file);
     }
 
@@ -175,7 +175,7 @@ class Report extends Base
         $day = date('j', $start_time);
 
         $script = "<script type='text/javascript'>var defaultDate = {year:$year, month:$month, day:$day};var reportType = '$report_type';</script>"
-                . '<script type="text/javascript" src="' . PHPWS_HOME_HTTP . 'mod/counseling/javascript/Admin/Report/script.js"></script>';
+                . '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/counseling/javascript/Admin/Report/script.js"></script>';
         \Layout::addJSHeader($script);
         javascript('datepicker');
     }
