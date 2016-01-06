@@ -681,6 +681,11 @@ var WaitingList = React.createClass({
                         React.createElement(
                             'th',
                             null,
+                            'Banner id'
+                        ),
+                        React.createElement(
+                            'th',
+                            null,
                             'Wait time'
                         ),
                         React.createElement(
@@ -718,6 +723,11 @@ var WaitingListRow = React.createClass({
         };
     },
 
+    saveToClipboard: function saveToClipboard() {
+        $(this.refs.bannerId).select();
+        document.execCommand('copy');
+    },
+
     render: function render() {
         var count = this.props.count + 1;
         return React.createElement(
@@ -737,6 +747,17 @@ var WaitingListRow = React.createClass({
                 'td',
                 null,
                 React.createElement(VisitorName, { visitor: this.props.visitor })
+            ),
+            React.createElement(
+                'td',
+                null,
+                React.createElement('input', { size: '11', ref: 'bannerId', value: this.props.visitor.banner_id }),
+                ' ',
+                React.createElement(
+                    'button',
+                    { title: 'Copy to clipboard', onClick: this.saveToClipboard },
+                    React.createElement('i', { className: 'glyphicon glyphicon-copy' })
+                )
             ),
             React.createElement(
                 'td',
