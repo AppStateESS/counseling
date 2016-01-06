@@ -10,7 +10,7 @@ $(window).ready(function(){
         todayBtn : true
     });
     $('#pick-date').datepicker().on('changeDate', selectDate);
-    
+
     $('#pick-date').click(function(e){
         e.preventDefault();
         $('#pick-date').datepicker('show');

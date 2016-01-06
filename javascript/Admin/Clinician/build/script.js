@@ -502,7 +502,7 @@ var ClinicianRow = React.createClass({
     render: function render() {
         return React.createElement(
             'div',
-            { className: 'col-sm-6 col-md-4' },
+            { className: 'col-sm-12 col-md-6' },
             React.createElement(
                 'button',
                 { className: 'clinician btn btn-primary btn-lg btn-block', onClick: this.props.choose },
