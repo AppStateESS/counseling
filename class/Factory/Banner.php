@@ -51,7 +51,6 @@ class Banner
         require_once PHPWS_SOURCE_DIR . 'mod/counseling/conf/defines.php';
         
         $client = new \Guzzle\Http\Client(COUNSELING_BANNER_URL);
-        $request = $client->get('student/'. $banner_id);
         $response = $request->send();
         $result = $response->json();
         return self::prune($result);
