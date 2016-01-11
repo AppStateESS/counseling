@@ -8,8 +8,7 @@ var Reason = React.createClass({
     getDefaultProps: function() {
         return {
             update: null,  // function to run upon reason selection
-            visitor : null, //visitor object
-            update : null // function to set parent's reason
+            visitor : null //visitor object
         };
     },
 
