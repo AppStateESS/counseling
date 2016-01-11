@@ -9,7 +9,6 @@ var Swipe = React.createClass({
             error : 0,
             visitor : null
         };
-
     },
 
     getDefaultProps: function() {
@@ -36,14 +35,14 @@ var Swipe = React.createClass({
     timedReset : function() {
         swipeTimeout = setTimeout(function(){
             this.resetSwipe();
-        }.bind(this), 5000);
+        }.bind(this), 4000);
     },
 
     resetSwipe : function() {
+        clearTimeout(swipeTimeout);
         this.setState({
             error : 0,
             visitor : null,
-            swipeStarted : false
         });
     },
 
@@ -54,7 +53,6 @@ var Swipe = React.createClass({
                 visitor = visitor.slice(1,10);
             }
 
-            console.log(visitor);
             $.getJSON('counseling/User/Checkin', {
             	command : 'loginVisitor',
                 bannerId : visitor
@@ -97,7 +95,7 @@ var Swipe = React.createClass({
     componentDidUpdate: function(prevProps, prevState) {
         this.focusSwiper();
     },
-    
+
     componentDidMount: function(prevProps, prevState) {
         this.focusSwiper();
     },
@@ -108,9 +106,11 @@ var Swipe = React.createClass({
 
         if (this.state.error === 1) {
             field = (
-                <div className="alert alert-danger alert-dismissible" role="alert" ref="errorAlert">
-                    <button className="close" type="button" onClick={this.resetSwipe}><i className="fa fa-times"></i></button>
-                    Account not found. Please try again or see the front desk.
+                <div className="text-center">
+                    <div className="alert alert-danger alert-dismissible" role="alert" ref="errorAlert">
+                        Account not found. Please try again or see the front desk.
+                    </div>
+                    <button className="btn btn-default" type="button" onClick={this.resetSwipe}><i className="fa fa-repeat"></i> Try again</button>
                 </div>
             );
         } else if (this.state.error === 2) {

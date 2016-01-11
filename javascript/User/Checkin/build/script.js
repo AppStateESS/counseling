@@ -60,14 +60,14 @@ var Swipe = React.createClass({
     timedReset: function timedReset() {
         swipeTimeout = setTimeout((function () {
             this.resetSwipe();
-        }).bind(this), 5000);
+        }).bind(this), 4000);
     },
 
     resetSwipe: function resetSwipe() {
+        clearTimeout(swipeTimeout);
         this.setState({
             error: 0,
-            visitor: null,
-            swipeStarted: false
+            visitor: null
         });
     },
 
@@ -78,7 +78,6 @@ var Swipe = React.createClass({
                 visitor = visitor.slice(1, 10);
             }
 
-            console.log(visitor);
             $.getJSON('counseling/User/Checkin', {
                 command: 'loginVisitor',
                 bannerId: visitor
@@ -130,13 +129,18 @@ var Swipe = React.createClass({
         if (this.state.error === 1) {
             field = React.createElement(
                 'div',
-                { className: 'alert alert-danger alert-dismissible', role: 'alert', ref: 'errorAlert' },
+                { className: 'text-center' },
+                React.createElement(
+                    'div',
+                    { className: 'alert alert-danger alert-dismissible', role: 'alert', ref: 'errorAlert' },
+                    'Account not found. Please try again or see the front desk.'
+                ),
                 React.createElement(
                     'button',
-                    { className: 'close', type: 'button', onClick: this.resetSwipe },
-                    React.createElement('i', { className: 'fa fa-times' })
-                ),
-                'Account not found. Please try again or see the front desk.'
+                    { className: 'btn btn-default', type: 'button', onClick: this.resetSwipe },
+                    React.createElement('i', { className: 'fa fa-repeat' }),
+                    ' Try again'
+                )
             );
         } else if (this.state.error === 2) {
             field = React.createElement(
