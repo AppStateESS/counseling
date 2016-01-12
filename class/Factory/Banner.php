@@ -54,7 +54,7 @@ class Banner
         $request = $client->get($banner_id);
         $response = $request->send();
         $result = $response->json();
-        if (empty($result['username'])) {
+        if (empty($result['userName'])) {
             return false;
         } else {
             return self::prune($result);
