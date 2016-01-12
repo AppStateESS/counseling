@@ -51,7 +51,7 @@ class Visitor extends Base
         }
 
         if (Banner::isError($vars)) {
-            return null;
+            throw new \Exception('Could not authenticate user');
         }
 
         $visitor = new Resource;
