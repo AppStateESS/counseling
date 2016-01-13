@@ -57,7 +57,11 @@ class Visitor extends Base
         $visitor = new Resource;
         $visitor->setBannerId($banner_id);
         $visitor->setFirstName($vars['firstName']);
-        $visitor->setPreferredName($vars['preferredName']);
+        if (empty($vars['preferredName'])) {
+            $visitor->setPreferredName($vars['firstName']);
+        } else {
+            $visitor->setPreferredName($vars['preferredName']);
+        }
         $visitor->stampFirstVisit();
         $visitor->setSeenLastVisit(false);
         $visitor->setLastname($vars['lastName']);
