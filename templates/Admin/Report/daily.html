@@ -1,4 +1,4 @@
-<h2>Daily Report - <?php echo $date?> 
+<h2>Daily Report - <?php echo $date?>
     <button title="Pick different day" id="pick-date" class="btn btn-default"><i style="cursor:pointer" class="fa fa-calendar"></i></button>
     <a href="counseling/Admin/Report/DailyCSV/<?php echo $startTime?>" title="Download CSV file" class="btn btn-default"><i class="fa fa-download"></i></a>
     <a href="counseling/Admin/Report/Weekly/<?php echo $startTime?>" title=View weekly report" class="btn btn-default"><i class="fa fa-bar-chart"></i> Weekly report</a>
@@ -6,7 +6,6 @@
 <?php if (empty($seen) && empty($unseen)):?>
 <p>No visitors recorded for today.</p>
 <?php return; endif;?>
-
 <h3>Left without being seen</h3>
 <?php if (empty($unseen)):?>
 <p>No visitors left without being seen</p>
@@ -15,18 +14,23 @@
     <tr>
         <th>&nbsp;</th>
         <th>Name</th>
+        <th>Banner Id</th>
         <th>Phone</th>
         <th>Reason left</th>
         <th>Arrived</th>
         <th>Waited</th>
     </tr>
-<?php foreach($unseen as $vus):?>
+    <?php foreach($unseen as $vus):?>
     <tr>
         <td>
-            <?=$vus['has_emergency']?'<i class="text-danger fa-lg fa ' . CC_CATEGORY_EMERGENCY_ICON . '"></i>':null?>
+            <?=$vus['has_emergency']?'<i class="text-danger fa-lg fa ' . CC_CATEGORY_EMERGENCY_ICON . '"></i>':null?> </td>
+        <td>
+            <?=$vus['visitor']['first_name']?>
+                <?php echo empty($vus['visitor']['preferred_name']) ? null : '"' . $vus['visitor']['preferred_name'] . '"'?>
+                <?=$vus['visitor']['last_name']?>
         </td>
         <td>
-            <?=$vus['visitor']['first_name'], ' ', $vus['visitor']['last_name']?>
+            <?=$vus['visitor']['banner_id']?>
         </td>
         <td>
             <?=$vus['visitor']['phone_number']?>
@@ -38,12 +42,9 @@
             <?=strftime('%l:%M%p', $vus['arrival_time'])?>
         </td>
         <td>
-            <?=$vus['wait_time']?> mins.
-        </td>
+            <?=$vus['wait_time']?> mins. </td>
     </tr>
-<?php endforeach;endif;?>
-</table>
-
+    <?php endforeach;endif;?> </table>
 <h3>Visitors seen</h3>
 <?php if (empty($seen)):?>
 <p>No visitors seen today.</p>
@@ -52,18 +53,23 @@
     <tr>
         <th>&nbsp;</th>
         <th>Name</th>
+        <th>Banner Id</th>
         <th>Clinician</th>
         <th>Disposition</th>
         <th>Arrived</th>
         <th>Waited</th>
     </tr>
-<?php foreach($seen as $vs):?>
+    <?php foreach($seen as $vs):?>
     <tr>
         <td>
-            <?=$vs['has_emergency']?'<i class="text-danger fa-lg fa ' . CC_CATEGORY_EMERGENCY_ICON . '"></i>':null?>
+            <?=$vs['has_emergency']?'<i class="text-danger fa-lg fa ' . CC_CATEGORY_EMERGENCY_ICON . '"></i>':null?> </td>
+        <td>
+            <?=$vs['visitor']['first_name']?>
+                <?php echo empty($vs['visitor']['preferred_name']) ? null : '"' . $vs['visitor']['preferred_name'] . '"'?>
+                <?=$vs['visitor']['last_name']?>
         </td>
         <td>
-            <?=$vs['visitor']['first_name'], ' ', $vs['visitor']['last_name']?>
+            <?=$vs['visitor']['banner_id']?>
         </td>
         <td>
             <?=$vs['clinician']?>
@@ -75,8 +81,6 @@
             <?=strftime('%l:%M%p', $vs['arrival_time'])?>
         </td>
         <td>
-            <?=$vs['wait_time']?> mins.
-        </td>
+            <?=$vs['wait_time']?> mins. </td>
     </tr>
-<?php endforeach;endif;?>
-</table>
+    <?php endforeach;endif;?> </table>

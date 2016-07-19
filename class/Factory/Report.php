@@ -75,7 +75,7 @@ class Report extends Base
         }
 
         $csv = array();
-        $csvRow[] = '"arrival time","complete reason","disposition","clinician","emergency","visit reason","banner_id","first name","last name","phone number","email","minutes waited"';
+        $csvRow[] = '"arrival time","complete reason","disposition","clinician","emergency","visit reason","banner_id","preferred_name","first name","last name","phone number","email","minutes waited"';
 
         foreach ($visits as $visit) {
             $sub = array();
@@ -91,6 +91,7 @@ class Report extends Base
             $sub[] = $visit['has_emergency'] ? 'Yes' : 'No';
             $sub[] = $visit['complete_reason_title'];
             $sub[] = $visit['banner_id'] = $visit['visitor']['banner_id'];
+            $sub[] = $visit['preferred_name'] = $visit['visitor']['preferred_name'];
             $sub[] = $visit['first_name'] = $visit['visitor']['first_name'];
             $sub[] = $visit['last_name'] = $visit['visitor']['last_name'];
             $sub[] = $visit['phone_number'] = $visit['visitor']['phone_number'];

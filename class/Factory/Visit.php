@@ -78,6 +78,9 @@ class Visit extends Base
         $visitors = $db->select();
 
         foreach ($visitors as $visitor) {
+            if (empty($visitor['preferred_name']) || $visitor['preferred_name'] === $visitor['first_name']) {
+                $visitor['preferred_name'] = null;
+            }
             $sorted_visitors[$visitor['id']] = $visitor;
             $sorted_visitors[$visitor['id']]['previously_seen'] = strftime('%b. %e, %Y', $visitor['previously_seen']);
         }
