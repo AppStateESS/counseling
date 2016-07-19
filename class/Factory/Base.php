@@ -8,7 +8,6 @@ namespace counseling\Factory;
  */
 class Base extends \ResourceFactory
 {
-
     public static function pullPostString($varname)
     {
         return trim(strip_tags(filter_input(INPUT_POST, $varname, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)));
@@ -35,6 +34,7 @@ class Base extends \ResourceFactory
         $obj->{CC_CATEGORY_OTHER} = CC_CATEGORY_OTHER_ICON;
         $obj->{CC_CATEGORY_WALKIN} = CC_CATEGORY_WALKIN_ICON;
         $obj->{CC_CATEGORY_APPOINTMENT} = CC_CATEGORY_APPOINTMENT_ICON;
+
         return $obj;
     }
 
@@ -62,5 +62,4 @@ class Base extends \ResourceFactory
             return $result['max'];
         }
     }
-
 }
