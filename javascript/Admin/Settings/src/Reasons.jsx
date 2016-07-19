@@ -619,14 +619,17 @@ var LineEdit = React.createClass({
             handleChange : null,
             defaultValue : null,
             close : null,
-            update : null
+            update : null,
+            value : ''
         };
     },
 
     render: function() {
         return (
             <div className="input-group">
-                <input className="editItem form-control" placeholder={this.props.placeholder} onChange={this.props.handleChange} defaultValue={this.props.defaultValue}/>
+                <input className="editItem form-control" placeholder={this.props.placeholder}
+                    onChange={this.props.handleChange} defaultValue={this.props.defaultValue}
+                    value={this.props.value}/>
                 <span className="input-group-btn">
                     <button className="btn btn-success" onClick={this.props.update}><i className="fa fa-check"></i></button>
                     <button className="btn btn-danger" onClick={this.props.close}><i className="fa fa-times"></i></button>
@@ -668,8 +671,8 @@ var FlipOption = React.createClass({
 var ReasonForm = React.createClass({
     getInitialState: function() {
         return {
-            title : null,
-            description : null,
+            title : '',
+            description : '',
             instruction : 1,
             category : 1,
             showEmergency : false,
@@ -809,11 +812,11 @@ var ReasonForm = React.createClass({
                     {this.state.formError ? <div className="alert alert-danger" style={{fontSize : '1em'}}>Please complete all highlighted text inputs.</div> : null}
                     <div className="form-group">
                         <TextInput inputId="title" label="Title" placeholder="One or two words describing reason. Internal use only."
-                            handleChange={this.updateTitle} required={true} tabIndex={1}/>
+                            handleChange={this.updateTitle} required={true} tabIndex={1} value={this.state.title}/>
                     </div>
                     <div className="form-group">
                         <TextInput inputId="description" label="Description" placeholder="Description of reason. Seen by visitors."
-                            handleChange={this.updateDescription} required={true} tabIndex={2}/>
+                            handleChange={this.updateDescription} required={true} tabIndex={2} value={this.state.description}/>
                     </div>
                     <div className="row">
                         <div className="col-sm-6">
@@ -821,10 +824,10 @@ var ReasonForm = React.createClass({
                                     <label>Instructions</label>
                                     <p>
                                         <label style={{marginRight:'2em'}}>
-                                            <input type="radio" name="instruction" value="1" defaultChecked={true} tabIndex={3} onClick={this.updateInstruction}/> Sit down
+                                            <input type="radio" name="instruction" defaultValue="1" defaultChecked={true} tabIndex={3} onClick={this.updateInstruction}/> Sit down
                                         </label>
                                         <label>
-                                            <input type="radio" name="instruction" value="2" tabIndex={4} onClick={this.updateInstruction}/> Front desk
+                                            <input type="radio" name="instruction" defaultValue="2" tabIndex={4} onClick={this.updateInstruction}/> Front desk
                                         </label>
                                     </p>
                             </div>
@@ -876,17 +879,17 @@ var GroupSelect = React.createClass({
                 <label>Category</label>
                 <div>
                     <label>
-                        <input type="radio" name="summaryGroup" value="1" onClick={this.updateCategory}/> <i className="fa fa-male fa-lg"></i> Walk-in
+                        <input type="radio" name="summaryGroup" defaultValue="1" onClick={this.updateCategory}/> <i className="fa fa-male fa-lg"></i> Walk-in
                     </label>
                 </div>
                 <div>
                     <label>
-                        <input type="radio" name="summaryGroup" value="2" onClick={this.updateCategory}/> <i className="fa fa-clock-o fa-lg"></i> Appointment
+                        <input type="radio" name="summaryGroup" defaultValue="2" onClick={this.updateCategory}/> <i className="fa fa-clock-o fa-lg"></i> Appointment
                     </label>
                 </div>
                 <div>
                     <label>
-                        <input type="radio" name="summaryGroup" defaultChecked={true} value="0" onClick={this.updateCategory}/> <i className="fa fa-question-circle fa-lg"></i> Other
+                        <input type="radio" name="summaryGroup" defaultChecked={true} defaultValue="0" onClick={this.updateCategory}/> <i className="fa fa-question-circle fa-lg"></i> Other
                     </label>
                 </div>
             </div>

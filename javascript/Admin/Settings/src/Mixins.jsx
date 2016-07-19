@@ -8,7 +8,7 @@ var TextInput = React.createClass({
             handlePress : null,
             handleChange : null,
             inputId : null,
-            value : null,
+            value : '',
             tabIndex : null,
         };
     },

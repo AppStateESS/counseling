@@ -239,7 +239,7 @@ var DispositionForm = React.createClass({
 
     getInitialState: function() {
         return {
-            title: null,
+            title: '',
             color : null,
             icon : null,
             formError: ''
@@ -251,7 +251,7 @@ var DispositionForm = React.createClass({
             closeForm: null,
             reload: null,
             fail: null,
-            title : null,
+            title : '',
             color : null,
             icon : null,
             dispositionId : 0
@@ -326,7 +326,6 @@ var DispositionForm = React.createClass({
             alert = <div className="alert alert-danger" style={{fontSize: '1em'}}>
                 {this.state.formError}</div>;
         }
-
         return (
             <div className="disposition-form">
                 {alert}

@@ -7,7 +7,7 @@ var Swipe = React.createClass({
     getInitialState: function() {
         return {
             error : 0,
-            visitor : null
+            visitor : '',
         };
     },
 
