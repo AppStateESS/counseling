@@ -6,54 +6,66 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         concat: {
             clinic: {
-                src: ['javascript/Admin/Clinician/src/CompleteVisit.jsx',
-                    'javascript/Admin/Clinician/src/SelectVisitor.jsx',
-                    'javascript/Admin/Clinician/src/ClinicianChoose.jsx',
-                    'javascript/Admin/Clinician/src/Dashboard.jsx'
-                ],
+                src: ['javascript/Admin/Clinician/src/*.jsx'],
                 dest: 'javascript/Admin/Clinician/tmp/joined.jsx'
             },
             desk: {
                 src: ['javascript/Admin/FrontDesk/src/Mixins.jsx',
-                    'javascript/Admin/FrontDesk/src/Summary.jsx',
-                    'javascript/Admin/FrontDesk/src/Emergency.jsx',
-                    'javascript/Admin/FrontDesk/src/Waiting.jsx',
-                    'javascript/Admin/FrontDesk/src/Dashboard.jsx'
+                    'javascript/Admin/FrontDesk/src/*.jsx',
                 ],
                 dest: 'javascript/Admin/FrontDesk/tmp/joined.jsx'
             },
             settings: {
-                src: ['javascript/Admin/Settings/src/Mixins.jsx',
-                    'javascript/Admin/Settings/src/Visitors.jsx',
-                    'javascript/Admin/Settings/src/Clinicians.jsx',
-                    'javascript/Admin/Settings/src/Visits.jsx',
-                    'javascript/Admin/Settings/src/Reasons.jsx',
-                    'javascript/Admin/Settings/src/Dispositions.jsx',
-                    'javascript/Admin/Settings/src/Dashboard.jsx'
-                ],
+                src: ['javascript/Admin/Settings/src/Mixins.jsx', 'javascript/Admin/Settings/src/*.jsx'],
                 dest: 'javascript/Admin/Settings/tmp/joined.jsx'
             },
             user: {
-                src: ['javascript/User/Checkin/src/Mixins.jsx',
-                    'javascript/User/Checkin/src/Swipe.jsx',
-                    'javascript/User/Checkin/src/Reason.jsx',
-                    'javascript/User/Checkin/src/Phone.jsx',
-                    'javascript/User/Checkin/src/Emergency.jsx',
-                    'javascript/User/Checkin/src/Instruction.jsx',
-                    'javascript/User/Checkin/src/Login.jsx'
-                ],
+                src: ['javascript/User/Checkin/src/Mixins.jsx', 'javascript/User/Checkin/src/*.jsx'],
                 dest: 'javascript/User/Checkin/tmp/joined.jsx'
-            }
+            },
+        },
+        watch: {
+            clinic: {
+                    files: 'javascript/Admin/Clinician/src/*.jsx',
+                    tasks: ['concat:clinic', 'babel:clinic'],
+            },
+            desk: {
+                    files: 'javascript/Admin/FrontDesk/src/*.jsx',
+                    tasks: ['concat:desk', 'babel:desk'],
+            },
+            settings: {
+                    files: 'javascript/Admin/Settings/src/*.jsx',
+                    tasks: ['concat:settings', 'babel:settings'],
+            },
+            user: {
+                    files: 'javascript/User/Checkin/src/*.jsx',
+                    tasks: ['concat:user', 'babel:user'],
+            },
         },
         babel: {
-            dist: {
+            options: {
+                sourceMap: true,
+            },
+            clinic: {
                 files: {
                     'javascript/Admin/Clinician/build/script.js': 'javascript/Admin/Clinician/tmp/joined.jsx',
+                }
+            },
+            desk: {
+                files: {
                     'javascript/Admin/FrontDesk/build/script.js': 'javascript/Admin/FrontDesk/tmp/joined.jsx',
+                }
+            },
+            settings: {
+                files: {
                     'javascript/Admin/Settings/build/script.js': 'javascript/Admin/Settings/tmp/joined.jsx',
+                }
+            },
+            user: {
+                files: {
                     'javascript/User/Checkin/build/script.js': 'javascript/User/Checkin/tmp/joined.jsx'
                 }
-            }
+            },
         },
         uglify: {
             admin: {
@@ -74,11 +86,12 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-react');
     grunt.loadNpmTasks('grunt-babel');
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.registerTask("default", ['concat', 'babel', 'uglify', 'clean']);
 }
