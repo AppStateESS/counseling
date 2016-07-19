@@ -2,6 +2,121 @@
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+var ClinicianChoose = React.createClass({
+    displayName: 'ClinicianChoose',
+
+    getInitialState: function getInitialState() {
+        return {
+            timeframe: null
+        };
+    },
+
+    componentDidMount: function componentDidMount() {
+        this.setTimeframe();
+    },
+
+    getDefaultProps: function getDefaultProps() {
+        return {
+            clinicians: null,
+            choose: null
+        };
+    },
+
+    setTimeframe: function setTimeframe() {
+        var timeframe;
+        var date = new Date();
+        var hours = date.getHours();
+        switch (hours) {
+            case hours < 12:
+                timeframe = 'Morning';
+                break;
+
+            case hours > 17:
+                timeframe = 'Evening';
+                break;
+
+            default:
+                timeframe = 'Afternoon';
+                break;
+        }
+        this.setState({
+            timeframe: timeframe
+        });
+    },
+
+    render: function render() {
+        var rows = null;
+
+        if (this.props.clinicians !== null && this.props.clinicians.length > 0) {
+            rows = this.props.clinicians.map(function (value, key) {
+                return React.createElement(ClinicianRow, _extends({ key: key }, value, { choose: this.props.choose.bind(null, key) }));
+            }.bind(this));
+        } else {
+            rows = React.createElement(
+                'p',
+                null,
+                'No clinicians found in system.'
+            );
+        }
+
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'h2',
+                null,
+                'Good ',
+                this.state.timeframe,
+                '!'
+            ),
+            React.createElement('hr', null),
+            React.createElement(
+                'h3',
+                null,
+                'Please click/touch your name to continue...'
+            ),
+            React.createElement(
+                'div',
+                { className: 'row clinician-container' },
+                rows
+            )
+        );
+    }
+
+});
+
+var ClinicianRow = React.createClass({
+    displayName: 'ClinicianRow',
+
+    getInitialState: function getInitialState() {
+        return {};
+    },
+
+    getDefaultProps: function getDefaultProps() {
+        return {
+            first_name: null,
+            last_name: null,
+            id: null,
+            choose: null
+        };
+    },
+
+    render: function render() {
+        return React.createElement(
+            'div',
+            { className: 'col-sm-12 col-md-6' },
+            React.createElement(
+                'button',
+                { className: 'clinician btn btn-primary btn-lg btn-block', onClick: this.props.choose },
+                this.props.first_name,
+                ' ',
+                this.props.last_name
+            )
+        );
+    }
+
+});
+
 var CompleteVisit = React.createClass({
     displayName: 'CompleteVisit',
 
@@ -25,11 +140,11 @@ var CompleteVisit = React.createClass({
     loadData: function loadData() {
         $.getJSON('counseling/Admin/Clinician', {
             command: 'dispositionList'
-        }).done((function (data) {
+        }).done(function (data) {
             this.setState({
                 dispositions: data
             });
-        }).bind(this));
+        }.bind(this));
     },
 
     handleClick: function handleClick(dispositionId) {
@@ -37,9 +152,9 @@ var CompleteVisit = React.createClass({
             command: 'assignDisposition',
             dispositionId: dispositionId,
             visitId: this.props.seen.id
-        }, null, 'json').done((function (data) {
+        }, null, 'json').done(function (data) {
             this.props.setStage('selectVisitor');
-        }).bind(this));
+        }.bind(this));
     },
 
     render: function render() {
@@ -48,7 +163,7 @@ var CompleteVisit = React.createClass({
         var buttonClass = null;
         var iconClass = null;
 
-        dispositions = this.state.dispositions.map((function (value, key) {
+        dispositions = this.state.dispositions.map(function (value, key) {
             buttonClass = 'btn btn-lg btn-block ' + value.color;
             iconClass = 'fa fa-' + value.icon;
             return React.createElement(
@@ -58,7 +173,7 @@ var CompleteVisit = React.createClass({
                 ' ',
                 value.title
             );
-        }).bind(this));
+        }.bind(this));
 
         return React.createElement(
             'div',
@@ -96,6 +211,127 @@ var CompleteVisit = React.createClass({
 
 });
 
+var ClinicianTimeout = null;
+
+var ClinicianDashboard = React.createClass({
+    displayName: 'ClinicianDashboard',
+
+    getInitialState: function getInitialState() {
+        return {
+            clinicians: null,
+            currentClinician: null,
+            stage: 'choose',
+            currentlySeen: null
+        };
+    },
+
+    componentDidMount: function componentDidMount() {
+        this.loadData();
+    },
+
+    loadData: function loadData() {
+        $.getJSON('counseling/Admin/Clinician', {
+            command: 'list'
+        }).done(function (data) {
+            this.setState({
+                clinicians: data
+            });
+        }.bind(this));
+    },
+
+    loadSeen: function loadSeen(clinician) {
+        $.getJSON('counseling/Admin/Clinician', {
+            command: 'currentlySeen',
+            clinicianId: clinician.id
+        }).done(function (data) {
+            if (data !== false) {
+                this.setState({
+                    currentlySeen: data,
+                    stage: 'completeVisit',
+                    currentClinician: clinician
+                });
+            } else {
+                this.setState({
+                    currentlySeen: null,
+                    stage: 'selectVisitor',
+                    currentClinician: clinician
+                });
+            }
+        }.bind(this));
+    },
+
+    choose: function choose(key) {
+        var clinician = this.state.clinicians[key];
+        this.loadSeen(clinician);
+    },
+
+    setStage: function setStage(stage) {
+        this.setState({
+            stage: stage
+        });
+    },
+
+    componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+        if (this.state.stage == 'reset') {
+            ClinicianTimeout = setTimeout(function () {
+                this.setStage('choose');
+            }.bind(this), 5000);
+        }
+    },
+
+    goBack: function goBack() {
+        clearTimeout(ClinicianTimeout);
+        this.setStage('choose');
+    },
+
+    render: function render() {
+        switch (this.state.stage) {
+            case 'choose':
+                return React.createElement(ClinicianChoose, { clinicians: this.state.clinicians, choose: this.choose });
+                break;
+
+            case 'selectVisitor':
+                return React.createElement(SelectVisitor, { clinician: this.state.currentClinician, setStage: this.setStage });
+                break;
+
+            case 'completeVisit':
+                return React.createElement(CompleteVisit, { clinician: this.state.currentClinician, seen: this.state.currentlySeen, goBack: this.goBack, setStage: this.setStage });
+                break;
+
+            case 'reset':
+                return React.createElement(
+                    'div',
+                    { className: 'well text-center' },
+                    React.createElement(
+                        'h2',
+                        null,
+                        'Thank you.'
+                    ),
+                    React.createElement(
+                        'h3',
+                        null,
+                        'Return on completion of your consultation.'
+                    ),
+                    React.createElement(
+                        'button',
+                        { className: 'btn btn-default btn-lg', onClick: this.goBack },
+                        React.createElement('i', { className: 'fa fa-undo' }),
+                        ' Go Back'
+                    )
+                );
+            default:
+                return React.createElement(
+                    'div',
+                    null,
+                    'Unknown stage'
+                );
+        }
+    }
+
+});
+
+ReactDOM.render(React.createElement(ClinicianDashboard, null), document.getElementById('clinician-dashboard'));
+
 var SelectVisitor = React.createClass({
     displayName: 'SelectVisitor',
 
@@ -120,14 +356,14 @@ var SelectVisitor = React.createClass({
     loadData: function loadData() {
         $.getJSON('counseling/Admin/Clinician', {
             command: 'visitorList'
-        }).done((function (data) {
+        }).done(function (data) {
             if (data !== null) {
                 this.setState({
                     waiting: data.waiting,
                     emergencies: data.emergencies
                 });
             }
-        }).bind(this));
+        }.bind(this));
     },
 
     goBack: function goBack() {
@@ -153,11 +389,12 @@ var SelectVisitor = React.createClass({
             command: 'selectVisit',
             visitId: visitId,
             clinicianId: clinicianId
-        }, null, 'json').done((function (data) {
+        }, null, 'json').done(function (data) {
             this.reset();
             this.props.setStage('reset');
-        }).bind(this));
+        }.bind(this));
     },
+
 
     render: function render() {
         if (this.state.selectedVisit !== null) {
@@ -294,9 +531,9 @@ var Emergencies = React.createClass({
         if (this.props.list === null || this.props.list.length === 0) {
             return null;
         } else {
-            var visits = this.props.list.map((function (value, key) {
+            var visits = this.props.list.map(function (value, key) {
                 return React.createElement(VisitorRow, _extends({ key: value.id }, value, { clinician: this.props.clinician, buttonClass: 'danger', select: this.props.select.bind(null, value) }));
-            }).bind(this));
+            }.bind(this));
 
             return React.createElement(
                 'div',
@@ -326,9 +563,9 @@ var Waiting = React.createClass({
         if (this.props.list === null || this.props.list.length === 0) {
             return null;
         } else {
-            var visits = this.props.list.map((function (value, key) {
+            var visits = this.props.list.map(function (value, key) {
                 return React.createElement(VisitorRow, _extends({ key: value.id }, value, { clinician: this.props.clinician, buttonClass: 'success', select: this.props.select.bind(null, value) }));
-            }).bind(this));
+            }.bind(this));
 
             return React.createElement(
                 'div',
@@ -399,233 +636,4 @@ var CategoryIcon = React.createClass({
         );
     }
 });
-
-var ClinicianChoose = React.createClass({
-    displayName: 'ClinicianChoose',
-
-    getInitialState: function getInitialState() {
-        return {
-            timeframe: null
-        };
-    },
-
-    componentDidMount: function componentDidMount() {
-        this.setTimeframe();
-    },
-
-    getDefaultProps: function getDefaultProps() {
-        return {
-            clinicians: null,
-            choose: null
-        };
-    },
-
-    setTimeframe: function setTimeframe() {
-        var timeframe;
-        var date = new Date();
-        var hours = date.getHours();
-        switch (hours) {
-            case hours < 12:
-                timeframe = 'Morning';
-                break;
-
-            case hours > 17:
-                timeframe = 'Evening';
-                break;
-
-            default:
-                timeframe = 'Afternoon';
-                break;
-        }
-        this.setState({
-            timeframe: timeframe
-        });
-    },
-
-    render: function render() {
-        var rows = null;
-
-        if (this.props.clinicians !== null && this.props.clinicians.length > 0) {
-            rows = this.props.clinicians.map((function (value, key) {
-                return React.createElement(ClinicianRow, _extends({ key: key }, value, { choose: this.props.choose.bind(null, key) }));
-            }).bind(this));
-        } else {
-            rows = React.createElement(
-                'p',
-                null,
-                'No clinicians found in system.'
-            );
-        }
-
-        return React.createElement(
-            'div',
-            null,
-            React.createElement(
-                'h2',
-                null,
-                'Good ',
-                this.state.timeframe,
-                '!'
-            ),
-            React.createElement('hr', null),
-            React.createElement(
-                'h3',
-                null,
-                'Please click/touch your name to continue...'
-            ),
-            React.createElement(
-                'div',
-                { className: 'row clinician-container' },
-                rows
-            )
-        );
-    }
-
-});
-
-var ClinicianRow = React.createClass({
-    displayName: 'ClinicianRow',
-
-    getInitialState: function getInitialState() {
-        return {};
-    },
-
-    getDefaultProps: function getDefaultProps() {
-        return {
-            first_name: null,
-            last_name: null,
-            id: null,
-            choose: null
-        };
-    },
-
-    render: function render() {
-        return React.createElement(
-            'div',
-            { className: 'col-sm-12 col-md-6' },
-            React.createElement(
-                'button',
-                { className: 'clinician btn btn-primary btn-lg btn-block', onClick: this.props.choose },
-                this.props.first_name,
-                ' ',
-                this.props.last_name
-            )
-        );
-    }
-
-});
-
-var ClinicianTimeout = null;
-
-var ClinicianDashboard = React.createClass({
-    displayName: 'ClinicianDashboard',
-
-    getInitialState: function getInitialState() {
-        return {
-            clinicians: null,
-            currentClinician: null,
-            stage: 'choose',
-            currentlySeen: null
-        };
-    },
-
-    componentDidMount: function componentDidMount() {
-        this.loadData();
-    },
-
-    loadData: function loadData() {
-        $.getJSON('counseling/Admin/Clinician', {
-            command: 'list'
-        }).done((function (data) {
-            this.setState({
-                clinicians: data
-            });
-        }).bind(this));
-    },
-
-    loadSeen: function loadSeen(clinician) {
-        $.getJSON('counseling/Admin/Clinician', {
-            command: 'currentlySeen',
-            clinicianId: clinician.id
-        }).done((function (data) {
-            if (data !== false) {
-                this.setState({
-                    currentlySeen: data,
-                    stage: 'completeVisit',
-                    currentClinician: clinician
-                });
-            } else {
-                this.setState({
-                    currentlySeen: null,
-                    stage: 'selectVisitor',
-                    currentClinician: clinician
-                });
-            }
-        }).bind(this));
-    },
-
-    choose: function choose(key) {
-        var clinician = this.state.clinicians[key];
-        this.loadSeen(clinician);
-    },
-
-    setStage: function setStage(stage) {
-        this.setState({
-            stage: stage
-        });
-    },
-
-    componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
-        if (this.state.stage == 'reset') {
-            ClinicianTimeout = setTimeout((function () {
-                this.setStage('choose');
-            }).bind(this), 5000);
-        }
-    },
-
-    goBack: function goBack() {
-        clearTimeout(ClinicianTimeout);
-        this.setStage('choose');
-    },
-
-    render: function render() {
-        switch (this.state.stage) {
-            case 'choose':
-                return React.createElement(ClinicianChoose, { clinicians: this.state.clinicians, choose: this.choose });
-                break;
-
-            case 'selectVisitor':
-                return React.createElement(SelectVisitor, { clinician: this.state.currentClinician, setStage: this.setStage });
-                break;
-
-            case 'completeVisit':
-                return React.createElement(CompleteVisit, { clinician: this.state.currentClinician, seen: this.state.currentlySeen, goBack: this.goBack, setStage: this.setStage });
-                break;
-
-            case 'reset':
-                return React.createElement(
-                    'div',
-                    { className: 'well text-center' },
-                    React.createElement(
-                        'h2',
-                        null,
-                        'Thank you.'
-                    ),
-                    React.createElement(
-                        'h3',
-                        null,
-                        'Return on completion of your consultation.'
-                    ),
-                    React.createElement(
-                        'button',
-                        { className: 'btn btn-default btn-lg', onClick: this.goBack },
-                        React.createElement('i', { className: 'fa fa-undo' }),
-                        ' Go Back'
-                    )
-                );
-        }
-    }
-
-});
-
-ReactDOM.render(React.createElement(ClinicianDashboard, null), document.getElementById('clinician-dashboard'));
+//# sourceMappingURL=script.js.map

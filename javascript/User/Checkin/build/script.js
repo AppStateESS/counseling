@@ -3,9 +3,9 @@
 var errorTimeout = {
     componentDidUpdate: function componentDidUpdate() {
         if (this.state.error === true) {
-            this.interval = setTimeout((function () {
+            this.interval = setTimeout(function () {
                 this.resetForm();
-            }).bind(this), 5000);
+            }.bind(this), 5000);
         }
     },
 
@@ -32,7 +32,7 @@ var Swipe = React.createClass({
     getInitialState: function getInitialState() {
         return {
             error: 0,
-            visitor: null
+            visitor: ''
         };
     },
 
@@ -58,9 +58,9 @@ var Swipe = React.createClass({
     },
 
     timedReset: function timedReset() {
-        swipeTimeout = setTimeout((function () {
+        swipeTimeout = setTimeout(function () {
             this.resetSwipe();
-        }).bind(this), 4000);
+        }.bind(this), 4000);
     },
 
     resetSwipe: function resetSwipe() {
@@ -81,7 +81,7 @@ var Swipe = React.createClass({
             $.getJSON('counseling/User/Checkin', {
                 command: 'loginVisitor',
                 bannerId: visitor
-            }).done((function (data) {
+            }).done(function (data) {
                 if (data.waiting !== undefined) {
                     this.alreadyVisiting();
                     this.timedReset();
@@ -90,9 +90,9 @@ var Swipe = React.createClass({
                 } else {
                     this.props.update(data);
                 }
-            }).bind(this)).fail((function () {
+            }.bind(this)).fail(function () {
                 this.loginFailure();
-            }).bind(this));
+            }.bind(this));
         } else {
             this.loginFailure();
         }
@@ -220,14 +220,14 @@ var Reason = React.createClass({
     componentDidMount: function componentDidMount() {
         $.getJSON('counseling/User/Reason', {
             command: 'list'
-        }).done((function (data) {
+        }).done(function (data) {
             if (data === null) {
                 data = [];
             }
             this.setState({
                 reasons: data
             });
-        }).bind(this));
+        }.bind(this));
     },
 
     pickReason: function pickReason(key) {
@@ -246,13 +246,13 @@ var Reason = React.createClass({
                 'System error: Please alert front desk.'
             );
         } else {
-            var reasonList = this.state.reasons.map((function (value, i) {
+            var reasonList = this.state.reasons.map(function (value, i) {
                 return React.createElement(
                     'li',
                     { key: i, className: 'list-group-item', style: { cursor: 'pointer' }, onClick: this.pickReason.bind(this, i) },
                     value.description
                 );
-            }).bind(this));
+            }.bind(this));
             content = React.createElement(
                 'div',
                 null,
@@ -587,11 +587,11 @@ var Stage = React.createClass({
     componentDidMount: function componentDidMount() {
         $.getJSON('counseling/User/Checkin', {
             command: 'instructions'
-        }).done((function (data) {
+        }).done(function (data) {
             this.setState({
                 instructionList: data
             });
-        }).bind(this));
+        }.bind(this));
     },
 
     updateReason: function updateReason(reason) {
@@ -626,9 +626,9 @@ var Stage = React.createClass({
                 command: 'updatePhone',
                 visitorId: this.state.visitor.id,
                 phoneNumber: phone
-            }, null, 'json').done((function (data) {
+            }, null, 'json').done(function (data) {
                 //console.log(data);
-            }).bind(this));
+            }.bind(this));
         }
 
         this.setState({
@@ -661,9 +661,9 @@ var Stage = React.createClass({
                 visitorId: this.state.visitor.id,
                 reasonId: this.state.reason.id,
                 emergency: this.state.emergency
-            }, null, 'json').done((function (data) {
+            }, null, 'json').done(function (data) {
                 resetTimeout = setTimeout(this.resetLogin, 5000);
-            }).bind(this));
+            }.bind(this));
         } else {
             resetTimeout = setTimeout(this.resetLogin, 5000);
         }
@@ -717,6 +717,7 @@ var Stage = React.createClass({
 var Box = React.createClass({
     displayName: 'Box',
 
+
     getDefaultProps: function getDefaultProps() {
         return {
             content: 'Empty'
@@ -734,3 +735,4 @@ var Box = React.createClass({
 });
 
 ReactDOM.render(React.createElement(Login, null), document.getElementById('Login'));
+//# sourceMappingURL=script.js.map

@@ -77,6 +77,7 @@ var ButtonGroupOption = React.createClass({
 var WaitingListStatus = React.createClass({
     displayName: 'WaitingListStatus',
 
+
     getDefaultProps: function getDefaultProps() {
         return {
             visitor: null,
@@ -90,9 +91,9 @@ var WaitingListStatus = React.createClass({
             $.post('counseling/Admin/Dashboard/Waiting/', {
                 command: 'intakeComplete',
                 visitorId: this.props.visitor.id
-            }, null, 'json').done((function (data) {
+            }, null, 'json').done(function (data) {
                 this.props.reload();
-            }).bind(this));
+            }.bind(this));
         }
     },
 
@@ -258,9 +259,9 @@ var SummaryCompleted = React.createClass({
     },
 
     componentDidMount: function componentDidMount() {
-        $(window).load((function () {
+        $(window).load(function () {
             this.loadTooltip();
-        }).bind(this));
+        }.bind(this));
     },
 
     loadTooltip: function loadTooltip() {
@@ -465,6 +466,7 @@ var SummaryWaitingTally = React.createClass({
 var SummaryTotalSeen = React.createClass({
     displayName: 'SummaryTotalSeen',
 
+
     getDefaultProps: function getDefaultProps() {
         return { totalSeen: 0 };
     },
@@ -543,9 +545,9 @@ var Emergency = React.createClass({
         if (this.props.list === null) {
             return null;
         }
-        var rows = this.props.list.map((function (value, key) {
+        var rows = this.props.list.map(function (value, key) {
             return React.createElement(EmergencyRow, _extends({ key: key }, value, { reload: this.props.reload }));
-        }).bind(this));
+        }.bind(this));
 
         return React.createElement(
             'div',
@@ -582,7 +584,9 @@ var EmergencyRow = React.createClass({
                 { className: 'col-sm-4 visitor-name' },
                 this.props.visitor.preferred_name,
                 ' ',
-                this.props.visitor.last_name
+                this.props.visitor.last_name,
+                ' / ',
+                this.props.visitor.banner_id
             ),
             React.createElement(
                 'div',
@@ -648,9 +652,9 @@ var WaitingList = React.createClass({
         if (this.props.list == null) {
             return React.createElement('div', null);
         }
-        listRows = this.props.list.map((function (value, key) {
+        listRows = this.props.list.map(function (value, key) {
             return React.createElement(WaitingListRow, _extends({}, value, { count: key, key: key, reload: this.props.reload }));
-        }).bind(this));
+        }.bind(this));
         return React.createElement(
             'div',
             { className: 'waiting-list' },
@@ -713,6 +717,7 @@ var WaitingList = React.createClass({
 
 var WaitingListRow = React.createClass({
     displayName: 'WaitingListRow',
+
 
     getDefaultProps: function getDefaultProps() {
         return {
@@ -869,6 +874,7 @@ var CategoryIcon = React.createClass({
 var WaitingListVisits = React.createClass({
     displayName: 'WaitingListVisits',
 
+
     getDefaultProps: function getDefaultProps() {
         return {
             visitNumber: '0'
@@ -920,6 +926,7 @@ var WaitingListVisits = React.createClass({
 var WaitingAction = React.createClass({
     displayName: 'WaitingAction',
 
+
     getDefaultProps: function getDefaultProps() {
         return {
             visitId: 0
@@ -931,9 +938,9 @@ var WaitingAction = React.createClass({
             command: 'setCompleteReason',
             reason: reason,
             visitId: this.props.visitId
-        }, null, 'json').done((function (data) {
+        }, null, 'json').done(function (data) {
             this.props.reload();
-        }).bind(this));
+        }.bind(this));
     },
 
     remove: function remove() {
@@ -941,9 +948,9 @@ var WaitingAction = React.createClass({
             $.post('counseling/Admin/Dashboard/Waiting', {
                 command: 'delete',
                 visitId: this.props.visitId
-            }, null, 'json').done((function (data) {
+            }, null, 'json').done(function (data) {
                 this.props.reload();
-            }).bind(this));
+            }.bind(this));
         }
     },
 
@@ -1019,9 +1026,9 @@ var Dashboard = React.createClass({
 
     refresh: function refresh() {
         if (this.state.refresh) {
-            refreshDashboard = setInterval((function () {
+            refreshDashboard = setInterval(function () {
                 this.loadData();
-            }).bind(this), 30000);
+            }.bind(this), 30000);
         }
     },
 
@@ -1029,7 +1036,7 @@ var Dashboard = React.createClass({
         clearInterval(refreshDashboard);
         $.getJSON('counseling/Admin/Dashboard/Waiting', {
             command: 'list'
-        }).done((function (data) {
+        }).done(function (data) {
             this.setState({
                 emergencyList: data.emergencies,
                 waitingList: data.waiting,
@@ -1037,7 +1044,7 @@ var Dashboard = React.createClass({
                 time: data.time
             });
             this.refresh();
-        }).bind(this));
+        }.bind(this));
     },
 
     render: function render() {
@@ -1052,3 +1059,4 @@ var Dashboard = React.createClass({
 });
 
 ReactDOM.render(React.createElement(Dashboard, null), document.getElementById('dashboard'));
+//# sourceMappingURL=script.js.map
