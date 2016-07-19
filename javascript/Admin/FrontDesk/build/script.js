@@ -568,6 +568,11 @@ var EmergencyRow = React.createClass({
         };
     },
 
+    saveToClipboard: function saveToClipboard() {
+        $(this.refs.bannerId).select();
+        document.execCommand('copy');
+    },
+
     render: function render() {
         var intakeComplete = null;
 
@@ -581,12 +586,21 @@ var EmergencyRow = React.createClass({
             ),
             React.createElement(
                 'div',
-                { className: 'col-sm-4 visitor-name' },
+                { className: 'col-sm-2 visitor-name' },
                 this.props.visitor.preferred_name,
                 ' ',
-                this.props.visitor.last_name,
-                ' / ',
-                this.props.visitor.banner_id
+                this.props.visitor.last_name
+            ),
+            React.createElement(
+                'div',
+                { className: 'col-sm-3' },
+                React.createElement('input', { size: '11', ref: 'bannerId', value: this.props.visitor.banner_id }),
+                ' ',
+                React.createElement(
+                    'button',
+                    { title: 'Copy to clipboard', onClick: this.saveToClipboard },
+                    React.createElement('i', { className: 'glyphicon glyphicon-copy' })
+                )
             ),
             React.createElement(
                 'div',
@@ -602,7 +616,7 @@ var EmergencyRow = React.createClass({
             ),
             React.createElement(
                 'div',
-                { className: 'col-sm-2' },
+                { className: 'col-sm-1' },
                 React.createElement(WaitingAction, { visitId: this.props.id, reload: this.props.reload })
             )
         );
