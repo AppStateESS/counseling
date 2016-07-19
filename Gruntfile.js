@@ -23,7 +23,14 @@ module.exports = function(grunt) {
                 dest: 'javascript/Admin/Settings/tmp/joined.jsx'
             },
             user: {
-                src: ['javascript/User/Checkin/src/Mixins.jsx', 'javascript/User/Checkin/src/*.jsx'],
+                src: ['javascript/User/Checkin/src/Mixins.jsx',
+                    'javascript/User/Checkin/src/Swipe.jsx',
+                    'javascript/User/Checkin/src/Reason.jsx',
+                    'javascript/User/Checkin/src/Phone.jsx',
+                    'javascript/User/Checkin/src/Emergency.jsx',
+                    'javascript/User/Checkin/src/Instruction.jsx',
+                    'javascript/User/Checkin/src/Login.jsx'
+                ],
                 dest: 'javascript/User/Checkin/tmp/joined.jsx'
             },
         },
