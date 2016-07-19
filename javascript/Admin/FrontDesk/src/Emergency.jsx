@@ -48,7 +48,7 @@ var EmergencyRow = React.createClass({
                     <i className="fa fa-lg fa-exclamation-triangle"></i>
                 </div>
                 <div className="col-sm-4 visitor-name">
-                    {this.props.visitor.preferred_name} {this.props.visitor.last_name}
+                    {this.props.visitor.preferred_name} {this.props.visitor.last_name} / {this.props.visitor.banner_id}
                 </div>
                 <div className="col-sm-2">
                     {this.props.wait_time} min
