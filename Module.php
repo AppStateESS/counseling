@@ -2,12 +2,11 @@
 
 namespace counseling;
 
-
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
-class Module extends \Module implements \SettingDefaults
+class Module extends \Module
 {
 
     public function __construct()
@@ -24,10 +23,20 @@ class Module extends \Module implements \SettingDefaults
 
     public function beforeRun(\Request $request, \Controller $controller)
     {
+        $this->checkDefine();
+    }
+
+    private function checkDefine()
+    {
+        static $checked = false;
+        if ($checked) {
+            return;
+        }
         $define_file = PHPWS_SOURCE_DIR . 'mod/counseling/conf/defines.php';
         if (!is_file($define_file)) {
             exit('Counseling requires a copy of conf/defines.php to be created.');
         }
+        $checked = true;
         require_once $define_file;
     }
 
@@ -47,14 +56,9 @@ class Module extends \Module implements \SettingDefaults
         }
     }
 
-    public function getSettingDefaults()
-    {
-        $settings['foo'] = 'bar';
-        return $settings;
-    }
-
     public function runTime(\Request $request)
     {
+        $this->checkDefine();
         if (\PHPWS_Core::atHome()) {
             $user = new \counseling\Controller\User($this);
             $content = $user->checkin();
