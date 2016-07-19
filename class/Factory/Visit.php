@@ -16,10 +16,10 @@ class Visit extends Base
      */
     public static function getCurrentVisits()
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_visit', 't1');
         $tbl->addOrderBy('arrival_time', 'asc');
-        $subselect = new \Database\SubSelect(self::getVisitCountDB($tbl), 'total_visits');
+        $subselect = new \phpws2\Database\SubSelect(self::getVisitCountDB($tbl), 'total_visits');
         $tbl->addField($subselect);
         $tbl->forceSplat();
         $tbl->addFieldConditional('complete_reason', 0);
@@ -37,10 +37,10 @@ class Visit extends Base
 
     public static function getDaysVisits($start_time, $end_time)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_visit', 't1');
         $tbl->addOrderBy('arrival_time', 'asc');
-        $subselect = new \Database\SubSelect(self::getVisitCountDB($tbl), 'total_visits');
+        $subselect = new \phpws2\Database\SubSelect(self::getVisitCountDB($tbl), 'total_visits');
         $tbl->addField($subselect);
         $tbl->forceSplat();
         $tbl->addFieldConditional('complete_reason', 0, '!=');
@@ -58,11 +58,11 @@ class Visit extends Base
         return $visits;
     }
 
-    private static function getVisitCountDB(\Database\Table $sub)
+    private static function getVisitCountDB(\phpws2\Database\Table $sub)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_visit');
-        $tbl->addField(new \Database\Expression('count(id)'));
+        $tbl->addField(new \phpws2\Database\Expression('count(id)'));
         $tbl->addFieldConditional('visitor_id', $sub->getField('visitor_id'));
         return $db;
     }
@@ -72,7 +72,7 @@ class Visit extends Base
         foreach ($visits as $visit) {
             $visitor_ids[] = $visit['visitor_id'];
         }
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_visitor');
         $tbl->addFieldConditional('id', $visitor_ids);
         $visitors = $db->select();
@@ -107,7 +107,7 @@ class Visit extends Base
         return $visit;
     }
 
-    
+
     public static function getDisposition($disposition_id)
     {
         if (empty($disposition_id)) {
@@ -146,7 +146,7 @@ class Visit extends Base
     {
         static $disp_list = null;
         if (empty($disp_list)) {
-            $db = \Database::getDB();
+            $db = \phpws2\Database::getDB();
             $tbl = $db->addTable('cc_disposition');
             $result = $db->select();
             if (empty($result)) {
@@ -163,7 +163,7 @@ class Visit extends Base
     {
         static $clin_list = null;
         if (empty($clin_list)) {
-            $db = \Database::getDB();
+            $db = \phpws2\Database::getDB();
             $tbl = $db->addTable('cc_clinician');
             $result = $db->select();
             if (empty($result)) {
@@ -202,9 +202,9 @@ class Visit extends Base
      */
     public static function getCurrentVisitCount()
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_visit');
-        $tbl->addField(new \Database\Expression('count(id)', 'count'));
+        $tbl->addField(new \phpws2\Database\Expression('count(id)', 'count'));
         $tbl->addFieldConditional('complete_time', 0);
         $visits = $db->selectColumn();
         return $visits;
@@ -237,7 +237,7 @@ class Visit extends Base
 
     public static function delete($visit_id)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_visit');
         $tbl->addFieldConditional('id', $visit_id);
         $db->delete();
@@ -264,7 +264,7 @@ class Visit extends Base
 
     public static function getWaitingByBanner($banner_id)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $visit = $db->addTable('cc_visit');
         $visit->addFieldConditional('complete_reason', 0);
         $visitor = $db->addTable('cc_visitor', null, false);

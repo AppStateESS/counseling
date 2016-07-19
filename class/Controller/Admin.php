@@ -8,9 +8,8 @@ require_once PHPWS_SOURCE_DIR . 'mod/counseling/conf/defines.php';
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
-class Admin extends \Http\Controller
+class Admin extends \phpws2\Http\Controller
 {
-
     public function get(\Request $request)
     {
         $command = $this->routeCommand($request);
@@ -38,15 +37,15 @@ class Admin extends \Http\Controller
         $commandObject = new $className($this->getModule());
         return $commandObject;
     }
-    
+
     public static function loadAdminBar()
     {
         $auth = \Current_User::getAuthorization();
-        
+
         $vars['is_deity'] = \Current_User::isDeity();
         $vars['logout_uri'] = $auth->logout_link;
         $vars['username'] = \Current_User::getDisplayName();
-        $template =  new \Template($vars);
+        $template = new \phpws2\Template($vars);
         $template->setModuleTemplate('counseling', 'Admin/navbar.html');
         $content = $template->get();
         \Layout::plug($content, 'NAV_LINKS');
