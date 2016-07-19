@@ -19,10 +19,7 @@ class Clinician extends \counseling\Controller\Base
         $icons = json_encode(\counseling\Factory\Base::categoryIcons());
 
         if (COUNSELING_REACT_DEV) {
-            $script[] = \counseling\Factory\React::development('Admin/Clinician/', 'CompleteVisit.jsx');
-            $script[] = \counseling\Factory\React::development('Admin/Clinician/', 'SelectVisitor.jsx');
-            $script[] = \counseling\Factory\React::development('Admin/Clinician/', 'ClinicianChoose.jsx');
-            $script[] = \counseling\Factory\React::development('Admin/Clinician/', 'Dashboard.jsx');
+            $script[] = \counseling\Factory\React::development('Admin/Clinician/', 'script.js');
         } else {
             $script[] = \counseling\Factory\React::production('Admin/Clinician/', 'script.min.js');
         }
@@ -50,11 +47,11 @@ EOF;
                 VisitFactory::attachClinician(Factory::pullPostInteger('visitId'),
                         Factory::pullPostInteger('clinicianId'));
                 break;
-            
+
             case 'assignDisposition':
                 VisitFactory::setDisposition(Factory::pullPostInteger('visitId'), Factory::pullPostInteger('dispositionId'));
                 break;
-            
+
             default:
                 throw new \Exception('Unknown post command');
         }
@@ -76,7 +73,7 @@ EOF;
             case 'list':
                 $json = Factory::getList();
                 break;
-            
+
             case 'currentlySeen':
                 $json = $this->currentlySeen();
                 break;
@@ -84,7 +81,7 @@ EOF;
             case 'visitorList':
                 $json = $this->getVisits();
                 break;
-            
+
             case 'dispositionList':
                 $json = \counseling\Factory\Disposition::getList();
                 break;
@@ -99,7 +96,7 @@ EOF;
         $visit = Factory::getCurrentlySeen($clinician_id);
         return $visit;
     }
-    
+
     private function getVisits()
     {
         $visits = VisitFactory::getCurrentVisits();

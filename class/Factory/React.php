@@ -8,28 +8,40 @@ namespace counseling\Factory;
  */
 class React
 {
-    public static function development($directory, $filename)
+     public static function development($directory, $filename)
     {
-        $script_file = 'src/' . $filename;
-
-        $data['development'] = true;
-        $data['addons'] = true;
-        javascript('react', $data);
-        $root_directory = PHPWS_SOURCE_HTTP . 'mod/counseling/javascript/';
-        $script = "<script type='text/jsx' src='$root_directory$directory$script_file'></script>";
-        return $script;
+        self::requireReact(true, false);
+        return self::requireFiles($directory, $filename);
     }
-    
+
     public static function production($directory, $filename)
     {
-        $script_file = 'build/' . $filename;
-        $data['development'] = false;
-        $data['addons'] = true;
-        javascript('react', $data);
+        self::requireReact(true, true);
+        return self::requireFiles($directory, $filename);
+    }
+
+    protected static function requireFiles($directory, $filename)
+    {
         $root_directory = PHPWS_SOURCE_HTTP . 'mod/counseling/javascript/';
-        $hash = md5($directory . $script_file);
-        $script = "<script type='text/javascript' src='$root_directory$directory$script_file'></script>";
+        $script = "<script type='text/javascript' src='{$root_directory}{$directory}build/$filename'></script>";
         return $script;
+    }
+
+    public static function requireReact($addons = true, $minified = true)
+    {
+        $node_directory = PHPWS_SOURCE_HTTP . 'mod/counseling/node_modules/';
+
+        $react_directory = $node_directory . 'react/dist/';
+        $react_file = $react_directory . ($addons ? 'react-with-addons' : 'react') . ($minified ? '.min.js' : '.js');
+
+        $react_dom_directory = $node_directory . 'react-dom/dist/';
+        $react_dom_file = $react_dom_directory . 'react-dom' . ($minified ? '.min.js' : '.js');
+
+        $script_file = <<<EOF
+<script type="text/javascript" src="$react_file"></script>
+<script type="text/javascript" src="$react_dom_file"></script>
+EOF;
+        \Layout::addJSHeader($script_file, 'react_include');
     }
 
 }
