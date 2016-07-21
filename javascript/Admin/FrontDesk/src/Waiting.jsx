@@ -1,7 +1,7 @@
 var Waiting = React.createClass({
     render: function() {
         if ( this.props.emergency === undefined && this.props.waiting === undefined ) {
-            return <div className="text-muted text-center">
+            return <div className="text-success text-center">
                 <i style={{fontSize : '200px'}} className="fa fa-smile-o"></i>
                 <p style={{fontSize : '100px'}}>All clear!</p>
             </div>;
@@ -117,14 +117,14 @@ var VisitorName = React.createClass({
     },
 
     render: function() {
-        if (this.props.visitor.first_name !== this.props.visitor.preferred_name) {
+        if (this.props.visitor.preferred_name) {
             var fullName = this.props.visitor.first_name + ' "' + this.props.visitor.preferred_name + '" ' + this.props.visitor.last_name;
             return (
                 <span className='visitor-name' data-toggle="tooltip" title={fullName}>{this.props.visitor.preferred_name} {this.props.visitor.last_name}</span>
             );
         } else {
             return (
-                <span>{this.props.visitor.preferred_name} {this.props.visitor.last_name}</span>
+                <span>{this.props.visitor.first_name} {this.props.visitor.last_name}</span>
             );
         }
     }

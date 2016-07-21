@@ -44,12 +44,17 @@ class Waiting extends \counseling\Controller\Base
             case 'setCompleteReason':
                 $this->setCompleteReason();
                 break;
-            
+
             case 'delete':
                 $visit_id = VisitFactory::pullPostInteger('visitId');
                 VisitFactory::delete($visit_id);
                 break;
-            
+
+            case 'reset':
+                $visit_id = VisitFactory::pullPostInteger('visitId');
+                VisitFactory::reset($visit_id);
+                break;
+
             default:
             throw new \Exception('Unknown post command');
         }
@@ -65,19 +70,21 @@ class Waiting extends \counseling\Controller\Base
         $reason = VisitFactory::pullPostInteger('reason');
         VisitFactory::setCompleteReason($visit_id, $reason);
     }
-    
+
     /**
      * Returns waiting and emergency lists
      */
     private function getLists()
     {
         $waiting = VisitFactory::getCurrentVisits();
+        $currentlySeen = VisitFactory::getCurrentlySeen();
         if (empty($waiting)) {
             $json['emergencyList'] = null;
             $json['waitingList'] = null;
             $json['summary'] = null;
         } else {
             $count = 0;
+            $seenTally = 0;
             $emergencies = 0;
             $other = 0;
             $walkin = 0;
@@ -86,15 +93,15 @@ class Waiting extends \counseling\Controller\Base
             $now = time();
 
             foreach ($waiting as $visit) {
-                $count++;
                 $id = $visit['id'];
-
                 $arrivals[] = $visit['wait_time'];
 
                 if ($visit['has_emergency']) {
+                    $count++;
                     $json['emergencies'][] = $visit;
                     $emergencies++;
                 } else {
+                    $count++;
                     $json['waiting'][] = $visit;
 
                     switch ($visit['category']) {
@@ -118,6 +125,13 @@ class Waiting extends \counseling\Controller\Base
             $summary['currentTally']['emergency'] = $emergencies;
 
         }
+
+        if (empty($currentlySeen)) {
+            $json['currentlySeen'] = null;
+        } else {
+            $json['currentlySeen'] = $currentlySeen;
+        }
+
         $summary['totalComplete'] = SummaryFactory::totalCompleteToday();
         $summary['totalSeen'] = SummaryFactory::totalCompleteToday(true);
         $summary['averageWait'] = SummaryFactory::averageToday();
@@ -125,7 +139,7 @@ class Waiting extends \counseling\Controller\Base
         $summary['leaveReasons'] = SummaryFactory::unseenReasons();
 
         $json['summary'] = $summary;
-        
+
         $json['time'] = trim(strftime('%l:%M%P, %h. %e, %Y'));
 
         return $json;

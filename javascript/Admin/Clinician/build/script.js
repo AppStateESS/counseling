@@ -319,12 +319,6 @@ var ClinicianDashboard = React.createClass({
                         ' Go Back'
                     )
                 );
-            default:
-                return React.createElement(
-                    'div',
-                    null,
-                    'Unknown stage'
-                );
         }
     }
 

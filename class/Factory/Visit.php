@@ -35,6 +35,30 @@ class Visit extends Base
         return $visits;
     }
 
+    public static function getCurrentlySeen()
+    {
+        $db = \phpws2\Database::getDB();
+        $tbl = $db->addTable('cc_visit', 't1');
+        $tbl->addOrderBy('arrival_time', 'asc');
+        $subselect = new \phpws2\Database\SubSelect(self::getVisitCountDB($tbl), 'total_visits');
+        $tbl->addField($subselect);
+        $tbl->forceSplat();
+        $cra = $db->createConditional($tbl->getField('complete_reason'), 1);
+        $crb = $db->createConditional($tbl->getField('disposition_id'), 0);
+        $cr2 = $db->createConditional($cra, $crb, 'and');
+        $db->addConditional($cr2);
+        $tbl2 = $db->addTable('cc_reason');
+        $tbl2->addField('title', 'reason_title');
+        $tbl2->addField('category');
+        $tbl->addFieldConditional('reason_id', $tbl2->getField('id'));
+        $visits = $db->select();
+        if (empty($visits)) {
+            return null;
+        }
+        $visits = self::addVisitData($visits);
+        return $visits;
+    }
+
     public static function getDaysVisits($start_time, $end_time)
     {
         $db = \phpws2\Database::getDB();
@@ -244,6 +268,18 @@ class Visit extends Base
         $tbl = $db->addTable('cc_visit');
         $tbl->addFieldConditional('id', $visit_id);
         $db->delete();
+    }
+
+    public static function reset($visit_id)
+    {
+        $db = \phpws2\Database::getDB();
+        $tbl = $db->addTable('cc_visit');
+        $tbl->addFieldConditional('id', $visit_id);
+        $tbl->addValue('complete_reason', 0);
+        $tbl->addValue('clinician_id', 0);
+        $tbl->addValue('arrival_time', time());
+        $tbl->addValue('complete_time', 0);
+        $db->update();
     }
 
     public static function attachClinician($visit_id, $clinician_id)

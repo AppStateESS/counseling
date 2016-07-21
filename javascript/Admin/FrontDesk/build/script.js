@@ -526,6 +526,76 @@ var SummaryAverageWait = React.createClass({
 
 });
 
+var CurrentlySeen = React.createClass({
+    displayName: 'CurrentlySeen',
+
+    getDefaultProps: function getDefaultProps() {
+        return { seen: null };
+    },
+
+    moveBack: function moveBack(id) {
+        $.post('./counseling/Admin/Dashboard/Waiting', {
+            visitId: id,
+            command: 'reset'
+        }).done(function (data) {
+            this.props.reload();
+        }.bind(this), 'json');
+    },
+
+    render: function render() {
+        if (!this.props.seen) {
+            return React.createElement(
+                'div',
+                { className: 'alert alert-info' },
+                'No one is being seen'
+            );
+        }
+        var seen = this.props.seen.map(function (value, key) {
+            return React.createElement(
+                'span',
+                { key: key, className: 'dropdown', style: { marginRight: '1em' } },
+                React.createElement(
+                    'button',
+                    { className: 'btn btn-default', 'data-toggle': 'dropdown' },
+                    value.visitor.last_name,
+                    ' w/ ',
+                    value.clinician,
+                    ' ',
+                    React.createElement('span', { className: 'caret' })
+                ),
+                React.createElement(
+                    'ul',
+                    { className: 'dropdown-menu' },
+                    React.createElement(
+                        'li',
+                        null,
+                        React.createElement(
+                            'a',
+                            { style: { cursor: 'pointer' }, onClick: this.moveBack.bind(this, value.id) },
+                            'Move ',
+                            value.visitor.preferred_name,
+                            ' ',
+                            value.visitor.last_name,
+                            ' back to queue'
+                        )
+                    )
+                )
+            );
+        }.bind(this));
+        return React.createElement(
+            'div',
+            { className: 'alert alert-info' },
+            React.createElement(
+                'strong',
+                null,
+                'Currently seen: '
+            ),
+            seen
+        );
+    }
+
+});
+
 var Emergency = React.createClass({
     displayName: 'Emergency',
 
@@ -631,7 +701,7 @@ var Waiting = React.createClass({
         if (this.props.emergency === undefined && this.props.waiting === undefined) {
             return React.createElement(
                 'div',
-                { className: 'text-muted text-center' },
+                { className: 'text-success text-center' },
                 React.createElement('i', { style: { fontSize: '200px' }, className: 'fa fa-smile-o' }),
                 React.createElement(
                     'p',
@@ -828,7 +898,7 @@ var VisitorName = React.createClass({
     },
 
     render: function render() {
-        if (this.props.visitor.first_name !== this.props.visitor.preferred_name) {
+        if (this.props.visitor.preferred_name) {
             var fullName = this.props.visitor.first_name + ' "' + this.props.visitor.preferred_name + '" ' + this.props.visitor.last_name;
             return React.createElement(
                 'span',
@@ -841,7 +911,7 @@ var VisitorName = React.createClass({
             return React.createElement(
                 'span',
                 null,
-                this.props.visitor.preferred_name,
+                this.props.visitor.first_name,
                 ' ',
                 this.props.visitor.last_name
             );
@@ -1030,6 +1100,7 @@ var Dashboard = React.createClass({
             emergencyList: null,
             waitingList: null,
             summary: null,
+            currentlySeen: null,
             time: null
         };
     },
@@ -1055,6 +1126,7 @@ var Dashboard = React.createClass({
                 emergencyList: data.emergencies,
                 waitingList: data.waiting,
                 summary: data.summary,
+                currentlySeen: data.currentlySeen,
                 time: data.time
             });
             this.refresh();
@@ -1066,6 +1138,7 @@ var Dashboard = React.createClass({
             'div',
             { className: 'dashboard' },
             React.createElement(Summary, { data: this.state.summary, time: this.state.time, reload: this.loadData }),
+            React.createElement(CurrentlySeen, { seen: this.state.currentlySeen, reload: this.loadData }),
             React.createElement(Waiting, { emergency: this.state.emergencyList, waiting: this.state.waitingList, reload: this.loadData })
         );
     }
