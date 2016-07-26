@@ -196,7 +196,7 @@ var DispositionListRow = React.createClass({
         return {
             title: null,
             icon : 'fa-times',
-            color : 'btn-danger',
+            color : 'default',
             id:null,
             edit: null,
             sorting : null,
@@ -212,7 +212,7 @@ var DispositionListRow = React.createClass({
 
     render: function() {
         var iconClass = 'fa fa-' + this.props.icon;
-        var buttonClass = 'btn btn-block ' + this.props.color;
+        var buttonClass = 'btn btn-block btn-' + this.props.color;
 
         return (
             <tr className="sorting-row" data-rowid={this.props.id} id={this.props.id}>
@@ -236,11 +236,12 @@ var DispositionListRow = React.createClass({
 });
 
 var DispositionForm = React.createClass({
+    mixins : [colorPicker],
 
     getInitialState: function() {
         return {
             title: '',
-            color : null,
+            color : 'default',
             icon : null,
             formError: ''
         };
@@ -252,7 +253,7 @@ var DispositionForm = React.createClass({
             reload: null,
             fail: null,
             title : '',
-            color : null,
+            color : 'default',
             icon : null,
             dispositionId : 0
         };
@@ -306,13 +307,6 @@ var DispositionForm = React.createClass({
 
     },
 
-    pickColor: function(color, event) {
-        event.preventDefault();
-        this.setState({
-            color : color
-        });
-    },
-
     pickIcon: function(icon, event) {
         event.preventDefault();
         this.setState({
@@ -336,7 +330,7 @@ var DispositionForm = React.createClass({
                         handleChange={this.updateTitle} required={true}
                         tabIndex={1} value={this.state.title}/>
                     <label>Button color</label>
-                    <DispositionColor handleClick={this.pickColor}/>
+                    <PickColor handleClick={this.pickColor}/>
                     <label>Icon</label>
                     <DispositionIcons handleClick={this.pickIcon}/>
                     <hr />
@@ -352,26 +346,6 @@ var DispositionForm = React.createClass({
     }
 });
 
-var DispositionColor = React.createClass({
-    getDefaultProps: function() {
-        return {
-        };
-    },
-
-    render: function() {
-        return (
-            <div>
-                <button className="btn btn-default" onClick={this.props.handleClick.bind(null, 'btn-default')}>&nbsp;</button>&nbsp;
-                <button className="btn btn-primary" onClick={this.props.handleClick.bind(null, 'btn-primary')}>&nbsp;</button>&nbsp;
-                <button className="btn btn-success" onClick={this.props.handleClick.bind(null, 'btn-success')}>&nbsp;</button>&nbsp;
-                <button className="btn btn-info" onClick={this.props.handleClick.bind(null, 'btn-info')}>&nbsp;</button>&nbsp;
-                <button className="btn btn-warning" onClick={this.props.handleClick.bind(null, 'btn-warning')}>&nbsp;</button>&nbsp;
-                <button className="btn btn-danger" onClick={this.props.handleClick.bind(null, 'btn-danger')}>&nbsp;</button>
-            </div>
-        );
-    }
-
-});
 
 var CurrentIcon = React.createClass({
     getDefaultProps: function() {
@@ -383,7 +357,7 @@ var CurrentIcon = React.createClass({
     },
 
     render: function() {
-        var buttonClass = 'btn btn-block btn-lg ' + this.props.color;
+        var buttonClass = 'btn btn-block btn-lg btn-' + this.props.color;
         var iconClass = 'fa fa-' + this.props.icon;
         var title = (this.props.title === null || this.props.title.length === 0) ? 'Sample' : this.props.title;
 

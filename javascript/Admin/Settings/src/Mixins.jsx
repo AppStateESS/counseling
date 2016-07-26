@@ -3,17 +3,17 @@ var TextInput = React.createClass({
         return {
             label: '',
             placeholder: '',
-            handleBlur:null,
+            handleBlur: null,
             required: false,
-            handlePress : null,
-            handleChange : null,
-            inputId : null,
-            value : '',
-            tabIndex : null,
+            handlePress: null,
+            handleChange: null,
+            inputId: null,
+            value: '',
+            tabIndex: null
         };
     },
 
-    handleBlur : function(e) {
+    handleBlur: function(e) {
         if (this.props.required && e.target.value.length < 1) {
             $(e.target).css('border-color', 'red');
         }
@@ -22,11 +22,11 @@ var TextInput = React.createClass({
         }
     },
 
-    handleFocus : function(e) {
+    handleFocus: function(e) {
         $(e.target).css('border-color', '');
     },
 
-    render : function() {
+    render: function() {
         var label = '';
         var required = '';
         if (this.props.label.length > 0) {
@@ -39,14 +39,23 @@ var TextInput = React.createClass({
         }
         return (
             <div className="form-group">
-                {label} {required}
-                <input type="text" className="form-control" id={this.props.inputId}
-                    name={this.props.inputId} placeholder={this.props.placeholder} onFocus={this.handleFocus}
-                    onChange={this.props.handleChange} onBlur={this.handleBlur} onKeyPress={this.props.handlePress}
-                    value={this.props.value} tabIndex={this.props.tabIndex}/>
+                {label}
+                {required}
+                <input
+                    type="text"
+                    className="form-control"
+                    id={this.props.inputId}
+                    name={this.props.inputId}
+                    placeholder={this.props.placeholder}
+                    onFocus={this.handleFocus}
+                    onChange={this.props.handleChange}
+                    onBlur={this.handleBlur}
+                    onKeyPress={this.props.handlePress}
+                    value={this.props.value}
+                    tabIndex={this.props.tabIndex}/>
             </div>
         );
-    }
+    },
 });
 
 var FormMixin = {
@@ -54,48 +63,39 @@ var FormMixin = {
         this.loadData();
     },
 
-    closeForm : function()
-    {
-        this.setState({
-            showForm : false
-        });
+    closeForm: function() {
+        this.setState({showForm: false});
     },
 
-    showForm : function()
-    {
-        this.setState({
-            showForm : true
-        });
+    showForm: function() {
+        this.setState({showForm: true});
     },
 
-    saveFailure : function()
-    {
-        this.setState({
-            saveFail : true
-        });
-    },
+    saveFailure: function() {
+        this.setState({saveFail: true});
+    }
 };
 
 var sortable = {
-    fixHelper : function(e, ui) {
-    	ui.children().each(function() {
-    		$(this).width($(this).width());
-    	});
-    	return ui;
+    fixHelper: function(e, ui) {
+        ui.children().each(function() {
+            $(this).width($(this).width());
+        });
+        return ui;
     },
 
-    loadSortable : function() {
+    loadSortable: function() {
         $(this.refs.sortRows).sortable({
-            handle : '.handle',
-            helper : this.fixHelper,
-            cancel : '',
-            update : this.updateSort,
-            axis : 'y',
-            containment : '#sortBox'
+            handle: '.handle',
+            helper: this.fixHelper,
+            cancel: '',
+            update: this.updateSort,
+            axis: 'y',
+            containment: '#sortBox',
         }).disableSelection();
     },
 
-    resortReact : function(rows, movedId, prevRowId, nextRowId) {
+    resortReact: function(rows, movedId, prevRowId, nextRowId) {
         var RPrev = null;
         var RMoved = null;
         var RNext = null;
@@ -103,13 +103,13 @@ var sortable = {
         var count = 0;
         var valId = 0;
 
-        rows.forEach(function(value, index){
+        rows.forEach(function(value, index) {
 
             valId = parseInt(value.id, 10);
 
             if (prevRowId !== undefined && valId === prevRowId) {
                 RPrev = value;
-            } else if(valId === movedId) {
+            } else if (valId === movedId) {
                 RMoved = value;
             } else if (nextRowId !== undefined && valId === nextRowId) {
                 RNext = value;
@@ -122,7 +122,7 @@ var sortable = {
             newRows.push(RMoved);
         }
 
-        rows.forEach(function(value, index){
+        rows.forEach(function(value, index) {
             if (RMoved.id !== value.id) {
                 count++;
                 value.sorting = count;
@@ -135,5 +135,43 @@ var sortable = {
             }
         });
         return newRows;
+    },
+};
+
+var colorPicker = {
+    pickColor: function(color, event) {
+        event.preventDefault();
+        this.setState({color: color});
     }
 };
+
+var PickColor = React.createClass({
+    getDefaultProps: function() {
+        return {handleClick: null};
+    },
+
+    render: function() {
+        return (
+            <div>
+                <button
+                    className="btn btn-default"
+                    onClick={this.props.handleClick.bind(null, 'default')}>&nbsp;</button>&nbsp;
+                <button
+                    className="btn btn-primary"
+                    onClick={this.props.handleClick.bind(null, 'primary')}>&nbsp;</button>&nbsp;
+                <button
+                    className="btn btn-success"
+                    onClick={this.props.handleClick.bind(null, 'success')}>&nbsp;</button>&nbsp;
+                <button
+                    className="btn btn-info"
+                    onClick={this.props.handleClick.bind(null, 'info')}>&nbsp;</button>&nbsp;
+                <button
+                    className="btn btn-warning"
+                    onClick={this.props.handleClick.bind(null, 'warning')}>&nbsp;</button>&nbsp;
+                <button
+                    className="btn btn-danger"
+                    onClick={this.props.handleClick.bind(null, 'danger')}>&nbsp;</button>
+            </div>
+        );
+    },
+});

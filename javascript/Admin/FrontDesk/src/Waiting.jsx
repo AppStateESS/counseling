@@ -37,7 +37,7 @@ var WaitingList = React.createClass({
         }.bind(this));
         return (
             <div className="waiting-list">
-                <table className="table table-striped">
+                <table className="table">
                     <tbody>
                         <tr>
                             <th>#</th>
@@ -73,14 +73,21 @@ var WaitingListRow = React.createClass({
         document.execCommand('copy');
     },
 
+    /*
+     * silences javascript warning on input used for copy and paste
+     */
+    nada: function() {},
+
     render: function() {
-        var count = this.props.count + 1;
+        let count = this.props.count + 1;
+        let _className = 'bg-' + this.props.color;
         return (
-            <tr>
+            <tr className={_className}>
                 <td style={{width : '3%'}}>{count}</td>
-                <td style={{width : '3%'}} className="text-center"><CategoryIcon category={this.props.category} reasonTitle={this.props.reason_title}/></td>
+                <td style={{width : '3%'}} className="text-center">
+                    <CategoryIcon category={this.props.category} reasonTitle={this.props.reason_title}/></td>
                 <td><VisitorName visitor={this.props.visitor}/></td>
-                <td><input size="11" ref="bannerId" value={this.props.visitor.banner_id} />&nbsp;
+                <td><input size="11" ref="bannerId" value={this.props.visitor.banner_id} onChange={this.nada}/>&nbsp;
                     <button title="Copy to clipboard" onClick={this.saveToClipboard}><i className="glyphicon glyphicon-copy"></i></button>
                 </td>
                 <td>{this.props.wait_time} min.</td>

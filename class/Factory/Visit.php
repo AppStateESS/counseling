@@ -25,6 +25,7 @@ class Visit extends Base
         $tbl->addFieldConditional('complete_reason', 0);
         $tbl2 = $db->addTable('cc_reason');
         $tbl2->addField('title', 'reason_title');
+        $tbl2->addField('color');
         $tbl2->addField('category');
         $tbl->addFieldConditional('reason_id', $tbl2->getField('id'));
         $visits = $db->select();

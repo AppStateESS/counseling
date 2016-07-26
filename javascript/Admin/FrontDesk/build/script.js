@@ -744,7 +744,7 @@ var WaitingList = React.createClass({
             { className: 'waiting-list' },
             React.createElement(
                 'table',
-                { className: 'table table-striped' },
+                { className: 'table' },
                 React.createElement(
                     'tbody',
                     null,
@@ -817,11 +817,17 @@ var WaitingListRow = React.createClass({
         document.execCommand('copy');
     },
 
+    /*
+     * silences javascript warning on input used for copy and paste
+     */
+    nada: function nada() {},
+
     render: function render() {
         var count = this.props.count + 1;
+        var _className = 'bg-' + this.props.color;
         return React.createElement(
             'tr',
-            null,
+            { className: _className },
             React.createElement(
                 'td',
                 { style: { width: '3%' } },
@@ -840,7 +846,7 @@ var WaitingListRow = React.createClass({
             React.createElement(
                 'td',
                 null,
-                React.createElement('input', { size: '11', ref: 'bannerId', value: this.props.visitor.banner_id }),
+                React.createElement('input', { size: '11', ref: 'bannerId', value: this.props.visitor.banner_id, onChange: this.nada }),
                 ' ',
                 React.createElement(
                     'button',

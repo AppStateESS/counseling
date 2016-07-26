@@ -128,4 +128,10 @@ class Reason extends Base
         self::saveResource($reason);
     }
 
+    public static function pickColor($reason_id, $color)
+    {
+        $reason = self::build($reason_id);
+        $reason->setColor($color);
+        self::saveResource($reason);
+    }
 }

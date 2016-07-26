@@ -81,6 +81,11 @@ class Reason extends \counseling\Controller\Base
                     throw new \Exception('Action not allowed');
                 }
                 break;
+                
+            case 'pickColor':
+                Factory::pickColor(filter_input(INPUT_POST, 'reasonId', FILTER_SANITIZE_NUMBER_INT), 
+                        filter_input(INPUT_POST, 'color', FILTER_SANITIZE_STRING));
+                break;
             
         }
 
