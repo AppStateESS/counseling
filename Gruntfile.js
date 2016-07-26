@@ -20,7 +20,10 @@ module.exports = function(grunt) {
                 dest: 'javascript/Admin/FrontDesk/tmp/joined.jsx'
             },
             settings: {
-                src: ['javascript/Admin/Settings/src/Mixins.jsx', 'javascript/Admin/Settings/src/*.jsx'],
+                src: ['javascript/Admin/Settings/src/Mixins.jsx',
+                'javascript/Admin/Settings/src/Reasons.jsx',
+                'javascript/Admin/Settings/src/Dispositions.jsx',
+                'javascript/Admin/Settings/src/*.jsx'],
                 dest: 'javascript/Admin/Settings/tmp/joined.jsx'
             },
             user: {
