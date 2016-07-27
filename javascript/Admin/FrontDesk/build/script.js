@@ -132,6 +132,74 @@ var WaitingListStatus = React.createClass({
 
 });
 
+var Modal = React.createClass({
+    displayName: 'Modal',
+
+    getInitialState: function getInitialState() {
+        return { header: null, body: null, footer: null };
+    },
+
+    getDefaultProps: function getDefaultProps() {
+        return { header: null, body: null, footer: null, modalId: 'reactModal', onClose: null };
+    },
+
+    componentDidMount: function componentDidMount() {
+        if (this.props.onClose) {
+            $('#' + this.props.modalId).on('hidden.bs.modal', function (e) {
+                this.props.onClose();
+            }.bind(this));
+        }
+    },
+
+    render: function render() {
+        return React.createElement(
+            'div',
+            { id: this.props.modalId, className: 'modal fade', tabindex: '-1', role: 'dialog' },
+            React.createElement(
+                'div',
+                { className: 'modal-dialog' },
+                React.createElement(
+                    'div',
+                    { className: 'modal-content' },
+                    React.createElement(
+                        'div',
+                        { className: 'modal-header' },
+                        React.createElement(
+                            'button',
+                            { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+                            React.createElement(
+                                'span',
+                                { 'aria-hidden': 'true' },
+                                '×'
+                            )
+                        ),
+                        React.createElement(
+                            'h4',
+                            { className: 'modal-title' },
+                            this.props.header
+                        )
+                    ),
+                    React.createElement(
+                        'div',
+                        { className: 'modal-body' },
+                        this.props.body
+                    ),
+                    React.createElement(
+                        'div',
+                        { className: 'modal-footer' },
+                        this.props.footer,
+                        React.createElement(
+                            'button',
+                            { type: 'button', className: 'btn btn-default', 'data-dismiss': 'modal' },
+                            'Close'
+                        )
+                    )
+                )
+            )
+        );
+    }
+});
+
 var Summary = React.createClass({
     displayName: 'Summary',
 
@@ -530,7 +598,21 @@ var CurrentlySeen = React.createClass({
     displayName: 'CurrentlySeen',
 
     getDefaultProps: function getDefaultProps() {
-        return { seen: null };
+        return { seen: null, reload: null };
+    },
+
+    getInitialState: function getInitialState() {
+        return { dispositions: [], seenId: 0 };
+    },
+
+    componentDidMount: function componentDidMount() {
+        this.loadDispositions();
+    },
+
+    loadDispositions: function loadDispositions() {
+        $.getJSON('counseling/Admin/Clinician', { command: 'dispositionList' }).done(function (data) {
+            this.setState({ dispositions: data });
+        }.bind(this));
     },
 
     moveBack: function moveBack(id) {
@@ -542,6 +624,53 @@ var CurrentlySeen = React.createClass({
         }.bind(this), 'json');
     },
 
+    complete: function complete(id) {
+        this.setState({ seenId: id });
+        $('#reactModal').modal('show');
+    },
+
+    handleClick: function handleClick(dispositionId) {
+        $.post('counseling/Admin/Clinician', {
+            command: 'assignDisposition',
+            dispositionId: dispositionId,
+            visitId: this.state.seenId
+        }, null, 'json').done(function (data) {
+            this.closeModal();
+        }.bind(this));
+    },
+
+    getModal: function getModal() {
+        var dispositions = null;
+        var buttonClass = null;
+        var iconClass = null;
+
+        dispositions = this.state.dispositions.map(function (value, key) {
+            buttonClass = 'btn btn-lg btn-block btn-' + value.color;
+            iconClass = 'fa fa-' + value.icon;
+            return React.createElement(
+                'button',
+                {
+                    key: key,
+                    className: buttonClass,
+                    onClick: this.handleClick.bind(null, value.id) },
+                React.createElement('i', { className: iconClass }),
+                value.title
+            );
+        }.bind(this));
+        var modalBody = React.createElement(
+            'div',
+            null,
+            dispositions
+        );
+        return React.createElement(Modal, { body: modalBody, header: 'Assign disposition', onClose: this.closeModal });
+    },
+
+    closeModal: function closeModal() {
+        this.setState({ seenId: 0 });
+        this.props.reload();
+        $('#reactModal').modal('hide');
+    },
+
     render: function render() {
         if (!this.props.seen) {
             return React.createElement(
@@ -550,15 +679,24 @@ var CurrentlySeen = React.createClass({
                 'No one is being seen'
             );
         }
+        var modal = this.getModal();
         var seen = this.props.seen.map(function (value, key) {
             return React.createElement(
                 'span',
-                { key: key, className: 'dropdown', style: { marginRight: '1em' } },
+                {
+                    key: value.visitor.id,
+                    className: 'dropdown',
+                    style: {
+                        marginRight: '1em'
+                    } },
                 React.createElement(
                     'button',
                     { className: 'btn btn-default', 'data-toggle': 'dropdown' },
                     value.visitor.last_name,
-                    ' w/ ',
+                    ' ',
+                    'w/',
+                    ' ',
+                    ' ',
                     value.clinician,
                     ' ',
                     React.createElement('span', { className: 'caret' })
@@ -571,12 +709,40 @@ var CurrentlySeen = React.createClass({
                         null,
                         React.createElement(
                             'a',
-                            { style: { cursor: 'pointer' }, onClick: this.moveBack.bind(this, value.id) },
-                            'Move ',
+                            {
+                                style: {
+                                    cursor: 'pointer'
+                                },
+                                onClick: this.moveBack.bind(this, value.id) },
+                            React.createElement('i', { className: 'fa fa-reply' }),
+                            ' ',
+                            'Move',
+                            ' ',
                             value.visitor.preferred_name,
-                            ' ',
+                            ' ',
+                            ' ',
                             value.visitor.last_name,
-                            ' back to queue'
+                            ' ',
+                            'back to queue'
+                        )
+                    ),
+                    React.createElement(
+                        'li',
+                        null,
+                        React.createElement(
+                            'a',
+                            {
+                                style: {
+                                    cursor: 'pointer'
+                                },
+                                onClick: this.complete.bind(this, value.id) },
+                            React.createElement('i', { className: 'fa fa-flag-checkered' }),
+                            ' ',
+                            'Complete ',
+                            value.visitor.preferred_name,
+                            ' ',
+                            value.visitor.last_name,
+                            '\'s consultation'
                         )
                     )
                 )
@@ -584,16 +750,20 @@ var CurrentlySeen = React.createClass({
         }.bind(this));
         return React.createElement(
             'div',
-            { className: 'alert alert-info' },
+            null,
+            modal,
             React.createElement(
-                'strong',
-                null,
-                'Currently seen: '
-            ),
-            seen
+                'div',
+                { className: 'alert alert-info' },
+                React.createElement(
+                    'strong',
+                    null,
+                    'Currently seen: '
+                ),
+                seen
+            )
         );
     }
-
 });
 
 var Emergency = React.createClass({

@@ -164,7 +164,7 @@ var CompleteVisit = React.createClass({
         var iconClass = null;
 
         dispositions = this.state.dispositions.map(function (value, key) {
-            buttonClass = 'btn btn-lg btn-block ' + value.color;
+            buttonClass = 'btn btn-lg btn-block btn-' + value.color;
             iconClass = 'fa fa-' + value.icon;
             return React.createElement(
                 'button',
