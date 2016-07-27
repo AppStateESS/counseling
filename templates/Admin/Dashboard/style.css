@@ -52,3 +52,7 @@
 .waiting-list {
     margin-top : 1em;
 }
+
+.bg-primary input, .bg-primary button>i.fa, .bg-primary i.glyphicon {
+    color : black;
+}
