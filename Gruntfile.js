@@ -11,6 +11,7 @@ module.exports = function(grunt) {
             },
             desk: {
                 src: ['javascript/Admin/FrontDesk/src/Mixins.jsx',
+                    'javascript/Admin/FrontDesk/src/Modal.jsx',
                     'javascript/Admin/FrontDesk/src/Summary.jsx',
                     'javascript/Admin/FrontDesk/src/CurrentlySeen.jsx',
                     'javascript/Admin/FrontDesk/src/Emergency.jsx',
