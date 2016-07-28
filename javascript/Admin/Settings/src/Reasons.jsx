@@ -87,7 +87,6 @@ var ReasonList = React.createClass({
 
     render: function() {
         var reasons = null;
-
         if (this.props.reasons) {
             reasons = this.props.reasons.map(function(value, key) {
                 return (<ReasonRow key={key} {...value} reload={this.props.reload} currentEdit={this.props.currentEdit} setCurrentEdit={this.props.setCurrentEdit}/>);
@@ -184,6 +183,30 @@ var ReasonRow = React.createClass({
         }.bind(this));
     },
 
+    updateTitle: function(event) {
+        this.setState({title:event.target.value});
+    },
+
+    resetTitle: function()
+    {
+        this.setState({title:this.props.title});
+    },
+
+    saveTitle: function()
+    {
+        console.log('saving title');
+        if (this.state.title === null || this.state.title.length === 0) {
+            return;
+        }
+        $.post('counseling/Admin/Settings/Reason', {
+            command: 'setTitle',
+            reasonId: this.state.id,
+            title: this.state.title,
+        }, null, 'json').done(function(data) {
+            this.props.reload();
+        }.bind(this));
+    },
+
     render: function() {
         let deleteButton = null;
         if (settingsAllowed) {
@@ -235,9 +258,8 @@ var ReasonRow = React.createClass({
                         <div className="col-sm-6">
                             <div className="section">
                                 <strong>Title:</strong>
-                                <ReasonTitle
-                                    value={this.state.title}
-                                    {...props}/>
+                                <ReasonTitle value={this.state.title} reset={this.resetTitle} update={this.updateTitle}
+                                save={this.saveTitle} {...props}/>
                             </div>
                         </div>
                         <div className="col-sm-6">
@@ -297,31 +319,18 @@ var ReasonTitle = React.createClass({
             reload: null,
             currentEdit: null,
             setCurrentEdit: null,
+            update: null,
+            save: null,
+            reset:null,
         };
     },
 
-    update: function(title) {
-        if (title === null || title.length === 0) {
-            return;
-        }
-        $.post('counseling/Admin/Settings/Reason', {
-            command: 'setTitle',
-            reasonId: this.props.reasonId,
-            title: title,
-        }, null, 'json').done(function(data) {
-            this.props.reload();
-        }.bind(this));
-    },
-
     render: function() {
-        return (<ReasonValue
-            {...this.props}
-            update={this.update}
+        return (
+            <ReasonValue {...this.props}
             placeholder="One or two words describing reason. Internal use only."
-            defaultValue={this.props.value}
-            currentEdit={this.props.currentEdit}
-            setCurrentEdit={this.props.setCurrentEdit}
-            section="1"/>);
+            section="1"/>
+        );
     },
 });
 
@@ -572,27 +581,32 @@ var ReasonDescription = React.createClass({
 
 var ReasonValue = React.createClass({
     getInitialState: function() {
-        return {value: null, editMode: false,};
+        return {editMode: false,};
     },
 
     getDefaultProps: function() {
         return {
+            value : '',
+            reasonId: 0,
+            reload: null,
             currentEdit: null,
             setCurrentEdit: null,
-            placeholder: null,
-            defaultValue: null,
             update: null,
+            save: null,
+            placeholder: null,
             section: 0,
-            reasonId: 0,
+            reset: null,
         };
-    },
-
-    updateValue: function(e) {
-        this.setState({value: e.target.value});
     },
 
     closeInput: function() {
         this.setState({editMode: false});
+        this.props.reset();
+    },
+
+    componentDidUpdate: function()
+    {
+        $('.editItem').focus();
     },
 
     openInput: function() {
@@ -600,24 +614,23 @@ var ReasonValue = React.createClass({
         this.setState({editMode: true});
     },
 
-    sendUpdate: function() {
-        this.props.update(this.state.value);
-        this.closeInput();
+    save: function() {
+        this.setState({editMode: false});
+        this.props.save();
     },
 
     render: function() {
         var value = null;
-        if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId && this.props.currentEdit.section == this.props.section) {
-            value = (<LineEdit
-                placeholder={this.props.placeholder}
-                handleChange={this.updateValue}
-                defaultValue={this.props.defaultValue}
-                value={this.state.value}
-                close={this.closeInput}
-                update={this.sendUpdate}/>);
+        if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId
+            && this.props.currentEdit.section == this.props.section) {
+            value = (
+                <LineEdit placeholder={this.props.placeholder}
+                    update={this.props.update} value={this.props.value}
+                    close={this.closeInput} save={this.save}/>
+            );
         } else {
             value = (
-                <div className="editItem" onClick={this.openInput} title="Click to edit">{this.props.defaultValue}</div>
+                <div className="editItem" onClick={this.openInput} title="Click to edit">{this.props.value}</div>
             );
         }
 
@@ -631,10 +644,10 @@ var LineEdit = React.createClass({
     getDefaultProps: function() {
         return {
             placeholder: null,
-            handleChange: null,
             defaultValue: null,
             close: null,
             update: null,
+            save: null,
             value: '',
         };
     },
@@ -642,14 +655,13 @@ var LineEdit = React.createClass({
     render: function() {
         return (
             <div className="input-group">
-                <input
+                <input type="text"
                     className="editItem form-control"
                     placeholder={this.props.placeholder}
-                    onChange={this.props.handleChange}
-                    defaultValue={this.props.defaultValue}
+                    onChange={this.props.update}
                     value={this.props.value}/>
                 <span className="input-group-btn">
-                    <button className="btn btn-success" onClick={this.props.update}>
+                    <button className="btn btn-success" onClick={this.props.save}>
                         <i className="fa fa-check"></i>
                     </button>
                     <button className="btn btn-danger" onClick={this.props.close}>

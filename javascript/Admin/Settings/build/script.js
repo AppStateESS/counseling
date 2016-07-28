@@ -325,7 +325,6 @@ var ReasonList = React.createClass({
 
     render: function render() {
         var reasons = null;
-
         if (this.props.reasons) {
             reasons = this.props.reasons.map(function (value, key) {
                 return React.createElement(ReasonRow, _extends({ key: key }, value, { reload: this.props.reload, currentEdit: this.props.currentEdit, setCurrentEdit: this.props.setCurrentEdit }));
@@ -426,6 +425,28 @@ var ReasonRow = React.createClass({
         }.bind(this));
     },
 
+    updateTitle: function updateTitle(event) {
+        this.setState({ title: event.target.value });
+    },
+
+    resetTitle: function resetTitle() {
+        this.setState({ title: this.props.title });
+    },
+
+    saveTitle: function saveTitle() {
+        console.log('saving title');
+        if (this.state.title === null || this.state.title.length === 0) {
+            return;
+        }
+        $.post('counseling/Admin/Settings/Reason', {
+            command: 'setTitle',
+            reasonId: this.state.id,
+            title: this.state.title
+        }, null, 'json').done(function (data) {
+            this.props.reload();
+        }.bind(this));
+    },
+
     render: function render() {
         var deleteButton = null;
         if (settingsAllowed) {
@@ -499,9 +520,8 @@ var ReasonRow = React.createClass({
                                 null,
                                 'Title:'
                             ),
-                            React.createElement(ReasonTitle, _extends({
-                                value: this.state.title
-                            }, props))
+                            React.createElement(ReasonTitle, _extends({ value: this.state.title, reset: this.resetTitle, update: this.updateTitle,
+                                save: this.saveTitle }, props))
                         )
                     ),
                     React.createElement(
@@ -605,30 +625,16 @@ var ReasonTitle = React.createClass({
             reasonId: 0,
             reload: null,
             currentEdit: null,
-            setCurrentEdit: null
+            setCurrentEdit: null,
+            update: null,
+            save: null,
+            reset: null
         };
-    },
-
-    update: function update(title) {
-        if (title === null || title.length === 0) {
-            return;
-        }
-        $.post('counseling/Admin/Settings/Reason', {
-            command: 'setTitle',
-            reasonId: this.props.reasonId,
-            title: title
-        }, null, 'json').done(function (data) {
-            this.props.reload();
-        }.bind(this));
     },
 
     render: function render() {
         return React.createElement(ReasonValue, _extends({}, this.props, {
-            update: this.update,
             placeholder: 'One or two words describing reason. Internal use only.',
-            defaultValue: this.props.value,
-            currentEdit: this.props.currentEdit,
-            setCurrentEdit: this.props.setCurrentEdit,
             section: '1' }));
     }
 });
@@ -915,27 +921,31 @@ var ReasonValue = React.createClass({
     displayName: 'ReasonValue',
 
     getInitialState: function getInitialState() {
-        return { value: null, editMode: false };
+        return { editMode: false };
     },
 
     getDefaultProps: function getDefaultProps() {
         return {
+            value: '',
+            reasonId: 0,
+            reload: null,
             currentEdit: null,
             setCurrentEdit: null,
-            placeholder: null,
-            defaultValue: null,
             update: null,
+            save: null,
+            placeholder: null,
             section: 0,
-            reasonId: 0
+            reset: null
         };
-    },
-
-    updateValue: function updateValue(e) {
-        this.setState({ value: e.target.value });
     },
 
     closeInput: function closeInput() {
         this.setState({ editMode: false });
+        this.props.reset();
+    },
+
+    componentDidUpdate: function componentDidUpdate() {
+        $('.editItem').focus();
     },
 
     openInput: function openInput() {
@@ -943,26 +953,22 @@ var ReasonValue = React.createClass({
         this.setState({ editMode: true });
     },
 
-    sendUpdate: function sendUpdate() {
-        this.props.update(this.state.value);
-        this.closeInput();
+    save: function save() {
+        this.setState({ editMode: false });
+        this.props.save();
     },
 
     render: function render() {
         var value = null;
         if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId && this.props.currentEdit.section == this.props.section) {
-            value = React.createElement(LineEdit, {
-                placeholder: this.props.placeholder,
-                handleChange: this.updateValue,
-                defaultValue: this.props.defaultValue,
-                value: this.state.value,
-                close: this.closeInput,
-                update: this.sendUpdate });
+            value = React.createElement(LineEdit, { placeholder: this.props.placeholder,
+                update: this.props.update, value: this.props.value,
+                close: this.closeInput, save: this.save });
         } else {
             value = React.createElement(
                 'div',
                 { className: 'editItem', onClick: this.openInput, title: 'Click to edit' },
-                this.props.defaultValue
+                this.props.value
             );
         }
 
@@ -980,10 +986,10 @@ var LineEdit = React.createClass({
     getDefaultProps: function getDefaultProps() {
         return {
             placeholder: null,
-            handleChange: null,
             defaultValue: null,
             close: null,
             update: null,
+            save: null,
             value: ''
         };
     },
@@ -992,18 +998,17 @@ var LineEdit = React.createClass({
         return React.createElement(
             'div',
             { className: 'input-group' },
-            React.createElement('input', {
+            React.createElement('input', { type: 'text',
                 className: 'editItem form-control',
                 placeholder: this.props.placeholder,
-                onChange: this.props.handleChange,
-                defaultValue: this.props.defaultValue,
+                onChange: this.props.update,
                 value: this.props.value }),
             React.createElement(
                 'span',
                 { className: 'input-group-btn' },
                 React.createElement(
                     'button',
-                    { className: 'btn btn-success', onClick: this.props.update },
+                    { className: 'btn btn-success', onClick: this.props.save },
                     React.createElement('i', { className: 'fa fa-check' })
                 ),
                 React.createElement(
