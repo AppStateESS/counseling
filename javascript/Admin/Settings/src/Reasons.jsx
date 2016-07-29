@@ -145,7 +145,8 @@ var ReasonRow = React.createClass({
             command: 'flipEmergency',
             reasonId: this.state.id,
         }, null, 'json').done(function(data) {
-            this.props.reload();
+            let switcher = this.state.show_emergency == '1' ? '0' : '1';
+            this.setState({show_emergency: switcher});
         }.bind(this));
     },
 
@@ -154,7 +155,8 @@ var ReasonRow = React.createClass({
             command: 'flipWaitListed',
             reasonId: this.state.id,
         }, null, 'json').done(function(data) {
-            this.props.reload();
+            let switcher = this.state.wait_listed == '1' ? '0' : '1';
+            this.setState({wait_listed: switcher});
         }.bind(this));
     },
 
@@ -163,7 +165,8 @@ var ReasonRow = React.createClass({
             command: 'flipAskForPhone',
             reasonId: this.state.id,
         }, null, 'json').done(function(data) {
-            this.props.reload();
+            let switcher = this.state.ask_for_phone == '1' ? '0' : '1';
+            this.setState({ask_for_phone: switcher});
         }.bind(this));
     },
 
@@ -904,12 +907,11 @@ var ReasonForm = React.createClass({
                 zIndex: '50',
             }}>
                 <form method="post" action="counseling/Admin/Settings/Reasons">
-                    <input type="hidden" name="command" value="add"/> {this.state.formError
-                        ? <div
-                                className="alert alert-danger"
-                                style={{
-                                fontSize: '1em'
-                            }}>Please complete all highlighted text inputs.</div>
+                    <input type="hidden" name="command" value="add"/>
+                    {this.state.formError ?
+                        <div className="alert alert-danger" style={{fontSize: '1em'}}>
+                            Please complete all highlighted text inputs.
+                        </div>
                         : null}
                     <div className="form-group">
                         <TextInput
@@ -936,17 +938,10 @@ var ReasonForm = React.createClass({
                             <div className="form-group">
                                 <label>Instructions</label>
                                 <p>
-                                    <label
-                                        style={{
-                                        marginRight: '2em'
-                                    }}>
-                                        <input
-                                            type="radio"
-                                            name="instruction"
-                                            defaultValue="1"
-                                            defaultChecked={true}
-                                            tabIndex={3}
-                                            onClick={this.updateInstruction}/>
+                                 <label style={{marginRight: '2em'}}>
+                                        <input type="radio" name="instruction"
+                                            defaultValue="1" defaultChecked={true}
+                                            tabIndex={3} onClick={this.updateInstruction}/>{' '}
                                         Sit down
                                     </label>
                                     <label>
@@ -955,46 +950,29 @@ var ReasonForm = React.createClass({
                                             name="instruction"
                                             defaultValue="2"
                                             tabIndex={4}
-                                            onClick={this.updateInstruction}/>
+                                            onClick={this.updateInstruction}/>{' '}
                                         Front desk
                                     </label>
                                 </p>
                             </div>
                             <div className="form-group">
                                 <label>
-                                    <input
-                                        type="checkbox"
-                                        name="waitListed"
-                                        value="1"
+                                    <input type="checkbox" name="waitListed" value="1"
                                         checked={this.state.waitListed}
-                                        onChange={this.updateWaitListed}
-                                        tabIndex={7}/>
-                                    Put on wait list &nbsp;<i
-                                        className="fa fa-question-circle"
-                                        style={{
-                cursor: 'pointer'
-            }}
-                                        data-toggle="tooltip"
-                                        data-placement="right"
+                                        onChange={this.updateWaitListed} tabIndex={7}/>{' '}
+                                    Put on wait list{' '}
+                                    <i className="fa fa-question-circle" style={{cursor:'pointer'}}
+                                        data-toggle="tooltip" data-placement="right"
                                         title="If checked, the visitor will be placed on the waiting list."></i>
                                 </label>
                             </div>
                             <div className="form-group">
                                 <label>
-                                    <input
-                                        type="checkbox"
-                                        name="showEmergency"
-                                        value="1"
-                                        checked={this.state.showEmergency}
-                                        onChange={this.updateEmergency}
-                                        tabIndex={5}/>
-                                    Show emergency question &nbsp;<i
-                                        className="fa fa-question-circle"
-                                        style={{
-                cursor: 'pointer'
-            }}
-                                        data-toggle="tooltip"
-                                        data-placement="right"
+                                 <input type="checkbox" name="showEmergency" value="1"
+                                    checked={this.state.showEmergency} onChange={this.updateEmergency}
+                                    tabIndex={5}/> Show emergency question{' '}
+                                    <i className="fa fa-question-circle" style={{cursor:'pointer'}}
+                                        data-toggle="tooltip" data-placement="right"
                                         title="If checked, the visitor will be asked if they have an emergency."></i>
                                 </label>
                             </div>
@@ -1006,14 +984,10 @@ var ReasonForm = React.createClass({
                                         value="1"
                                         checked={this.state.askForPhone}
                                         onChange={this.updateAskForPhone}
-                                        tabIndex={8}/>
-                                    Ask for phone number &nbsp;<i
-                                        className="fa fa-question-circle"
-                                        style={{
-                cursor: 'pointer'
-            }}
-                                        data-toggle="tooltip"
-                                        data-placement="right"
+                                        tabIndex={8}/>{' '}
+                                    Ask for phone number &nbsp;
+                                    <i className="fa fa-question-circle" style={{cursor:'pointer'}}
+                                        data-toggle="tooltip" data-placement="right"
                                         title="If checked, the visitor will be asked for their phone number."></i>
                                 </label>
                             </div>
@@ -1046,23 +1020,17 @@ var GroupSelect = React.createClass({
                 <label>Category</label>
                 <div>
                     <label>
-                        <input
-                            type="radio"
-                            name="summaryGroup"
-                            defaultValue="1"
-                            onClick={this.updateCategory}/>
-                        <i className="fa fa-male fa-lg"></i>
+                        <input type="radio" name="summaryGroup" defaultValue="1"
+                            onClick={this.updateCategory}/>{' '}
+                        <i className="fa fa-male fa-lg"></i>{' '}
                         Walk-in
                     </label>
                 </div>
                 <div>
                     <label>
-                        <input
-                            type="radio"
-                            name="summaryGroup"
-                            defaultValue="2"
-                            onClick={this.updateCategory}/>
-                        <i className="fa fa-clock-o fa-lg"></i>
+                        <input type="radio" name="summaryGroup" defaultValue="2"
+                            onClick={this.updateCategory}/>{' '}
+                        <i className="fa fa-clock-o fa-lg"></i>{' '}
                         Appointment
                     </label>
                 </div>
@@ -1073,8 +1041,8 @@ var GroupSelect = React.createClass({
                             name="summaryGroup"
                             defaultChecked={true}
                             defaultValue="0"
-                            onClick={this.updateCategory}/>
-                        <i className="fa fa-question-circle fa-lg"></i>
+                            onClick={this.updateCategory}/>{' '}
+                        <i className="fa fa-question-circle fa-lg"></i>{' '}
                         Other
                     </label>
                 </div>

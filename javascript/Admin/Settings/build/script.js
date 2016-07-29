@@ -385,7 +385,8 @@ var ReasonRow = React.createClass({
             command: 'flipEmergency',
             reasonId: this.state.id
         }, null, 'json').done(function (data) {
-            this.props.reload();
+            var switcher = this.state.show_emergency == '1' ? '0' : '1';
+            this.setState({ show_emergency: switcher });
         }.bind(this));
     },
 
@@ -394,7 +395,8 @@ var ReasonRow = React.createClass({
             command: 'flipWaitListed',
             reasonId: this.state.id
         }, null, 'json').done(function (data) {
-            this.props.reload();
+            var switcher = this.state.wait_listed == '1' ? '0' : '1';
+            this.setState({ wait_listed: switcher });
         }.bind(this));
     },
 
@@ -403,7 +405,8 @@ var ReasonRow = React.createClass({
             command: 'flipAskForPhone',
             reasonId: this.state.id
         }, null, 'json').done(function (data) {
-            this.props.reload();
+            var switcher = this.state.ask_for_phone == '1' ? '0' : '1';
+            this.setState({ ask_for_phone: switcher });
         }.bind(this));
     },
 
@@ -1254,14 +1257,9 @@ var ReasonForm = React.createClass({
                 'form',
                 { method: 'post', action: 'counseling/Admin/Settings/Reasons' },
                 React.createElement('input', { type: 'hidden', name: 'command', value: 'add' }),
-                ' ',
                 this.state.formError ? React.createElement(
                     'div',
-                    {
-                        className: 'alert alert-danger',
-                        style: {
-                            fontSize: '1em'
-                        } },
+                    { className: 'alert alert-danger', style: { fontSize: '1em' } },
                     'Please complete all highlighted text inputs.'
                 ) : null,
                 React.createElement(
@@ -1307,17 +1305,11 @@ var ReasonForm = React.createClass({
                                 null,
                                 React.createElement(
                                     'label',
-                                    {
-                                        style: {
-                                            marginRight: '2em'
-                                        } },
-                                    React.createElement('input', {
-                                        type: 'radio',
-                                        name: 'instruction',
-                                        defaultValue: '1',
-                                        defaultChecked: true,
-                                        tabIndex: 3,
-                                        onClick: this.updateInstruction }),
+                                    { style: { marginRight: '2em' } },
+                                    React.createElement('input', { type: 'radio', name: 'instruction',
+                                        defaultValue: '1', defaultChecked: true,
+                                        tabIndex: 3, onClick: this.updateInstruction }),
+                                    ' ',
                                     'Sit down'
                                 ),
                                 React.createElement(
@@ -1329,6 +1321,7 @@ var ReasonForm = React.createClass({
                                         defaultValue: '2',
                                         tabIndex: 4,
                                         onClick: this.updateInstruction }),
+                                    ' ',
                                     'Front desk'
                                 )
                             )
@@ -1339,21 +1332,14 @@ var ReasonForm = React.createClass({
                             React.createElement(
                                 'label',
                                 null,
-                                React.createElement('input', {
-                                    type: 'checkbox',
-                                    name: 'waitListed',
-                                    value: '1',
+                                React.createElement('input', { type: 'checkbox', name: 'waitListed', value: '1',
                                     checked: this.state.waitListed,
-                                    onChange: this.updateWaitListed,
-                                    tabIndex: 7 }),
-                                'Put on wait list  ',
-                                React.createElement('i', {
-                                    className: 'fa fa-question-circle',
-                                    style: {
-                                        cursor: 'pointer'
-                                    },
-                                    'data-toggle': 'tooltip',
-                                    'data-placement': 'right',
+                                    onChange: this.updateWaitListed, tabIndex: 7 }),
+                                ' ',
+                                'Put on wait list',
+                                ' ',
+                                React.createElement('i', { className: 'fa fa-question-circle', style: { cursor: 'pointer' },
+                                    'data-toggle': 'tooltip', 'data-placement': 'right',
                                     title: 'If checked, the visitor will be placed on the waiting list.' })
                             )
                         ),
@@ -1363,21 +1349,13 @@ var ReasonForm = React.createClass({
                             React.createElement(
                                 'label',
                                 null,
-                                React.createElement('input', {
-                                    type: 'checkbox',
-                                    name: 'showEmergency',
-                                    value: '1',
-                                    checked: this.state.showEmergency,
-                                    onChange: this.updateEmergency,
+                                React.createElement('input', { type: 'checkbox', name: 'showEmergency', value: '1',
+                                    checked: this.state.showEmergency, onChange: this.updateEmergency,
                                     tabIndex: 5 }),
-                                'Show emergency question  ',
-                                React.createElement('i', {
-                                    className: 'fa fa-question-circle',
-                                    style: {
-                                        cursor: 'pointer'
-                                    },
-                                    'data-toggle': 'tooltip',
-                                    'data-placement': 'right',
+                                ' Show emergency question',
+                                ' ',
+                                React.createElement('i', { className: 'fa fa-question-circle', style: { cursor: 'pointer' },
+                                    'data-toggle': 'tooltip', 'data-placement': 'right',
                                     title: 'If checked, the visitor will be asked if they have an emergency.' })
                             )
                         ),
@@ -1394,14 +1372,10 @@ var ReasonForm = React.createClass({
                                     checked: this.state.askForPhone,
                                     onChange: this.updateAskForPhone,
                                     tabIndex: 8 }),
+                                ' ',
                                 'Ask for phone number  ',
-                                React.createElement('i', {
-                                    className: 'fa fa-question-circle',
-                                    style: {
-                                        cursor: 'pointer'
-                                    },
-                                    'data-toggle': 'tooltip',
-                                    'data-placement': 'right',
+                                React.createElement('i', { className: 'fa fa-question-circle', style: { cursor: 'pointer' },
+                                    'data-toggle': 'tooltip', 'data-placement': 'right',
                                     title: 'If checked, the visitor will be asked for their phone number.' })
                             )
                         )
@@ -1453,12 +1427,11 @@ var GroupSelect = React.createClass({
                 React.createElement(
                     'label',
                     null,
-                    React.createElement('input', {
-                        type: 'radio',
-                        name: 'summaryGroup',
-                        defaultValue: '1',
+                    React.createElement('input', { type: 'radio', name: 'summaryGroup', defaultValue: '1',
                         onClick: this.updateCategory }),
+                    ' ',
                     React.createElement('i', { className: 'fa fa-male fa-lg' }),
+                    ' ',
                     'Walk-in'
                 )
             ),
@@ -1468,12 +1441,11 @@ var GroupSelect = React.createClass({
                 React.createElement(
                     'label',
                     null,
-                    React.createElement('input', {
-                        type: 'radio',
-                        name: 'summaryGroup',
-                        defaultValue: '2',
+                    React.createElement('input', { type: 'radio', name: 'summaryGroup', defaultValue: '2',
                         onClick: this.updateCategory }),
+                    ' ',
                     React.createElement('i', { className: 'fa fa-clock-o fa-lg' }),
+                    ' ',
                     'Appointment'
                 )
             ),
@@ -1489,7 +1461,9 @@ var GroupSelect = React.createClass({
                         defaultChecked: true,
                         defaultValue: '0',
                         onClick: this.updateCategory }),
+                    ' ',
                     React.createElement('i', { className: 'fa fa-question-circle fa-lg' }),
+                    ' ',
                     'Other'
                 )
             )
