@@ -327,7 +327,9 @@ var ReasonList = React.createClass({
         var reasons = null;
         if (this.props.reasons) {
             reasons = this.props.reasons.map(function (value, key) {
-                return React.createElement(ReasonRow, _extends({ key: key }, value, { reload: this.props.reload, currentEdit: this.props.currentEdit, setCurrentEdit: this.props.setCurrentEdit }));
+                return React.createElement(ReasonRow, _extends({ key: key }, value, { reload: this.props.reload,
+                    currentEdit: this.props.currentEdit,
+                    setCurrentEdit: this.props.setCurrentEdit }));
             }.bind(this));
         }
         return React.createElement(
@@ -429,12 +431,27 @@ var ReasonRow = React.createClass({
         this.setState({ title: event.target.value });
     },
 
+    updateDescription: function updateDescription(event) {
+        this.setState({ description: event.target.value });
+    },
+
+    updateInstruction: function updateInstruction(event) {
+        this.setState({ instruction: event.target.value });
+    },
+
     resetTitle: function resetTitle() {
         this.setState({ title: this.props.title });
     },
 
+    resetDescription: function resetDescription() {
+        this.setState({ description: this.props.description });
+    },
+
+    resetInstruction: function resetInstruction() {
+        this.setState({ instruction: this.props.instruction });
+    },
+
     saveTitle: function saveTitle() {
-        console.log('saving title');
         if (this.state.title === null || this.state.title.length === 0) {
             return;
         }
@@ -442,6 +459,32 @@ var ReasonRow = React.createClass({
             command: 'setTitle',
             reasonId: this.state.id,
             title: this.state.title
+        }, null, 'json').done(function (data) {
+            this.props.reload();
+        }.bind(this));
+    },
+
+    saveDescription: function saveDescription() {
+        if (this.state.description === null || this.state.description.length === 0) {
+            return;
+        }
+        $.post('counseling/Admin/Settings/Reason', {
+            command: 'setDescription',
+            reasonId: this.state.id,
+            description: this.state.description
+        }, null, 'json').done(function (data) {
+            this.props.reload();
+        }.bind(this));
+    },
+
+    saveInstruction: function saveInstruction() {
+        if (this.state.instruction === null || this.state.instruction.length === 0) {
+            return;
+        }
+        $.post('counseling/Admin/Settings/Reason', {
+            command: 'setInstruction',
+            reasonId: this.state.id,
+            instruction: this.state.instruction
         }, null, 'json').done(function (data) {
             this.props.reload();
         }.bind(this));
@@ -520,8 +563,8 @@ var ReasonRow = React.createClass({
                                 null,
                                 'Title:'
                             ),
-                            React.createElement(ReasonTitle, _extends({ value: this.state.title, reset: this.resetTitle, update: this.updateTitle,
-                                save: this.saveTitle }, props))
+                            React.createElement(ReasonTitle, _extends({ value: this.state.title, reset: this.resetTitle,
+                                update: this.updateTitle, save: this.saveTitle }, props))
                         )
                     ),
                     React.createElement(
@@ -535,7 +578,9 @@ var ReasonRow = React.createClass({
                                 null,
                                 'Description:'
                             ),
-                            React.createElement(ReasonDescription, _extends({ value: this.state.description }, props))
+                            React.createElement(ReasonDescription, _extends({ value: this.state.description,
+                                reset: this.resetDescription, update: this.updateDescription,
+                                save: this.saveDescription }, props))
                         )
                     )
                 ),
@@ -553,7 +598,9 @@ var ReasonRow = React.createClass({
                                 null,
                                 'Instruction:'
                             ),
-                            React.createElement(ReasonInstruction, { value: this.state.instruction })
+                            React.createElement(ReasonInstruction, _extends({ value: this.state.instruction,
+                                reset: this.resetInstruction, update: this.updateInstruction,
+                                save: this.saveInstruction }, props))
                         )
                     ),
                     React.createElement(
@@ -567,7 +614,8 @@ var ReasonRow = React.createClass({
                                 null,
                                 'Category:'
                             ),
-                            React.createElement(ReasonCategory, _extends({ value: this.state.category }, props))
+                            React.createElement(ReasonCategory, _extends({ value: this.state.category, reset: this.resetInstruction,
+                                update: this.updateInstruction, save: this.saveInstruction }, props))
                         )
                     )
                 ),
@@ -760,15 +808,29 @@ var ReasonInstruction = React.createClass({
     displayName: 'ReasonInstruction',
 
     getInitialState: function getInitialState() {
-        return { editMode: false, instruction: null };
+        return { editMode: false };
     },
 
     getDefaultProps: function getDefaultProps() {
-        return { value: '1', editMode: false, reasonId: 0 };
+        return {
+            value: '1',
+            editMode: false,
+            reasonId: 0,
+            reset: null,
+            update: null,
+            save: null,
+            reload: null,
+            currentEdit: null,
+            setCurrentEdit: null
+        };
+    },
+
+    componentDidUpdate: function componentDidUpdate() {
+        $('.editItem').focus();
     },
 
     componentDidMount: function componentDidMount() {
-        this.setState({ editMode: this.props.editMode, instruction: this.props.value });
+        this.setState({ editMode: this.props.editMode });
     },
 
     formMode: function formMode() {
@@ -776,23 +838,14 @@ var ReasonInstruction = React.createClass({
         this.setState({ editMode: true });
     },
 
-    saveInstruction: function saveInstruction() {
-        $.post('counseling/Admin/Settings/Reason', {
-            command: 'setInstruction',
-            reasonId: this.props.reasonId,
-            instruction: this.state.instruction
-        }, null, 'json').done(function (data) {
-            this.setState({ editMode: false });
-            this.props.reload();
-        }.bind(this));
-    },
-
-    updateInstruction: function updateInstruction(e) {
-        this.setState({ instruction: e.target.value });
-    },
-
     closeForm: function closeForm() {
-        this.setState({ instruction: this.props.value, editMode: false });
+        this.setState({ editMode: false });
+        this.props.reset();
+    },
+
+    save: function save() {
+        this.setState({ editMode: false });
+        this.props.save();
     },
 
     render: function render() {
@@ -821,15 +874,15 @@ var ReasonInstruction = React.createClass({
                     { className: 'col-sm-8' },
                     React.createElement(ReasonSelect, {
                         options: selectOptions,
-                        match: this.state.instruction,
-                        handleChange: this.updateInstruction })
+                        match: this.props.value,
+                        handleChange: this.props.update })
                 ),
                 React.createElement(
                     'div',
                     { className: 'col-sm-4' },
                     React.createElement(
                         'button',
-                        { className: 'btn btn-success', onClick: this.saveInstruction },
+                        { className: 'btn btn-success', onClick: this.save },
                         React.createElement('i', { className: 'fa fa-check' })
                     ),
                     React.createElement(
@@ -865,14 +918,17 @@ var ReasonSelect = React.createClass({
     displayName: 'ReasonSelect',
 
     getDefaultProps: function getDefaultProps() {
-        return { match: '0', handleChange: null, options: null };
+        return {
+            match: '0',
+            handleChange: null,
+            options: null
+        };
     },
 
     render: function render() {
         return React.createElement(
             'select',
             {
-                ref: 'instructionSelect',
                 defaultValue: this.props.match,
                 className: 'form-control',
                 onChange: this.props.handleChange },
@@ -892,28 +948,21 @@ var ReasonDescription = React.createClass({
 
 
     getDefaultProps: function getDefaultProps() {
-        return { value: null, reasonId: 0, currentEdit: null, setCurrentEdit: null };
-    },
-
-    update: function update(description) {
-        if (description === null || description.length === 0) {
-            return;
-        }
-        $.post('counseling/Admin/Settings/Reason', {
-            command: 'setDescription',
-            reasonId: this.props.reasonId,
-            description: description
-        }, null, 'json').done(function (data) {
-            this.props.reload();
-        }.bind(this));
+        return {
+            value: null,
+            reasonId: 0,
+            reload: null,
+            currentEdit: null,
+            setCurrentEdit: null,
+            update: null,
+            save: null,
+            reset: null
+        };
     },
 
     render: function render() {
         return React.createElement(ReasonValue, _extends({}, this.props, {
-            update: this.update,
-            placeholder: 'Description of reason. Seen by visitors.',
-            defaultValue: this.props.value,
-            section: '2' }));
+            placeholder: 'Description of reason. Seen by visitors.', section: '2' }));
     }
 });
 

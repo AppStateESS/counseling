@@ -89,7 +89,11 @@ var ReasonList = React.createClass({
         var reasons = null;
         if (this.props.reasons) {
             reasons = this.props.reasons.map(function(value, key) {
-                return (<ReasonRow key={key} {...value} reload={this.props.reload} currentEdit={this.props.currentEdit} setCurrentEdit={this.props.setCurrentEdit}/>);
+                return (
+                    <ReasonRow key={key} {...value} reload={this.props.reload}
+                        currentEdit={this.props.currentEdit}
+                        setCurrentEdit={this.props.setCurrentEdit}/>
+                );
             }.bind(this));
         }
         return (
@@ -187,14 +191,28 @@ var ReasonRow = React.createClass({
         this.setState({title:event.target.value});
     },
 
-    resetTitle: function()
-    {
+    updateDescription: function(event) {
+        this.setState({description:event.target.value});
+    },
+
+    updateInstruction: function(event) {
+        this.setState({instruction:event.target.value});
+    },
+
+    resetTitle: function() {
         this.setState({title:this.props.title});
+    },
+
+    resetDescription: function() {
+        this.setState({description:this.props.description});
+    },
+
+    resetInstruction: function() {
+        this.setState({instruction:this.props.instruction});
     },
 
     saveTitle: function()
     {
-        console.log('saving title');
         if (this.state.title === null || this.state.title.length === 0) {
             return;
         }
@@ -202,6 +220,34 @@ var ReasonRow = React.createClass({
             command: 'setTitle',
             reasonId: this.state.id,
             title: this.state.title,
+        }, null, 'json').done(function(data) {
+            this.props.reload();
+        }.bind(this));
+    },
+
+    saveDescription: function()
+    {
+        if (this.state.description === null || this.state.description.length === 0) {
+            return;
+        }
+        $.post('counseling/Admin/Settings/Reason', {
+            command: 'setDescription',
+            reasonId: this.state.id,
+            description: this.state.description,
+        }, null, 'json').done(function(data) {
+            this.props.reload();
+        }.bind(this));
+    },
+
+    saveInstruction: function()
+    {
+        if (this.state.instruction === null || this.state.instruction.length === 0) {
+            return;
+        }
+        $.post('counseling/Admin/Settings/Reason', {
+            command: 'setInstruction',
+            reasonId: this.state.id,
+            instruction: this.state.instruction,
         }, null, 'json').done(function(data) {
             this.props.reload();
         }.bind(this));
@@ -258,14 +304,16 @@ var ReasonRow = React.createClass({
                         <div className="col-sm-6">
                             <div className="section">
                                 <strong>Title:</strong>
-                                <ReasonTitle value={this.state.title} reset={this.resetTitle} update={this.updateTitle}
-                                save={this.saveTitle} {...props}/>
+                                <ReasonTitle value={this.state.title} reset={this.resetTitle}
+                                update={this.updateTitle} save={this.saveTitle} {...props}/>
                             </div>
                         </div>
                         <div className="col-sm-6">
                             <div className="section">
                                 <strong>Description:</strong>
-                                <ReasonDescription value={this.state.description} {...props}/>
+                                <ReasonDescription value={this.state.description}
+                                    reset={this.resetDescription} update={this.updateDescription}
+                                    save={this.saveDescription} {...props}/>
                             </div>
                         </div>
                     </div>
@@ -273,13 +321,16 @@ var ReasonRow = React.createClass({
                         <div className="col-sm-6">
                             <div className="section">
                                 <strong>Instruction:</strong>
-                                <ReasonInstruction value={this.state.instruction}/>
+                                <ReasonInstruction value={this.state.instruction}
+                                    reset={this.resetInstruction} update={this.updateInstruction}
+                                    save={this.saveInstruction} {...props}/>
                             </div>
                         </div>
                         <div className="col-sm-6">
                             <div className="section">
                                 <strong>Category:</strong>
-                                <ReasonCategory value={this.state.category}  {...props}/>
+                                <ReasonCategory value={this.state.category} reset={this.resetInstruction}
+                                update={this.updateInstruction} save={this.saveInstruction} {...props}/>
                             </div>
                         </div>
                     </div>
@@ -439,15 +490,30 @@ var ReasonCategory = React.createClass({
 
 var ReasonInstruction = React.createClass({
     getInitialState: function() {
-        return {editMode: false, instruction: null,};
+        return {editMode: false};
     },
 
     getDefaultProps: function() {
-        return {value: '1', editMode: false, reasonId: 0,};
+        return {
+            value: '1',
+            editMode: false,
+            reasonId: 0,
+            reset: null,
+            update: null,
+            save: null,
+            reload: null,
+            currentEdit: null,
+            setCurrentEdit: null,
+        };
+    },
+
+    componentDidUpdate: function()
+    {
+        $('.editItem').focus();
     },
 
     componentDidMount: function() {
-        this.setState({editMode: this.props.editMode, instruction: this.props.value,});
+        this.setState({editMode: this.props.editMode});
     },
 
     formMode: function() {
@@ -455,23 +521,14 @@ var ReasonInstruction = React.createClass({
         this.setState({editMode: true});
     },
 
-    saveInstruction: function() {
-        $.post('counseling/Admin/Settings/Reason', {
-            command: 'setInstruction',
-            reasonId: this.props.reasonId,
-            instruction: this.state.instruction,
-        }, null, 'json').done(function(data) {
-            this.setState({editMode: false});
-            this.props.reload();
-        }.bind(this));
-    },
-
-    updateInstruction: function(e) {
-        this.setState({instruction: e.target.value});
-    },
-
     closeForm: function() {
-        this.setState({instruction: this.props.value, editMode: false,});
+        this.setState({editMode: false,});
+        this.props.reset();
+    },
+
+    save: function() {
+        this.setState({editMode: false});
+        this.props.save();
     },
 
     render: function() {
@@ -493,17 +550,18 @@ var ReasonInstruction = React.createClass({
             },
         ];
 
-        if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId && this.props.currentEdit.section == '3') {
+        if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId
+            && this.props.currentEdit.section == '3') {
             value = (
                 <div className="row">
                     <div className="col-sm-8">
                         <ReasonSelect
                             options={selectOptions}
-                            match={this.state.instruction}
-                            handleChange={this.updateInstruction}/>
+                            match={this.props.value}
+                            handleChange={this.props.update}/>
                     </div>
                     <div className="col-sm-4">
-                        <button className="btn btn-success" onClick={this.saveInstruction}>
+                        <button className="btn btn-success" onClick={this.save}>
                             <i className="fa fa-check"></i>
                         </button>
                         <button className="btn btn-danger" onClick={this.closeForm}>
@@ -530,13 +588,16 @@ var ReasonInstruction = React.createClass({
 
 var ReasonSelect = React.createClass({
     getDefaultProps: function() {
-        return {match: '0', handleChange: null, options: null,};
+        return {
+            match: '0',
+            handleChange: null,
+            options: null,
+        };
     },
 
     render: function() {
         return (
             <select
-                ref="instructionSelect"
                 defaultValue={this.props.match}
                 className="form-control"
                 onChange={this.props.handleChange}>
@@ -553,29 +614,23 @@ var ReasonSelect = React.createClass({
 var ReasonDescription = React.createClass({
 
     getDefaultProps: function() {
-        return {value: null, reasonId: 0, currentEdit: null, setCurrentEdit: null,};
-    },
-
-    update: function(description) {
-        if (description === null || description.length === 0) {
-            return;
-        }
-        $.post('counseling/Admin/Settings/Reason', {
-            command: 'setDescription',
-            reasonId: this.props.reasonId,
-            description: description,
-        }, null, 'json').done(function(data) {
-            this.props.reload();
-        }.bind(this));
+        return {
+            value: null,
+            reasonId: 0,
+            reload:null,
+            currentEdit: null,
+            setCurrentEdit: null,
+            update: null,
+            save: null,
+            reset: null,
+        };
     },
 
     render: function() {
-        return (<ReasonValue
-            {...this.props}
-            update={this.update}
-            placeholder="Description of reason. Seen by visitors."
-            defaultValue={this.props.value}
-            section="2"/>);
+        return (
+            <ReasonValue {...this.props}
+            placeholder="Description of reason. Seen by visitors." section="2"/>
+        );
     },
 });
 
