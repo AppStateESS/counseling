@@ -199,6 +199,10 @@ var ReasonRow = React.createClass({
         this.setState({instruction:event.target.value});
     },
 
+    updateCategory: function(event) {
+        this.setState({category:event.target.value});
+    },
+
     resetTitle: function() {
         this.setState({title:this.props.title});
     },
@@ -209,6 +213,10 @@ var ReasonRow = React.createClass({
 
     resetInstruction: function() {
         this.setState({instruction:this.props.instruction});
+    },
+
+    resetCategory: function() {
+        this.setState({category:this.props.category});
     },
 
     saveTitle: function()
@@ -239,8 +247,7 @@ var ReasonRow = React.createClass({
         }.bind(this));
     },
 
-    saveInstruction: function()
-    {
+    saveInstruction: function() {
         if (this.state.instruction === null || this.state.instruction.length === 0) {
             return;
         }
@@ -248,6 +255,19 @@ var ReasonRow = React.createClass({
             command: 'setInstruction',
             reasonId: this.state.id,
             instruction: this.state.instruction,
+        }, null, 'json').done(function(data) {
+            this.props.reload();
+        }.bind(this));
+    },
+
+    saveCategory: function() {
+        if (this.state.category === null || this.state.category.length === 0) {
+            return;
+        }
+        $.post('counseling/Admin/Settings/Reason', {
+            command: 'setCategory',
+            reasonId: this.state.id,
+            category: this.state.category,
         }, null, 'json').done(function(data) {
             this.props.reload();
         }.bind(this));
@@ -329,8 +349,8 @@ var ReasonRow = React.createClass({
                         <div className="col-sm-6">
                             <div className="section">
                                 <strong>Category:</strong>
-                                <ReasonCategory value={this.state.category} reset={this.resetInstruction}
-                                update={this.updateInstruction} save={this.saveInstruction} {...props}/>
+                                <ReasonCategory value={this.state.category} reset={this.resetCategory}
+                                update={this.updateCategory} save={this.saveCategory} {...props}/>
                             </div>
                         </div>
                     </div>
@@ -387,15 +407,30 @@ var ReasonTitle = React.createClass({
 
 var ReasonCategory = React.createClass({
     getInitialState: function() {
-        return {editMode: false, instruction: null,};
+        return {editMode: false};
     },
 
     getDefaultProps: function() {
-        return {value: '1', editMode: false, reasonId: 0,};
+        return {
+            value: '1',
+            editMode: false,
+            reasonId: 0,
+            reset: null,
+            update: null,
+            save: null,
+            reload: null,
+            currentEdit: null,
+            setCurrentEdit: null,
+        };
     },
 
     componentDidMount: function() {
-        this.setState({editMode: this.props.editMode, category: this.props.value,});
+        this.setState({editMode: this.props.editMode});
+    },
+
+    componentDidUpdate: function()
+    {
+        $('.editItem').focus();
     },
 
     formMode: function() {
@@ -403,23 +438,14 @@ var ReasonCategory = React.createClass({
         this.setState({editMode: true});
     },
 
-    saveCategory: function() {
-        $.post('counseling/Admin/Settings/Reason', {
-            command: 'setCategory',
-            reasonId: this.props.reasonId,
-            category: this.state.category,
-        }, null, 'json').done(function(data) {
-            this.setState({editMode: false});
-            this.props.reload();
-        }.bind(this));
-    },
-
-    updateCategory: function(e) {
-        this.setState({category: e.target.value});
-    },
-
     closeForm: function() {
-        this.setState({category: this.props.value, editMode: false,});
+        this.setState({editMode: false,});
+        this.props.reset();
+    },
+
+    save: function() {
+        this.setState({editMode: false});
+        this.props.save();
     },
 
     render: function() {
@@ -453,17 +479,18 @@ var ReasonCategory = React.createClass({
             },
         ];
 
-        if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId && this.props.currentEdit.section == '4') {
+        if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId
+                && this.props.currentEdit.section == '4') {
             value = (
                 <div className="row">
                     <div className="col-sm-8">
                         <ReasonSelect
                             options={selectOptions}
-                            match={this.state.category}
-                            handleChange={this.updateCategory}/>
+                            match={this.props.value}
+                            handleChange={this.props.update}/>
                     </div>
                     <div className="col-sm-4">
-                        <button className="btn btn-success" onClick={this.saveCategory}>
+                        <button className="btn btn-success" onClick={this.save}>
                             <i className="fa fa-check"></i>
                         </button>
                         <button className="btn btn-danger" onClick={this.closeForm}>
@@ -571,10 +598,7 @@ var ReasonInstruction = React.createClass({
                 </div>
             );
         } else {
-            value = <div
-                style={{
-                cursor: 'pointer'
-            }}
+            value = <div style={{cursor: 'pointer'}}
                 onClick={this.formMode}
                 className="col-sm-8 editItem"
                 title="Click to edit">{matchOption}</div>;
