@@ -10,7 +10,7 @@ class Visit extends \Resource
 {
     /**
      * Time the visitor arrived
-     * @var \Variable\DateTime
+     * @var \phpws2\Variable\DateTime
      */
     protected $arrival_time;
 
@@ -22,19 +22,19 @@ class Visit extends \Resource
      * 3 - Missing
      * 4 - Made appointment
      * 
-     * @var \Variable\Integer
+     * @var \phpws2\Variable\Integer
      */
     protected $complete_reason;
 
     /**
      * User id of admin that marked the visitor complete
-     * @var \Variable\Integer
+     * @var \phpws2\Variable\Integer
      */
     protected $complete_staff_id;
 
     /**
      * Time visitor was marked as completed by being seen or leaving.
-     * @var \Variable\DateTime
+     * @var \phpws2\Variable\DateTime
      */
     protected $complete_time;
 
@@ -46,41 +46,49 @@ class Visit extends \Resource
 
     /**
      * If true, the visitor has an emergency that requires attention.
-     * @var \Variable\Bool
+     * @var \phpws2\Variable\Bool
      */
     protected $has_emergency;
 
     /**
      * Reason for visit. Id of reason from cc_reason table.
-     * @var \Variable\Integer
+     * @var \phpws2\Variable\Integer
      */
     protected $reason_id;
 
     /**
      * Id of visitor from cc_visitor table
-     * @var \Variable\Integer
+     * @var \phpws2\Variable\Integer
      */
     protected $visitor_id;
 
     /**
      * Id of clinician from cc_clinician table
-     * @var \Variable\Integer
+     * @var \phpws2\Variable\Integer
      */
     protected $clinician_id;
+    
+    /**
+     * Indicates if student is waiting or has an appointment.
+     * @var \phpws2\Variable\Bool
+     */
+    protected $waiting;
+    
     protected $table = 'cc_visit';
 
     public function __construct()
     {
         parent::__construct();
-        $this->arrival_time = new \Variable\DateTime(null, 'arrival_time');
-        $this->complete_reason = new \Variable\Integer(0, 'complete_reason');
-        $this->complete_staff_id = new \Variable\Integer(0, 'complete_staff_id');
-        $this->complete_time = new \Variable\DateTime(0, 'complete_time');
-        $this->disposition_id = new \Variable\Integer(0, 'disposition_id');
-        $this->has_emergency = new \Variable\Bool(null, 'has_emergency');
-        $this->reason_id = new \Variable\Integer(null, 'reason_id');
-        $this->visitor_id = new \Variable\Integer(null, 'visitor_id');
-        $this->clinician_id = new \Variable\Integer(null, 'clinician_id');
+        $this->arrival_time = new \phpws2\Variable\DateTime(null, 'arrival_time');
+        $this->complete_reason = new \phpws2\Variable\Integer(0, 'complete_reason');
+        $this->complete_staff_id = new \phpws2\Variable\Integer(0, 'complete_staff_id');
+        $this->complete_time = new \phpws2\Variable\DateTime(0, 'complete_time');
+        $this->disposition_id = new \phpws2\Variable\Integer(0, 'disposition_id');
+        $this->has_emergency = new \phpws2\Variable\Bool(null, 'has_emergency');
+        $this->reason_id = new \phpws2\Variable\Integer(null, 'reason_id');
+        $this->visitor_id = new \phpws2\Variable\Integer(null, 'visitor_id');
+        $this->clinician_id = new \phpws2\Variable\Integer(null, 'clinician_id');
+        $this->waiting = new \phpws2\Variable\Bool(null, 'waiting');
     }
 
     public function getArrivalTime()
@@ -186,6 +194,16 @@ class Visit extends \Resource
     public function getClinicianId()
     {
         return $this->clinician_id->get();
+    }
+    
+    public function setWaiting($wait)
+    {
+        $this->waiting->set($wait);
+    }
+    
+    public function getWaiting()
+    {
+        return $this->waiting->get();
     }
 
 }
