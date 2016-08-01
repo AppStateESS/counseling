@@ -655,18 +655,14 @@ var Stage = React.createClass({
     },
 
     completeCheckin: function completeCheckin() {
-        if (this.state.reason.wait_listed === '1') {
-            $.post('counseling/User/Visit', {
-                command: 'create',
-                visitorId: this.state.visitor.id,
-                reasonId: this.state.reason.id,
-                emergency: this.state.emergency
-            }, null, 'json').done(function (data) {
-                resetTimeout = setTimeout(this.resetLogin, 5000);
-            }.bind(this));
-        } else {
+        $.post('counseling/User/Visit', {
+            command: 'create',
+            visitorId: this.state.visitor.id,
+            reasonId: this.state.reason.id,
+            emergency: this.state.emergency
+        }, null, 'json').done(function (data) {
             resetTimeout = setTimeout(this.resetLogin, 5000);
-        }
+        }.bind(this));
     },
 
     resetLogin: function resetLogin() {
