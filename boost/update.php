@@ -23,12 +23,15 @@ EOF;
         case version_compare($version, '2.1.0', '<'):
             $db = \phpws2\Database::getDB();
             $tbl = $db->addTable('cc_visit');
-            $dt = new \phpws2\Database\Datatype\Smallint($tbl, 'waiting');
+            $dt = new \phpws2\Database\Datatype\Smallint($tbl, 'category');
             $dt->add();
+            $db->clearTables();
+            $reason = $db->addTable('cc_reason');
+            $reason->dropColumn('wait_listed');
             $content[] = <<<EOF
 <pre>2.1.0
 --------------
-+ Adding 'waiting' flag to visits
++ Adding 'category' flag to visits, handles wait status now.
 </pre>
 EOF;
     }
