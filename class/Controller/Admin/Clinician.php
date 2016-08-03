@@ -99,11 +99,13 @@ EOF;
 
     private function getVisits()
     {
-        $visits = VisitFactory::getCurrentVisits();
+        $visits = VisitFactory::getCurrentVisits(false);
         if (empty($visits)) {
             return null;
         }
 
+        $json['waiting'] = $json['emergencies'] = null;
+        
         foreach ($visits as $visit) {
             if ($visit['has_emergency']) {
                 $json['emergencies'][] = $visit;
