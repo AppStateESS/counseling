@@ -36,12 +36,13 @@ class Visit extends \counseling\Controller\Base
         $emergency = Factory::pullPostCheck('emergency');
 
         $reason = \counseling\Factory\Reason::build($reason_id);
+        $reason->getCategory();
         $visit = new Resource();
         $visit->stampArrivalTime();
+        $visit->setCategory($reason->getCategory());
         $visit->setHasEmergency($emergency);
         $visit->setReasonId($reason_id);
         $visit->setVisitorId($visitor_id);
-        $visit->setWaiting($reason->getWaitListed());
         Factory::saveResource($visit);
     }
 }
