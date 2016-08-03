@@ -8,7 +8,6 @@ namespace counseling\Controller\Admin;
  */
 class Settings extends \counseling\Controller\Base
 {
-
     public function get(\Request $request)
     {
         if (!\Current_User::isDeity()) {
@@ -56,6 +55,7 @@ class Settings extends \counseling\Controller\Base
 $react
 EOF;
         $view = new \View\HtmlView($content);
+
         return $view;
     }
 
@@ -64,15 +64,15 @@ EOF;
         $command = $request->shiftCommand();
 
         if (empty($command)) {
-            return null;
+            return;
         }
 
-        $className = 'counseling\Controller\Admin\Settings\\' . $command;
+        $className = 'counseling\Controller\Admin\Settings\\'.$command;
         if (!class_exists($className)) {
             throw new \Exception('Unknown command');
         }
         $commandObject = new $className($this->getModule());
+
         return $commandObject;
     }
-
 }

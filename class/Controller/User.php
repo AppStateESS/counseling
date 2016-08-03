@@ -2,7 +2,7 @@
 
 namespace counseling\Controller;
 
-require_once PHPWS_SOURCE_DIR . 'mod/counseling/conf/defines.php';
+require_once PHPWS_SOURCE_DIR.'mod/counseling/conf/defines.php';
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
@@ -10,16 +10,17 @@ require_once PHPWS_SOURCE_DIR . 'mod/counseling/conf/defines.php';
  */
 class User extends \Http\Controller
 {
-
     public function get(\Request $request)
     {
         $command = $this->routeCommand($request);
+
         return $command->get($request);
     }
 
     public function post(\Request $request)
     {
         $command = $this->routeCommand($request);
+
         return $command->post($request);
     }
 
@@ -31,11 +32,12 @@ class User extends \Http\Controller
             $command = 'Checkin';
         }
 
-        $className = 'counseling\Controller\User\\' . $command;
+        $className = 'counseling\Controller\User\\'.$command;
         if (!class_exists($className)) {
             throw new \Exception('Unknown command');
         }
         $commandObject = new $className($this->getModule());
+
         return $commandObject;
     }
 
@@ -53,7 +55,7 @@ class User extends \Http\Controller
 <div id="Login"></div>
 $react
 EOF;
+
         return $content;
     }
-
 }

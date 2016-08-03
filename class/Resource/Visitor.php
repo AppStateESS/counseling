@@ -9,7 +9,8 @@ namespace counseling\Resource;
 class Visitor extends \Resource
 {
     /**
-     * Banner Id
+     * Banner Id.
+     *
      * @var \Variable\Integer
      */
     protected $banner_id;
@@ -27,14 +28,16 @@ class Visitor extends \Resource
     /**
      * Timestamp of first visit
      * This variable could be derived from the visit records.
-     * Adding here for quick access
+     * Adding here for quick access.
+     *
      * @var \Variable\DateTime
      */
     protected $first_visit;
 
     /**
      * Tracks if visitor was seen regardless of visits.
-     * @var \Variable\Bool 
+     *
+     * @var \Variable\Bool
      */
     protected $seen_last_visit;
 
@@ -45,13 +48,15 @@ class Visitor extends \Resource
 
     /**
      * Timestamp of last visit
-     * See first_visit notes on
+     * See first_visit notes on.
+     *
      * @var \Variable\DateTime
      */
     protected $last_visit;
 
     /**
-     * Visitor phone number
+     * Visitor phone number.
+     *
      * @var \Variable\PhoneNumber
      */
     protected $phone_number;
@@ -60,7 +65,7 @@ class Visitor extends \Resource
      * @var \Variable\Email
      */
     protected $email;
-    
+
     /**
      * @var \Variable\Bool
      */
@@ -70,7 +75,7 @@ class Visitor extends \Resource
      * @var \Variable\DateTime
      */
     protected $previously_seen;
-    
+
     protected $table = 'cc_visitor';
 
     public function __construct()
@@ -145,12 +150,12 @@ class Visitor extends \Resource
     {
         $this->phone_number->set($var);
     }
-    
+
     public function setPreviouslySeen($var)
     {
         $this->previously_seen->set($var);
     }
-    
+
     public function stampPreviouslySeen()
     {
         $this->previously_seen->stamp();
@@ -165,7 +170,7 @@ class Visitor extends \Resource
     {
         $this->intake_complete->set($var);
     }
-    
+
     public function getBannerId()
     {
         return $this->banner_id->get();
@@ -195,7 +200,7 @@ class Visitor extends \Resource
     {
         return $this->seen_last_visit->get();
     }
-    
+
     public function getIntakeComplete()
     {
         return $this->intake_complete->get();
@@ -215,10 +220,9 @@ class Visitor extends \Resource
     {
         return $this->phone_number->get();
     }
-    
+
     public function getPreviouslySeen()
     {
         return $this->previously_seen->get();
     }
-
 }

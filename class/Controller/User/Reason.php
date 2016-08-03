@@ -10,7 +10,6 @@ use counseling\Factory\Reason as Factory;
  */
 class Reason extends \counseling\Controller\Base
 {
-
     protected function getJsonView($data, \Request $request)
     {
         if (!$request->isVar('command')) {
@@ -25,7 +24,7 @@ class Reason extends \counseling\Controller\Base
         }
 
         $view = new \View\JsonView($json);
+
         return $view;
     }
-
 }

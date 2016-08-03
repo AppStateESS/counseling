@@ -10,7 +10,6 @@ use counseling\Resource\Visitor as Resource;
  */
 class Visitor extends Base
 {
-
     public static function getByBannerId($banner_id)
     {
         $db = \Database::getDB();
@@ -18,27 +17,29 @@ class Visitor extends Base
         $tbl->addFieldConditional('banner_id', $banner_id);
         $visitorArray = $db->selectOneRow();
         if (empty($visitorArray)) {
-            return null;
+            return;
         }
-        $visitor = new Resource;
+        $visitor = new Resource();
         $visitor->setVars($visitorArray);
+
         return $visitor;
     }
 
     /**
-     * 
-     * @param integer $id
+     * @param int $id
+     *
      * @return \counseling\Resource\Visitor
      */
     public static function build($id = 0)
     {
-        $visitor = new Resource;
+        $visitor = new Resource();
         if ($id) {
             $visitor->setId($id);
             if (!parent::loadByID($visitor)) {
-                throw new \Exception('Visitor id not found:' . $id);
+                throw new \Exception('Visitor id not found:'.$id);
             }
         }
+
         return $visitor;
     }
 
@@ -54,7 +55,7 @@ class Visitor extends Base
             throw new \Exception('Could not authenticate user');
         }
 
-        $visitor = new Resource;
+        $visitor = new Resource();
         $visitor->setBannerId($banner_id);
         $visitor->setFirstName($vars['firstName']);
         if (empty($vars['preferredName'])) {
@@ -76,7 +77,7 @@ class Visitor extends Base
 
     public static function intakeComplete($id)
     {
-        $visitor = new Resource;
+        $visitor = new Resource();
         self::loadByID($visitor, $id);
         $visitor->setIntakeComplete(true);
         self::saveResource($visitor);
@@ -98,5 +99,4 @@ class Visitor extends Base
         $visitor->stampPreviouslySeen();
         self::saveResource($visitor);
     }
-
 }

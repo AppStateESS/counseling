@@ -95,5 +95,4 @@ class Clinician extends \Resource
     {
         return $this->sorting->get();
     }
-
 }

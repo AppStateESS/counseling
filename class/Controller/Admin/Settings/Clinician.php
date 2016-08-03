@@ -10,7 +10,6 @@ use counseling\Factory\Clinician as Factory;
  */
 class Clinician extends \counseling\Controller\Base
 {
-
     protected function getJsonView($data, \Request $request)
     {
         if (!$request->isVar('command')) {
@@ -25,6 +24,7 @@ class Clinician extends \counseling\Controller\Base
                 break;
         }
         $view = new \View\JsonView($json);
+
         return $view;
     }
 
@@ -54,7 +54,7 @@ class Clinician extends \counseling\Controller\Base
 
         $view = new \View\JsonView(array('success' => true));
         $response = new \Response($view);
+
         return $response;
     }
-
 }

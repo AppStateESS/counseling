@@ -11,7 +11,6 @@ use counseling\Factory\Visit as VisitFactory;
  */
 class Clinician extends \counseling\Controller\Base
 {
-
     public function getHtmlView($data, \Request $request)
     {
         \Layout::addStyle('counseling', 'Admin/Clinician/style.css');
@@ -33,6 +32,7 @@ class Clinician extends \counseling\Controller\Base
 $react
 EOF;
         $view = new \View\HtmlView($content);
+
         return $view;
     }
 
@@ -58,6 +58,7 @@ EOF;
 
         $view = new \View\JsonView(array('success' => true));
         $response = new \Response($view);
+
         return $response;
     }
 
@@ -87,6 +88,7 @@ EOF;
                 break;
         }
         $view = new \View\JsonView($json);
+
         return $view;
     }
 
@@ -94,6 +96,7 @@ EOF;
     {
         $clinician_id = Factory::pullGetInteger('clinicianId');
         $visit = Factory::getCurrentlySeen($clinician_id);
+
         return $visit;
     }
 
@@ -101,11 +104,11 @@ EOF;
     {
         $visits = VisitFactory::getCurrentVisits(false);
         if (empty($visits)) {
-            return null;
+            return;
         }
 
         $json['waiting'] = $json['emergencies'] = null;
-        
+
         foreach ($visits as $visit) {
             if ($visit['has_emergency']) {
                 $json['emergencies'][] = $visit;
@@ -113,7 +116,7 @@ EOF;
                 $json['waiting'][] = $visit;
             }
         }
+
         return $json;
     }
-
 }

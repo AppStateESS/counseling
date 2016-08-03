@@ -10,13 +10,13 @@ use counseling\Resource\Disposition as Resource;
  */
 class Disposition extends Base
 {
-
     public static function getList($active_only = true)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_disposition');
         $tbl->addFieldConditional('active', 1);
         $tbl->addOrderBy('sorting');
+
         return $db->select();
     }
 
@@ -36,13 +36,14 @@ class Disposition extends Base
 
     public static function build($id = 0)
     {
-        $disposition = new Resource;
+        $disposition = new Resource();
         if ($id) {
             $disposition->setId($id);
             if (!parent::loadByID($disposition)) {
-                throw new \Exception('Disposition id not found:' . $id);
+                throw new \Exception('Disposition id not found:'.$id);
             }
         }
+
         return $disposition;
     }
 
@@ -59,8 +60,9 @@ class Disposition extends Base
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_disposition');
         $tbl->addFieldConditional('active', 1);
-        $tbl->addField(new \Database\Expression('count(' . $tbl->getField('id') . ')', 'count'));
+        $tbl->addField(new \Database\Expression('count('.$tbl->getField('id').')', 'count'));
         $count = $db->selectColumn();
+
         return $count;
     }
 
@@ -108,5 +110,4 @@ class Disposition extends Base
 
         self::saveResource($moved_obj);
     }
-
 }

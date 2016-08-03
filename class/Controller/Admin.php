@@ -2,7 +2,7 @@
 
 namespace counseling\Controller;
 
-require_once PHPWS_SOURCE_DIR . 'mod/counseling/conf/defines.php';
+require_once PHPWS_SOURCE_DIR.'mod/counseling/conf/defines.php';
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
@@ -13,12 +13,14 @@ class Admin extends \phpws2\Http\Controller
     public function get(\Request $request)
     {
         $command = $this->routeCommand($request);
+
         return $command->get($request);
     }
 
     public function post(\Request $request)
     {
         $command = $this->routeCommand($request);
+
         return $command->post($request);
     }
 
@@ -30,11 +32,12 @@ class Admin extends \phpws2\Http\Controller
             $command = 'Dashboard';
         }
 
-        $className = 'counseling\Controller\Admin\\' . $command;
+        $className = 'counseling\Controller\Admin\\'.$command;
         if (!class_exists($className)) {
             throw new \Exception('Unknown command');
         }
         $commandObject = new $className($this->getModule());
+
         return $commandObject;
     }
 
@@ -50,5 +53,4 @@ class Admin extends \phpws2\Http\Controller
         $content = $template->get();
         \Layout::plug($content, 'NAV_LINKS');
     }
-
 }

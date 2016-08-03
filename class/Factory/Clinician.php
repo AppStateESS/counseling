@@ -10,13 +10,13 @@ use counseling\Resource\Clinician as Resource;
  */
 class Clinician extends Base
 {
-
     public static function getList($active_only = true)
     {
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_clinician');
         $tbl->addFieldConditional('active', 1);
         $tbl->addOrderBy('sorting');
+
         return $db->select();
     }
 
@@ -35,13 +35,14 @@ class Clinician extends Base
 
     public static function build($id = 0)
     {
-        $clinician = new Resource;
+        $clinician = new Resource();
         if ($id) {
             $clinician->setId($id);
             if (!parent::loadByID($clinician)) {
-                throw new \Exception('Clinician id not found:' . $id);
+                throw new \Exception('Clinician id not found:'.$id);
             }
         }
+
         return $clinician;
     }
 
@@ -65,6 +66,7 @@ class Clinician extends Base
         $db->joinResources($tbl, $tbl2, $db->createConditional($tbl->getField('visitor_id'), $tbl2->getField('id'), '='));
 
         $result = $db->selectOneRow();
+
         return $result;
     }
 
@@ -73,8 +75,9 @@ class Clinician extends Base
         $db = \Database::getDB();
         $tbl = $db->addTable('cc_clinician');
         $tbl->addFieldConditional('active', 1);
-        $tbl->addField(new \Database\Expression('count(' . $tbl->getField('id') . ')', 'count'));
+        $tbl->addField(new \Database\Expression('count('.$tbl->getField('id').')', 'count'));
         $count = $db->selectColumn();
+
         return $count;
     }
 
@@ -122,5 +125,4 @@ class Clinician extends Base
 
         self::saveResource($moved_obj);
     }
-
 }

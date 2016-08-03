@@ -3,7 +3,6 @@
 namespace counseling\Controller\Admin\Settings;
 
 use counseling\Factory\Reason as Factory;
-use counseling\Resource\Reason as Resource;
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
@@ -11,7 +10,6 @@ use counseling\Resource\Reason as Resource;
  */
 class Reason extends \counseling\Controller\Base
 {
-
     protected function getJsonView($data, \Request $request)
     {
         if (!$request->isVar('command')) {
@@ -31,6 +29,7 @@ class Reason extends \counseling\Controller\Base
         }
 
         $view = new \View\JsonView($json);
+
         return $view;
     }
 
@@ -69,11 +68,11 @@ class Reason extends \counseling\Controller\Base
             case 'setInstruction':
                 $this->setInstruction();
                 break;
-            
+
             case 'setCategory':
                 $this->setCategory();
                 break;
-            
+
             case 'delete':
                 if (\Current_User::isDeity()) {
                     Factory::delete(filter_input(INPUT_POST, 'reasonId', FILTER_SANITIZE_NUMBER_INT));
@@ -81,16 +80,17 @@ class Reason extends \counseling\Controller\Base
                     throw new \Exception('Action not allowed');
                 }
                 break;
-                
+
             case 'pickColor':
-                Factory::pickColor(filter_input(INPUT_POST, 'reasonId', FILTER_SANITIZE_NUMBER_INT), 
+                Factory::pickColor(filter_input(INPUT_POST, 'reasonId', FILTER_SANITIZE_NUMBER_INT),
                         filter_input(INPUT_POST, 'color', FILTER_SANITIZE_STRING));
                 break;
-            
+
         }
 
         $view = new \View\JsonView(array('success' => true));
         $response = new \Response($view);
+
         return $response;
     }
 
@@ -98,6 +98,7 @@ class Reason extends \counseling\Controller\Base
     {
         $content = 'Reasons HTML works';
         $view = new \View\HtmlView($content);
+
         return $view;
     }
 
@@ -128,5 +129,4 @@ class Reason extends \counseling\Controller\Base
         $reason->setCategory(Factory::pullPostInteger('category'));
         Factory::saveResource($reason);
     }
-
 }

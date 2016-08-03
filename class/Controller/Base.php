@@ -8,13 +8,12 @@ namespace counseling\Controller;
  */
 abstract class Base extends \Http\Controller
 {
-
     public function get(\Request $request)
     {
         $data = array();
         $view = $this->getView($data, $request);
         $response = new \Response($view);
+
         return $response;
     }
-
 }

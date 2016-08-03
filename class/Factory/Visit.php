@@ -10,11 +10,10 @@ use counseling\Resource\Visit as Resource;
  */
 class Visit extends Base
 {
-
     /**
      * @return array
      */
-    public static function getCurrentVisits()
+    public static function getCurrentVisits($get_appointments = true)
     {
         $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_visit', 't1');
@@ -26,13 +25,17 @@ class Visit extends Base
         $tbl2 = $db->addTable('cc_reason');
         $tbl2->addField('title', 'reason_title');
         $tbl2->addField('color');
-        $tbl2->addField('category');
         $tbl->addFieldConditional('reason_id', $tbl2->getField('id'));
+        if (!$get_appointments) {
+            $tbl->addFieldConditional('category', CC_CATEGORY_APPOINTMENT, '!=');
+            $tbl->addFieldConditional('category', CC_CATEGORY_GROUP, '!=');
+        }
         $visits = $db->select();
         if (empty($visits)) {
-            return null;
+            return;
         }
         $visits = self::addVisitData($visits);
+
         return $visits;
     }
 
@@ -54,9 +57,10 @@ class Visit extends Base
         $tbl->addFieldConditional('reason_id', $tbl2->getField('id'));
         $visits = $db->select();
         if (empty($visits)) {
-            return null;
+            return;
         }
         $visits = self::addVisitData($visits);
+
         return $visits;
     }
 
@@ -77,9 +81,10 @@ class Visit extends Base
         $tbl->addFieldConditional('reason_id', $tbl2->getField('id'));
         $visits = $db->select();
         if (empty($visits)) {
-            return null;
+            return;
         }
         $visits = self::addVisitData($visits);
+
         return $visits;
     }
 
@@ -89,6 +94,7 @@ class Visit extends Base
         $tbl = $db->addTable('cc_visit');
         $tbl->addField(new \phpws2\Database\Expression('count(id)'));
         $tbl->addFieldConditional('visitor_id', $sub->getField('visitor_id'));
+
         return $db;
     }
 
@@ -120,21 +126,22 @@ class Visit extends Base
                 $visits[$key]['wait_time'] = self::timeWaited($visit['arrival_time']);
             }
         }
+
         return $visits;
     }
 
     public static function build($id = 0)
     {
-        $visit = new Resource;
+        $visit = new Resource();
         if ($id) {
             $visit->setId($id);
             if (!parent::loadByID($visit)) {
-                throw new \Exception('Visit id not found:' . $id);
+                throw new \Exception('Visit id not found:'.$id);
             }
         }
+
         return $visit;
     }
-
 
     public static function getDisposition($disposition_id)
     {
@@ -163,10 +170,11 @@ class Visit extends Base
         }
         if (isset($clin_list[$clinician_id])) {
             $clinician = $clin_list[$clinician_id];
-            $clinician_name = $clinician['first_name'] . ' ' . $clinician['last_name'];
+            $clinician_name = $clinician['first_name'].' '.$clinician['last_name'];
         } else {
             $clinician_name = '[Clinician deleted]';
         }
+
         return $clinician_name;
     }
 
@@ -178,12 +186,13 @@ class Visit extends Base
             $tbl = $db->addTable('cc_disposition');
             $result = $db->select();
             if (empty($result)) {
-                return null;
+                return;
             }
             foreach ($result as $d) {
                 $disp_list[$d['id']] = $d['title'];
             }
         }
+
         return $disp_list;
     }
 
@@ -195,12 +204,13 @@ class Visit extends Base
             $tbl = $db->addTable('cc_clinician');
             $result = $db->select();
             if (empty($result)) {
-                return null;
+                return;
             }
             foreach ($result as $d) {
                 $clin_list[$d['id']] = $d;
             }
         }
+
         return $clin_list;
     }
 
@@ -219,6 +229,9 @@ class Visit extends Base
             case CC_COMPLETE_APPOINTMENT:
                 return 'Made appointment for later';
 
+            case CC_COMPLETE_SENT_BACK:
+                return 'Sent back for appointment';
+
             default:
                 return 'Unknown reason';
         }
@@ -226,6 +239,7 @@ class Visit extends Base
 
     /**
      * Returns a count of the total completed visits. Included emergency and non.
+     *
      * @return string
      */
     public static function getCurrentVisitCount()
@@ -235,6 +249,7 @@ class Visit extends Base
         $tbl->addField(new \phpws2\Database\Expression('count(id)', 'count'));
         $tbl->addFieldConditional('complete_time', 0);
         $visits = $db->selectColumn();
+
         return $visits;
     }
 
@@ -245,6 +260,7 @@ class Visit extends Base
         }
         $timestamp = intval($timestamp);
         $rel = $final - $timestamp;
+
         return (int) floor($rel / 60);
     }
 
@@ -310,7 +326,7 @@ class Visit extends Base
         $visitor = $db->addTable('cc_visitor', null, false);
         $visitor->addFieldConditional('banner_id', $banner_id);
         $db->joinResources($visitor, $visit, $db->createConditional($visit->getField('visitor_id'), $visitor->getField('id')));
+
         return $db->selectOneRow();
     }
-
 }

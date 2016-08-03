@@ -3,7 +3,6 @@
 namespace counseling\Controller\Admin\Settings;
 
 use counseling\Factory\Disposition as Factory;
-use counseling\Resource\Disposition as Resource;
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
@@ -11,7 +10,6 @@ use counseling\Resource\Disposition as Resource;
  */
 class Disposition extends \counseling\Controller\Base
 {
-
     protected function getJsonView($data, \Request $request)
     {
         if (!$request->isVar('command')) {
@@ -31,6 +29,7 @@ class Disposition extends \counseling\Controller\Base
         }
 
         $view = new \View\JsonView($json);
+
         return $view;
     }
 
@@ -49,7 +48,7 @@ class Disposition extends \counseling\Controller\Base
             case 'delete':
                 Factory::delete(Factory::pullPostInteger('dispositionId'));
                 break;
-            
+
             case 'sort':
                 Factory::sort(Factory::pullPostInteger('moved'), Factory::pullPostInteger('prev'),
                         Factory::pullPostInteger('next'));
@@ -61,7 +60,7 @@ class Disposition extends \counseling\Controller\Base
 
         $view = new \View\JsonView(array('success' => true));
         $response = new \Response($view);
+
         return $response;
     }
-
 }

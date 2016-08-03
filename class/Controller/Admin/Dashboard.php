@@ -8,7 +8,6 @@ namespace counseling\Controller\Admin;
  */
 class Dashboard extends \counseling\Controller\Base
 {
-
     public function get(\Request $request)
     {
         $command = $this->routeCommand($request);
@@ -51,6 +50,7 @@ class Dashboard extends \counseling\Controller\Base
 $react
 EOF;
         $view = new \View\HtmlView($content);
+
         return $view;
     }
 
@@ -59,15 +59,15 @@ EOF;
         $command = $request->shiftCommand();
 
         if (empty($command)) {
-            return null;
+            return;
         }
 
-        $className = 'counseling\Controller\Admin\Dashboard\\' . $command;
+        $className = 'counseling\Controller\Admin\Dashboard\\'.$command;
         if (!class_exists($className)) {
             throw new \Exception('Unknown command');
         }
         $commandObject = new $className($this->getModule());
+
         return $commandObject;
     }
-
 }

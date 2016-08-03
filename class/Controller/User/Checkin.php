@@ -2,7 +2,6 @@
 
 namespace counseling\Controller\User;
 
-use counseling\Factory\Banner;
 use counseling\Factory\Reason;
 use counseling\Factory\Visitor;
 use counseling\Factory\Visit;
@@ -13,7 +12,6 @@ use counseling\Factory\Visit;
  */
 class Checkin extends \counseling\Controller\Base
 {
-
     protected function getJsonView($data, \Request $request)
     {
         if (!$request->isVar('command')) {
@@ -32,6 +30,7 @@ class Checkin extends \counseling\Controller\Base
         }
 
         $view = new \View\JsonView($json);
+
         return $view;
     }
 
@@ -39,9 +38,9 @@ class Checkin extends \counseling\Controller\Base
     {
         $banner_id = filter_input(INPUT_GET, 'bannerId', FILTER_SANITIZE_STRING);
         $waiting = Visit::getWaitingByBanner($banner_id);
-        
+
         if (!empty($waiting)) {
-            return array('waiting'=>true);
+            return array('waiting' => true);
         }
 
         $visitor = Visitor::getByBannerId($banner_id);
@@ -50,11 +49,11 @@ class Checkin extends \counseling\Controller\Base
         }
 
         if (empty($visitor)) {
-            return null;
+            return;
         } else {
             $jsonVisitor = $visitor->getStringVars();
+
             return $jsonVisitor;
         }
     }
-
 }
