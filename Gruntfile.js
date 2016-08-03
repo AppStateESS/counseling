@@ -14,6 +14,7 @@ module.exports = function(grunt) {
                     'javascript/Admin/FrontDesk/src/Modal.jsx',
                     'javascript/Admin/FrontDesk/src/Summary.jsx',
                     'javascript/Admin/FrontDesk/src/CurrentlySeen.jsx',
+                    'javascript/Admin/FrontDesk/src/Appointment.jsx',
                     'javascript/Admin/FrontDesk/src/Emergency.jsx',
                     'javascript/Admin/FrontDesk/src/Waiting.jsx',
                     'javascript/Admin/FrontDesk/src/Dashboard.jsx'
