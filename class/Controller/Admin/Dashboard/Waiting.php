@@ -12,7 +12,6 @@ use counseling\Factory\Summary as SummaryFactory;
  */
 class Waiting extends \counseling\Controller\Base
 {
-
     protected function getJsonView($data, \Request $request)
     {
         if (!$request->isVar('command')) {
@@ -27,6 +26,7 @@ class Waiting extends \counseling\Controller\Base
         }
 
         $view = new \View\JsonView($json);
+
         return $view;
     }
 
@@ -56,11 +56,12 @@ class Waiting extends \counseling\Controller\Base
                 break;
 
             default:
-            throw new \Exception('Unknown post command');
+                throw new \Exception('Unknown post command');
         }
 
         $view = new \View\JsonView(array('success' => true));
         $response = new \Response($view);
+
         return $response;
     }
 
@@ -72,15 +73,16 @@ class Waiting extends \counseling\Controller\Base
     }
 
     /**
-     * Returns waiting and emergency lists
+     * Returns waiting and emergency lists.
      */
     private function getLists()
     {
         $waiting = VisitFactory::getCurrentVisits();
-        $currentlySeen = VisitFactory::getCurrentlySeen();
+
         if (empty($waiting)) {
             $json['emergencyList'] = null;
-            $json['waitingList'] = null;
+            $json['waiting'] = null;
+            $json['appointment'] = null;
             $json['summary'] = null;
         } else {
             $count = 0;
@@ -91,28 +93,34 @@ class Waiting extends \counseling\Controller\Base
             $appointment = 0;
 
             $now = time();
-
             foreach ($waiting as $visit) {
                 $id = $visit['id'];
-                $arrivals[] = $visit['wait_time'];
 
                 if ($visit['has_emergency']) {
-                    $count++;
+                    ++$count;
                     $json['emergencies'][] = $visit;
-                    $emergencies++;
+                    ++$emergencies;
                 } else {
-                    $count++;
-                    $json['waiting'][] = $visit;
-
                     switch ($visit['category']) {
-                        case '0':
+                        case CC_CATEGORY_OTHER:
                             $other++;
                             break;
-                        case '1':
-                            $walkin++;
+
+                        case CC_CATEGORY_WALKIN:
+                            $arrivals[] = $visit['wait_time'];
+                            ++$count;
+                            ++$walkin;
+                            $json['waiting'][] = $visit;
                             break;
-                        case '2':
-                            $appointment++;
+
+                        case CC_CATEGORY_APPOINTMENT:
+                        case CC_CATEGORY_GROUP:
+                            $json['appointment'][] = $visit;
+                            ++$appointment;
+                            break;
+
+                        default:
+                            exit('bad category '.$visit['category']);
                     }
                 }
             }
@@ -123,9 +131,9 @@ class Waiting extends \counseling\Controller\Base
             $summary['currentTally']['walkin'] = $walkin;
             $summary['currentTally']['appointment'] = $appointment;
             $summary['currentTally']['emergency'] = $emergencies;
-
         }
 
+        $currentlySeen = VisitFactory::getCurrentlySeen();
         if (empty($currentlySeen)) {
             $json['currentlySeen'] = null;
         } else {
@@ -144,5 +152,4 @@ class Waiting extends \counseling\Controller\Base
 
         return $json;
     }
-
 }
