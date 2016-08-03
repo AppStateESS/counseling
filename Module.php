@@ -38,6 +38,7 @@ class Module extends \Module
         }
         $checked = true;
         require_once $define_file;
+        require_once PHPWS_SOURCE_DIR .  'mod/counseling/conf/system_defines.php';
     }
 
     public function getController(\Request $request)
