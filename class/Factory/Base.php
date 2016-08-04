@@ -34,6 +34,7 @@ class Base extends \ResourceFactory
         $obj->{CC_CATEGORY_OTHER} = CC_CATEGORY_OTHER_ICON;
         $obj->{CC_CATEGORY_WALKIN} = CC_CATEGORY_WALKIN_ICON;
         $obj->{CC_CATEGORY_APPOINTMENT} = CC_CATEGORY_APPOINTMENT_ICON;
+        $obj->{CC_CATEGORY_GROUP} = CC_CATEGORY_GROUP_ICON;
 
         return $obj;
     }

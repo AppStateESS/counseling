@@ -245,27 +245,26 @@ var Reasons = React.createClass({
 
     render: function render() {
         var form = null;
-        var button = null;
+        var button = React.createElement(
+            'button',
+            { ref: 'addButton', className: 'btn btn-success', onClick: this.showForm,
+                style: { marginBottom: '1em' } },
+            'Add reason ',
+            React.createElement('i', { className: 'fa fa-caret-down' })
+        );
         var alert = null;
         var reasons = null;
+        var background = null;
 
         if (this.state.showForm) {
             form = React.createElement(ReasonForm, {
                 closeForm: this.closeForm,
                 reload: this.loadData,
                 fail: this.saveFailure });
+            $(this.refs.addButton).attr('disabled', true);
+            background = React.createElement('div', { className: 'modal-background' });
         } else {
-            button = React.createElement(
-                'button',
-                {
-                    className: 'btn btn-success',
-                    onClick: this.showForm,
-                    style: {
-                        marginBottom: '1em'
-                    } },
-                'Add reason',
-                React.createElement('i', { className: 'fa fa-caret-down' })
-            );
+            $(this.refs.addButton).attr('disabled', false);
         }
         if (this.state.saveFail) {
             alert = React.createElement(
@@ -284,6 +283,7 @@ var Reasons = React.createClass({
         return React.createElement(
             'div',
             null,
+            background,
             React.createElement(
                 'div',
                 { className: 'settings-form-area' },
@@ -351,7 +351,6 @@ var ReasonRow = React.createClass({
             instruction: '',
             show_emergency: true,
             category: 0,
-            wait_listed: false,
             ask_for_phone: false,
             active: true,
             sorting: 0,
@@ -367,7 +366,6 @@ var ReasonRow = React.createClass({
             instruction: '',
             show_emergency: true,
             category: 0,
-            wait_listed: false,
             ask_for_phone: false,
             active: true,
             sorting: 0,
@@ -387,16 +385,6 @@ var ReasonRow = React.createClass({
         }, null, 'json').done(function (data) {
             var switcher = this.state.show_emergency == '1' ? '0' : '1';
             this.setState({ show_emergency: switcher });
-        }.bind(this));
-    },
-
-    flipWaitListed: function flipWaitListed() {
-        $.post('counseling/Admin/Settings/Reason', {
-            command: 'flipWaitListed',
-            reasonId: this.state.id
-        }, null, 'json').done(function (data) {
-            var switcher = this.state.wait_listed == '1' ? '0' : '1';
-            this.setState({ wait_listed: switcher });
         }.bind(this));
     },
 
@@ -443,6 +431,7 @@ var ReasonRow = React.createClass({
     },
 
     updateCategory: function updateCategory(event) {
+        console.log(event);
         this.setState({ category: event.target.value });
     },
 
@@ -534,13 +523,6 @@ var ReasonRow = React.createClass({
             label: 'Ask emergency',
             icon: 'fa-exclamation-triangle' });
 
-        var wait = React.createElement(FlipOption, {
-            handleClick: this.flipWaitListed,
-            active: this.state.wait_listed == '1',
-            title: 'Choosing this reason puts visitor in the wait queue',
-            label: 'Wait list',
-            icon: 'fa-hourglass-start' });
-
         var phone = React.createElement(FlipOption, {
             handleClick: this.flipAskForPhone,
             active: this.state.ask_for_phone == '1',
@@ -589,11 +571,7 @@ var ReasonRow = React.createClass({
                             ),
                             React.createElement(ReasonTitle, _extends({ value: this.state.title, reset: this.resetTitle,
                                 update: this.updateTitle, save: this.saveTitle }, props))
-                        )
-                    ),
-                    React.createElement(
-                        'div',
-                        { className: 'col-sm-6' },
+                        ),
                         React.createElement(
                             'div',
                             { className: 'section' },
@@ -605,12 +583,18 @@ var ReasonRow = React.createClass({
                             React.createElement(ReasonDescription, _extends({ value: this.state.description,
                                 reset: this.resetDescription, update: this.updateDescription,
                                 save: this.saveDescription }, props))
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'section' },
+                            React.createElement(
+                                'strong',
+                                null,
+                                'Reason highlight'
+                            ),
+                            React.createElement(PickColor, { handleClick: this.pickColor })
                         )
-                    )
-                ),
-                React.createElement(
-                    'div',
-                    { className: 'row' },
+                    ),
                     React.createElement(
                         'div',
                         { className: 'col-sm-6' },
@@ -625,11 +609,7 @@ var ReasonRow = React.createClass({
                             React.createElement(ReasonInstruction, _extends({ value: this.state.instruction,
                                 reset: this.resetInstruction, update: this.updateInstruction,
                                 save: this.saveInstruction }, props))
-                        )
-                    ),
-                    React.createElement(
-                        'div',
-                        { className: 'col-sm-6' },
+                        ),
                         React.createElement(
                             'div',
                             { className: 'section' },
@@ -638,48 +618,20 @@ var ReasonRow = React.createClass({
                                 null,
                                 'Category:'
                             ),
+                            React.createElement('br', null),
                             React.createElement(ReasonCategory, _extends({ value: this.state.category, reset: this.resetCategory,
                                 update: this.updateCategory, save: this.saveCategory }, props))
-                        )
-                    )
-                ),
-                React.createElement('hr', null),
-                React.createElement(
-                    'div',
-                    { className: 'row' },
-                    React.createElement(
-                        'div',
-                        { className: 'col-sm-12' },
-                        React.createElement(
-                            'span',
-                            null,
-                            React.createElement(
-                                'strong',
-                                null,
-                                'Reason highlight'
-                            )
                         ),
-                        React.createElement(PickColor, { handleClick: this.pickColor })
-                    )
-                ),
-                React.createElement('hr', null),
-                React.createElement(
-                    'div',
-                    { className: 'row' },
-                    React.createElement(
-                        'div',
-                        { className: 'col-sm-4 text-center' },
-                        wait
-                    ),
-                    React.createElement(
-                        'div',
-                        { className: 'col-sm-4 text-center' },
-                        emergency
-                    ),
-                    React.createElement(
-                        'div',
-                        { className: 'col-sm-4 text-center' },
-                        phone
+                        React.createElement(
+                            'div',
+                            { className: 'section' },
+                            phone
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'section' },
+                            emergency
+                        )
                     )
                 )
             )
@@ -769,7 +721,11 @@ var ReasonCategory = React.createClass({
                 break;
 
             case '2':
-                matchOption = 'Appointment';
+                matchOption = 'Individual appointment';
+                break;
+
+            case '4':
+                matchOption = 'Group appointment';
                 break;
         }
 
@@ -781,7 +737,10 @@ var ReasonCategory = React.createClass({
             label: 'Walk-in'
         }, {
             value: '2',
-            label: 'Appointment'
+            label: 'Individual appointment'
+        }, {
+            value: '4',
+            label: 'Group appointment'
         }];
 
         if (this.state.editMode && this.props.currentEdit.id == this.props.reasonId && this.props.currentEdit.section == '4') {
@@ -1058,6 +1017,8 @@ var ReasonValue = React.createClass({
 var LineEdit = React.createClass({
     displayName: 'LineEdit',
 
+    mouseFlag: false,
+
     getDefaultProps: function getDefaultProps() {
         return {
             placeholder: null,
@@ -1069,6 +1030,20 @@ var LineEdit = React.createClass({
         };
     },
 
+    blurEvent: function blurEvent() {
+        if (this.mouseFlag === false) {
+            this.props.close();
+        }
+    },
+
+    flagMouseOn: function flagMouseOn() {
+        this.mouseFlag = true;
+    },
+
+    flagMouseOff: function flagMouseOff() {
+        this.mouseFlag = false;
+    },
+
     render: function render() {
         return React.createElement(
             'div',
@@ -1077,13 +1052,14 @@ var LineEdit = React.createClass({
                 className: 'editItem form-control',
                 placeholder: this.props.placeholder,
                 onChange: this.props.update,
-                value: this.props.value }),
+                value: this.props.value, onBlur: this.blurEvent }),
             React.createElement(
                 'span',
                 { className: 'input-group-btn' },
                 React.createElement(
                     'button',
-                    { className: 'btn btn-success', onClick: this.props.save },
+                    { className: 'btn btn-success', onClick: this.props.save,
+                        onMouseDown: this.flagMouseOn, onMouseUp: this.flagMouseOff },
                     React.createElement('i', { className: 'fa fa-check' })
                 ),
                 React.createElement(
@@ -1112,21 +1088,20 @@ var FlipOption = React.createClass({
     render: function render() {
         var divClass = null;
         var iconClass = 'fa fa-lg ' + this.props.icon;
+        var title = null;
 
         if (this.props.active) {
             divClass = 'text-success';
+            title = 'Click to disable';
         } else {
             divClass = 'dim';
+            title = 'Click to enable';
         }
         return React.createElement(
             'div',
-            {
-                onClick: this.props.handleClick,
-                className: divClass,
-                style: {
-                    cursor: 'pointer'
-                } },
+            { onClick: this.props.handleClick, className: divClass, style: { cursor: 'pointer' }, title: title },
             React.createElement('i', { className: iconClass, title: this.props.title }),
+            ' ',
             this.props.label
         );
     }
@@ -1143,7 +1118,6 @@ var ReasonForm = React.createClass({
             category: 1,
             showEmergency: false,
             askForPhone: 0,
-            waitListed: true,
             formError: false,
             instructionList: null
         };
@@ -1182,8 +1156,7 @@ var ReasonForm = React.createClass({
             instruction: this.state.instruction,
             category: this.state.category,
             showEmergency: this.state.showEmergency,
-            askForPhone: this.state.askForPhone,
-            waitListed: this.state.waitListed
+            askForPhone: this.state.askForPhone
         }, null, 'json').done(function (data) {
             this.props.reload();
         }.bind(this)).fail(function () {
@@ -1211,28 +1184,11 @@ var ReasonForm = React.createClass({
 
     updateEmergency: function updateEmergency(event) {
         var showEmergency = event.target.checked;
-        var waitListed = this.state.waitListed;
-
-        if (showEmergency) {
-            waitListed = true;
-        }
-
-        this.setState({ waitListed: waitListed, showEmergency: showEmergency });
+        this.setState({ showEmergency: showEmergency });
     },
 
     updateAskForPhone: function updateAskForPhone(event) {
         this.setState({ askForPhone: event.target.checked });
-    },
-
-    updateWaitListed: function updateWaitListed(event) {
-        var waitListed = event.target.checked;
-        var showEmergency = this.state.showEmergency;
-
-        if (!waitListed) {
-            showEmergency = false;
-        }
-
-        this.setState({ waitListed: waitListed, showEmergency: showEmergency });
     },
 
     closeForm: function closeForm(event) {
@@ -1243,16 +1199,7 @@ var ReasonForm = React.createClass({
     render: function render() {
         return React.createElement(
             'div',
-            {
-                style: {
-                    position: 'absolute',
-                    width: '600px',
-                    backgroundColor: 'white',
-                    border: '1px solid black',
-                    padding: '1em',
-                    borderRadius: '10px',
-                    zIndex: '50'
-                } },
+            { className: 'setting-form' },
             React.createElement(
                 'form',
                 { method: 'post', action: 'counseling/Admin/Settings/Reasons' },
@@ -1309,8 +1256,7 @@ var ReasonForm = React.createClass({
                                     React.createElement('input', { type: 'radio', name: 'instruction',
                                         defaultValue: '1', defaultChecked: true,
                                         tabIndex: 3, onClick: this.updateInstruction }),
-                                    ' ',
-                                    'Sit down'
+                                    '  Sit down'
                                 ),
                                 React.createElement(
                                     'label',
@@ -1321,26 +1267,8 @@ var ReasonForm = React.createClass({
                                         defaultValue: '2',
                                         tabIndex: 4,
                                         onClick: this.updateInstruction }),
-                                    ' ',
-                                    'Front desk'
+                                    '  Front desk'
                                 )
-                            )
-                        ),
-                        React.createElement(
-                            'div',
-                            { className: 'form-group' },
-                            React.createElement(
-                                'label',
-                                null,
-                                React.createElement('input', { type: 'checkbox', name: 'waitListed', value: '1',
-                                    checked: this.state.waitListed,
-                                    onChange: this.updateWaitListed, tabIndex: 7 }),
-                                ' ',
-                                'Put on wait list',
-                                ' ',
-                                React.createElement('i', { className: 'fa fa-question-circle', style: { cursor: 'pointer' },
-                                    'data-toggle': 'tooltip', 'data-placement': 'right',
-                                    title: 'If checked, the visitor will be placed on the waiting list.' })
                             )
                         ),
                         React.createElement(
@@ -1352,8 +1280,7 @@ var ReasonForm = React.createClass({
                                 React.createElement('input', { type: 'checkbox', name: 'showEmergency', value: '1',
                                     checked: this.state.showEmergency, onChange: this.updateEmergency,
                                     tabIndex: 5 }),
-                                ' Show emergency question',
-                                ' ',
+                                ' Show emergency question ',
                                 React.createElement('i', { className: 'fa fa-question-circle', style: { cursor: 'pointer' },
                                     'data-toggle': 'tooltip', 'data-placement': 'right',
                                     title: 'If checked, the visitor will be asked if they have an emergency.' })
@@ -1372,8 +1299,7 @@ var ReasonForm = React.createClass({
                                     checked: this.state.askForPhone,
                                     onChange: this.updateAskForPhone,
                                     tabIndex: 8 }),
-                                ' ',
-                                'Ask for phone number  ',
+                                '  Ask for phone number  ',
                                 React.createElement('i', { className: 'fa fa-question-circle', style: { cursor: 'pointer' },
                                     'data-toggle': 'tooltip', 'data-placement': 'right',
                                     title: 'If checked, the visitor will be asked for their phone number.' })
@@ -1383,7 +1309,7 @@ var ReasonForm = React.createClass({
                     React.createElement(
                         'div',
                         { className: 'col-sm-6' },
-                        React.createElement(GroupSelect, null)
+                        React.createElement(GroupSelect, { update: this.updateCategory })
                     )
                 ),
                 React.createElement(
@@ -1409,7 +1335,7 @@ var GroupSelect = React.createClass({
 
 
     getDefaultProps: function getDefaultProps() {
-        return {};
+        return { update: null };
     },
 
     render: function render() {
@@ -1428,11 +1354,10 @@ var GroupSelect = React.createClass({
                     'label',
                     null,
                     React.createElement('input', { type: 'radio', name: 'summaryGroup', defaultValue: '1',
-                        onClick: this.updateCategory }),
-                    ' ',
-                    React.createElement('i', { className: 'fa fa-male fa-lg' }),
-                    ' ',
-                    'Walk-in'
+                        onClick: this.props.update }),
+                    ' ',
+                    React.createElement('i', { className: 'fa fa-clock-o fa-lg' }),
+                    '  Walk-in'
                 )
             ),
             React.createElement(
@@ -1442,11 +1367,23 @@ var GroupSelect = React.createClass({
                     'label',
                     null,
                     React.createElement('input', { type: 'radio', name: 'summaryGroup', defaultValue: '2',
-                        onClick: this.updateCategory }),
-                    ' ',
-                    React.createElement('i', { className: 'fa fa-clock-o fa-lg' }),
-                    ' ',
-                    'Appointment'
+                        onClick: this.props.update }),
+                    ' ',
+                    React.createElement('i', { className: 'fa fa-male fa-lg' }),
+                    '  Individual appointment'
+                )
+            ),
+            React.createElement(
+                'div',
+                null,
+                React.createElement(
+                    'label',
+                    null,
+                    React.createElement('input', { type: 'radio', name: 'summaryGroup', defaultValue: '4',
+                        onClick: this.props.update }),
+                    ' ',
+                    React.createElement('i', { className: 'fa fa-users fa-lg' }),
+                    '  Group appointment'
                 )
             ),
             React.createElement(
@@ -1460,11 +1397,10 @@ var GroupSelect = React.createClass({
                         name: 'summaryGroup',
                         defaultChecked: true,
                         defaultValue: '0',
-                        onClick: this.updateCategory }),
-                    ' ',
+                        onClick: this.props.update }),
+                    ' ',
                     React.createElement('i', { className: 'fa fa-question-circle fa-lg' }),
-                    ' ',
-                    'Other'
+                    '  Other'
                 )
             )
         );

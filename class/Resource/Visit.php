@@ -9,7 +9,8 @@ namespace counseling\Resource;
 class Visit extends \Resource
 {
     /**
-     * Time the visitor arrived
+     * Time the visitor arrived.
+     *
      * @var \phpws2\Variable\DateTime
      */
     protected $arrival_time;
@@ -20,60 +21,73 @@ class Visit extends \Resource
      * 1 - Seen by counselor
      * 2 - Had to leave
      * 3 - Missing
-     * 4 - Made appointment
+     * 4 - Made appointment.
      * 
      * @var \phpws2\Variable\Integer
      */
     protected $complete_reason;
 
     /**
-     * User id of admin that marked the visitor complete
+     * User id of admin that marked the visitor complete.
+     *
      * @var \phpws2\Variable\Integer
      */
     protected $complete_staff_id;
 
     /**
      * Time visitor was marked as completed by being seen or leaving.
+     *
      * @var \phpws2\Variable\DateTime
      */
     protected $complete_time;
 
     /**
-     * Id of disposition
+     * Id of disposition.
+     *
      * @var array
      */
     protected $disposition_id;
 
     /**
      * If true, the visitor has an emergency that requires attention.
+     *
      * @var \phpws2\Variable\Bool
      */
     protected $has_emergency;
 
     /**
      * Reason for visit. Id of reason from cc_reason table.
+     *
      * @var \phpws2\Variable\Integer
      */
     protected $reason_id;
 
     /**
-     * Id of visitor from cc_visitor table
+     * Id of visitor from cc_visitor table.
+     *
      * @var \phpws2\Variable\Integer
      */
     protected $visitor_id;
 
     /**
-     * Id of clinician from cc_clinician table
+     * Id of clinician from cc_clinician table.
+     *
      * @var \phpws2\Variable\Integer
      */
     protected $clinician_id;
-    
+
     /**
-     * Indicates if student is waiting or has an appointment.
-     * @var \phpws2\Variable\Bool
+     * Indicates if student is walk-in or has an appointment.
+     * 0 = other
+     * 1 = walk in
+     * 2 = individual appointment
+     * 3 = emergency
+     * 4 = group appointment.
+     *
+     * @var \phpws2\Variable\Integer
      */
-    protected $waiting;
-    
+    protected $category;
+
     protected $table = 'cc_visit';
 
     public function __construct()
@@ -88,7 +102,7 @@ class Visit extends \Resource
         $this->reason_id = new \phpws2\Variable\Integer(null, 'reason_id');
         $this->visitor_id = new \phpws2\Variable\Integer(null, 'visitor_id');
         $this->clinician_id = new \phpws2\Variable\Integer(null, 'clinician_id');
-        $this->waiting = new \phpws2\Variable\Bool(null, 'waiting');
+        $this->category = new \phpws2\Variable\Integer(null, 'category');
     }
 
     public function getArrivalTime()
@@ -185,25 +199,24 @@ class Visit extends \Resource
     {
         $this->complete_time->stamp();
     }
-    
+
     public function setClinicianId($var)
     {
         $this->clinician_id->set($var);
     }
-    
+
     public function getClinicianId()
     {
         return $this->clinician_id->get();
     }
-    
-    public function setWaiting($wait)
+
+    public function setCategory($wait)
     {
-        $this->waiting->set($wait);
-    }
-    
-    public function getWaiting()
-    {
-        return $this->waiting->get();
+        $this->category->set($wait);
     }
 
+    public function getCategory()
+    {
+        return $this->category->get();
+    }
 }

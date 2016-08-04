@@ -1,39 +1,36 @@
 var Waiting = React.createClass({
     render: function() {
-        if ( this.props.emergency === undefined && this.props.waiting === undefined ) {
-            return <div className="text-success text-center">
-                <i style={{fontSize : '200px'}} className="fa fa-smile-o"></i>
-                <p style={{fontSize : '100px'}}>All clear!</p>
-            </div>;
-        } else {
-            return (
+        let waitingList = <div>No walk-ins waiting</div>;
+        if (!isEmpty(this.props.waiting)) {
+            waitingList = (
                 <div>
-                    <Emergency list={this.props.emergency} reload={this.props.reload}/>
-                    <WaitingList list={this.props.waiting} reload={this.props.reload} />
+                    <h3>Walk-ins</h3>
+                    <WaitingList list={this.props.waiting} reload={this.props.reload}/>
                 </div>
             );
         }
+        return (
+            <div>
+                <Emergency list={this.props.emergency} reload={this.props.reload}/>
+                {waitingList}
+            </div>
+        );
     }
 });
 
 var WaitingList = React.createClass({
     getDefaultProps: function() {
-        return {
-            list : null,
-            reload : null
-        };
+        return {list: null, reload: null};
     },
 
     render: function() {
 
         var listRows = null;
         if (this.props.list == null) {
-            return <div />;
+            return <div/>;
         }
-        listRows = this.props.list.map(function(value, key){
-            return (
-                <WaitingListRow {...value} count={key} key={key} reload={this.props.reload}/>
-            );
+        listRows = this.props.list.map(function(value, key) {
+            return (<WaitingListRow {...value} count={key} key={key} reload={this.props.reload}/>);
         }.bind(this));
         return (
             <div className="waiting-list">
@@ -58,68 +55,58 @@ var WaitingList = React.createClass({
 });
 
 var WaitingListRow = React.createClass({
-
     getDefaultProps: function() {
-        return {
-            value : {},
-            count : 0,
-            reload : null,
-            visitor : null
-        };
+        return {value: {}, count: 0, reload: null, visitor: null};
     },
-
-    saveToClipboard: function() {
-        $(this.refs.bannerId).select();
-        document.execCommand('copy');
-    },
-
-    /*
-     * silences javascript warning on input used for copy and paste
-     */
-    nada: function() {},
 
     render: function() {
         let count = this.props.count + 1;
         let _className = 'bg-' + this.props.color;
         return (
             <tr className={_className}>
-                <td style={{width : '3%'}}>{count}</td>
-                <td style={{width : '3%'}} className="text-center">
-                    <CategoryIcon category={this.props.category} reasonTitle={this.props.reason_title}/></td>
+                <td style={{
+                    width: '3%'
+                }}>{count}</td>
+                <td
+                    style={{
+                        width: '3%'
+                    }}
+                    className="text-center">
+                    <CategoryIcon
+                        category={this.props.category}
+                        reasonTitle={this.props.reason_title}/></td>
                 <td><VisitorName visitor={this.props.visitor}/></td>
-                <td><input size="11" ref="bannerId" value={this.props.visitor.banner_id} onChange={this.nada}/>&nbsp;
-                    <button title="Copy to clipboard" onClick={this.saveToClipboard}><i className="glyphicon glyphicon-copy"></i></button>
-                </td>
-                <td>{this.props.wait_time} min.</td>
-                <td><WaitingListVisits visitNumber={this.props.total_visits} /></td>
                 <td>
-                    <WaitingListStatus visitor={this.props.visitor} reload={this.props.reload}
+                    <ClipboardInput bannerId={this.props.visitor.banner_id}/>
+                </td>
+                <td>{this.props.wait_time}
+                min.</td>
+                <td><WaitingListVisits visitNumber={this.props.total_visits}/></td>
+                <td>
+                    <WaitingListStatus
+                        visitor={this.props.visitor}
+                        reload={this.props.reload}
                         visitNumber={this.props.total_visits}/>
                 </td>
-                 <td><WaitingAction visitId={this.props.id} reload={this.props.reload}/></td>
+                <td><WaitingAction visitId={this.props.id} reload={this.props.reload}/></td>
             </tr>
         );
     }
-
 });
 
 var VisitorName = React.createClass({
     getInitialState: function() {
-        return {
-            tooltip : true
-        };
+        return {tooltip: true};
     },
 
     getDefaultProps: function() {
-        return {
-            visitor : null
-        };
+        return {visitor: null};
     },
 
-    componentDidMount : function() {
+    componentDidMount: function() {
         if (this.state.tooltip) {
-            $('span.visitor-name').tooltip({animation:true, placement:'right'});
-            this.setState({tooltip : false});
+            $('span.visitor-name').tooltip({animation: true, placement: 'right'});
+            this.setState({tooltip: false});
         }
     },
 
@@ -135,26 +122,20 @@ var VisitorName = React.createClass({
             );
         }
     }
-
 });
 
 var CategoryIcon = React.createClass({
     getInitialState: function() {
-        return {
-            tooltip : true
-        };
+        return {tooltip: true};
     },
     getDefaultProps: function() {
-        return {
-            category : 0,
-            reasonTitle : null
-        };
+        return {category: 0, reasonTitle: null};
     },
 
-    componentDidMount : function() {
+    componentDidMount: function() {
         if (this.state.tooltip) {
-            $('i.category').tooltip({animation:true, placement:'right'});
-            this.setState({tooltip : false});
+            $('i.category').tooltip({animation: true, placement: 'right'});
+            this.setState({tooltip: false});
         }
     },
 
@@ -166,15 +147,12 @@ var CategoryIcon = React.createClass({
             <div>{icon}</div>
         );
     }
-
 });
 
 var WaitingListVisits = React.createClass({
 
     getDefaultProps: function() {
-        return {
-            visitNumber : '0'
-        };
+        return {visitNumber: '0'};
     },
 
     render: function() {
@@ -187,86 +165,79 @@ var WaitingListVisits = React.createClass({
 
             case '2':
             case '3':
-                return <span className="label label-primary">{this.props.visitNumber} visits</span>;
+                return <span className="label label-primary">{this.props.visitNumber}
+                    visits</span>;
 
             case '4':
             case '5':
-                return <span className="label label-warning">{this.props.visitNumber} visits</span>;
+                return <span className="label label-warning">{this.props.visitNumber}
+                    visits</span>;
 
             default:
-                return <span className="label label-danger">{this.props.visitNumber} visits</span>;
+                return <span className="label label-danger">{this.props.visitNumber}
+                    visits</span>;
         }
 
     }
-
 });
 
 var WaitingAction = React.createClass({
 
     getDefaultProps: function() {
-        return {
-            visitId : 0
-        };
+        return {visitId: 0};
     },
 
-    completeReason : function(reason) {
+    completeReason: function(reason) {
         $.post('counseling/Admin/Dashboard/Waiting', {
-        	command : 'setCompleteReason',
-            reason : reason,
-            visitId : this.props.visitId
-        }, null, 'json')
-        	.done(function(data){
-                this.props.reload();
-        	}.bind(this));
+            command: 'setCompleteReason',
+            reason: reason,
+            visitId: this.props.visitId
+        }, null, 'json').done(function(data) {
+            this.props.reload();
+        }.bind(this));
     },
 
-    remove : function() {
+    remove: function() {
         if (confirm('Are you sure you want to remove this visitor?')) {
             $.post('counseling/Admin/Dashboard/Waiting', {
-            	command : 'delete',
-                visitId : this.props.visitId
-            }, null, 'json')
-            	.done(function(data){
-                    this.props.reload();
-            	}.bind(this));
+                command: 'delete',
+                visitId: this.props.visitId
+            }, null, 'json').done(function(data) {
+                this.props.reload();
+            }.bind(this));
         }
     },
 
-    getOptions : function() {
+    getOptions: function() {
         var options = [];
-        options.push(
-            {
-                label : <div><i className="fa fa-external-link"></i> Had to leave</div>,
-                visitId : this.props.visitId,
-                handleClick : this.completeReason.bind(null, 2)
-            },
-            {
-                label : <div><i className="fa fa-eye-slash"></i> Missing</div>,
-                visitId : this.props.visitId,
-                handleClick : this.completeReason.bind(null, 3)
-            },
-            {
-                label : <div><i className="fa fa-clock-o"></i> Made appointment</div>,
-                visitId : this.props.visitId,
-                handleClick : this.completeReason.bind(null, 4)
-            },
-            {
-                divider : true
-            },
-            {
-                label : <div className="text-danger"><i className="fa fa-trash-o"></i> Remove</div>,
-                visitId : this.props.visitId,
-                handleClick : this.remove
-            }
-        );
+        options.push({
+            label: <div>
+                <i className="fa fa-external-link"></i>&nbsp; Had to leave</div>,
+            visitId: this.props.visitId,
+            handleClick: this.completeReason.bind(null, 2)
+        }, {
+            label: <div>
+                <i className="fa fa-eye-slash"></i>&nbsp; Missing</div>,
+            visitId: this.props.visitId,
+            handleClick: this.completeReason.bind(null, 3)
+        }, {
+            label: <div>
+                <i className="fa fa-clock-o"></i>&nbsp; Made appointment</div>,
+            visitId: this.props.visitId,
+            handleClick: this.completeReason.bind(null, 4)
+        }, {
+            divider: true
+        }, {
+            label: <div className="text-danger">
+                <i className="fa fa-trash-o"></i>&nbsp; Remove</div>,
+            visitId: this.props.visitId,
+            handleClick: this.remove
+        });
         return options;
     },
 
     render: function() {
         var options = this.getOptions();
-        return (
-            <ButtonGroup options={options}/>
-        );
+        return (<ButtonGroup options={options}/>);
     }
-
 });

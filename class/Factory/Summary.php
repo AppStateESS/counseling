@@ -8,9 +8,7 @@ namespace counseling\Factory;
  */
 class Summary extends Base
 {
-
     /**
-     * 
      * @param array $arrivals
      */
     public static function getEstimatedWait(array $arrivals)
@@ -70,7 +68,8 @@ class Summary extends Base
         if ($seen_only) {
             $tbl->addFieldConditional('complete_reason', CC_COMPLETE_SEEN);
         }
-        $tbl->addField(new \Database\Expression('count(' . $tbl->getField('id') . ')', 'visitCount'));
+        $tbl->addField(new \Database\Expression('count('.$tbl->getField('id').')', 'visitCount'));
+
         return $db->selectColumn();
     }
 
@@ -94,6 +93,7 @@ class Summary extends Base
             $minutes[] = floor($time_dir / 60);
         }
         $average = floor(array_sum($minutes) / count($minutes));
+
         return $average;
     }
 
@@ -120,21 +120,23 @@ class Summary extends Base
         }
         foreach ($result as $val) {
             if ($val['has_emergency'] == '1') {
-                $tally['emergency'] ++;
+                ++$tally['emergency'];
             } else {
                 switch ($val['category']) {
-                    case '0':
-                        $tally['other'] ++;
+                    case CC_CATEGORY_OTHER:
+                        $tally['other']++;
                         break;
-                    case '1':
-                        $tally['walkin'] ++;
+                    case CC_CATEGORY_WALKIN:
+                        $tally['walkin']++;
                         break;
-                    case '2':
-                        $tally['appointment'] ++;
+                    case CC_CATEGORY_APPOINTMENT:
+                    case CC_CATEGORY_GROUP:
+                        $tally['appointment']++;
                         break;
                 }
             }
         }
+
         return $tally;
     }
 
@@ -149,29 +151,33 @@ class Summary extends Base
         $tbl->addFieldConditional('complete_time', $starttime, '>');
         $tbl->addFieldConditional('complete_time', $endtime, '<');
         $tbl->addFieldConditional('complete_reason', CC_COMPLETE_SEEN, '!=');
-        $tbl->addField(new \Database\Expression('count(' . $tbl->getField('id') . ')', 'visitCount'));
+        $tbl->addField(new \Database\Expression('count('.$tbl->getField('id').')', 'visitCount'));
         $db->setGroupBy($complete_reason);
         $result = $db->select();
 
         if (empty($result)) {
-            return null;
+            return;
         }
         foreach ($result as $key => $val) {
             switch ((int) $val['complete_reason']) {
                 case CC_COMPLETE_LEFT:
-                    $reasons[] = '(' . $val['visitCount'] . ') Had to leave';
+                    $reasons[] = '('.$val['visitCount'].') Had to leave';
                     break;
-                
+
                 case CC_COMPLETE_MISSING:
-                    $reasons[] = '(' . $val['visitCount'] . ') Missing when called';
+                    $reasons[] = '('.$val['visitCount'].') Missing when called';
                     break;
 
                 case CC_COMPLETE_APPOINTMENT:
-                     $reasons[] = '(' . $val['visitCount'] . ') Made an later appointment';
+                     $reasons[] = '('.$val['visitCount'].') Made an later appointment';
+                    break;
+
+                case CC_COMPLETE_SENT_BACK:
+                     $reasons[] = '('.$val['visitCount'].') Sent back to appointment';
                     break;
             }
         }
+
         return $reasons;
     }
-
 }

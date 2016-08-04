@@ -26,8 +26,8 @@
             <?=$vus['has_emergency']?'<i class="text-danger fa-lg fa ' . CC_CATEGORY_EMERGENCY_ICON . '"></i>':null?> </td>
         <td>
             <?=$vus['visitor']['first_name']?>
-                <?php echo empty($vus['visitor']['preferred_name']) ? null : '"' . $vus['visitor']['preferred_name'] . '"'?>
-                <?=$vus['visitor']['last_name']?>
+            <?php echo empty($vus['visitor']['preferred_name']) ? null : '"' . $vus['visitor']['preferred_name'] . '"'?>
+            <?=$vus['visitor']['last_name']?>
         </td>
         <td>
             <?=$vus['visitor']['banner_id']?>
@@ -65,8 +65,8 @@
             <?=$vs['has_emergency']?'<i class="text-danger fa-lg fa ' . CC_CATEGORY_EMERGENCY_ICON . '"></i>':null?> </td>
         <td>
             <?=$vs['visitor']['first_name']?>
-                <?php echo empty($vs['visitor']['preferred_name']) ? null : '"' . $vs['visitor']['preferred_name'] . '"'?>
-                <?=$vs['visitor']['last_name']?>
+            <?php echo empty($vs['visitor']['preferred_name']) ? null : '"' . $vs['visitor']['preferred_name'] . '"'?>
+            <?=$vs['visitor']['last_name']?>
         </td>
         <td>
             <?=$vs['visitor']['banner_id']?>
@@ -82,5 +82,31 @@
         </td>
         <td>
             <?=$vs['wait_time']?> mins. </td>
+    </tr>
+    <?php endforeach;endif;?> </table>
+
+<h3>Appointments seen</h3>
+<?php if (empty($appointment)):?>
+<p>No appointment seen today.</p>
+<?php endif; if (!empty($appointment)):?>
+<table class='table table-striped'>
+    <tr>
+        <th>Name</th>
+        <th>Banner Id</th>
+        <th>Arrived</th>
+    </tr>
+    <?php foreach($appointment as $vs):?>
+    <tr>
+        <td>
+            <?=$vs['visitor']['first_name']?>
+            <?php echo empty($vs['visitor']['preferred_name']) ? null : '"' . $vs['visitor']['preferred_name'] . '"'?>
+            <?=$vs['visitor']['last_name']?>
+        </td>
+        <td>
+            <?=$vs['visitor']['banner_id']?>
+        </td>
+        <td>
+            <?=strftime('%l:%M%p', $vs['arrival_time'])?>
+        </td>
     </tr>
     <?php endforeach;endif;?> </table>

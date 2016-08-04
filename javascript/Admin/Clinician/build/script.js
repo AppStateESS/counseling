@@ -330,17 +330,11 @@ var SelectVisitor = React.createClass({
     displayName: 'SelectVisitor',
 
     getInitialState: function getInitialState() {
-        return {
-            waiting: null,
-            emergencies: null,
-            selectedVisit: null
-        };
+        return { waiting: null, emergencies: null, selectedVisit: null };
     },
 
     getDefaultProps: function getDefaultProps() {
-        return {
-            clinician: null
-        };
+        return { clinician: null };
     },
 
     componentDidMount: function componentDidMount() {
@@ -348,14 +342,9 @@ var SelectVisitor = React.createClass({
     },
 
     loadData: function loadData() {
-        $.getJSON('counseling/Admin/Clinician', {
-            command: 'visitorList'
-        }).done(function (data) {
+        $.getJSON('counseling/Admin/Clinician', { command: 'visitorList' }).done(function (data) {
             if (data !== null) {
-                this.setState({
-                    waiting: data.waiting,
-                    emergencies: data.emergencies
-                });
+                this.setState({ waiting: data.waiting, emergencies: data.emergencies });
             }
         }.bind(this));
     },
@@ -365,15 +354,11 @@ var SelectVisitor = React.createClass({
     },
 
     reset: function reset() {
-        this.setState({
-            selectedVisit: null
-        });
+        this.setState({ selectedVisit: null });
     },
 
     select: function select(visit) {
-        this.setState({
-            selectedVisit: visit
-        });
+        this.setState({ selectedVisit: visit });
     },
 
     startConsultation: function startConsultation() {
@@ -392,7 +377,10 @@ var SelectVisitor = React.createClass({
 
     render: function render() {
         if (this.state.selectedVisit !== null) {
-            return React.createElement(ConfirmVisitor, { visit: this.state.selectedVisit, goBack: this.reset, startConsultation: this.startConsultation });
+            return React.createElement(ConfirmVisitor, {
+                visit: this.state.selectedVisit,
+                goBack: this.reset,
+                startConsultation: this.startConsultation });
         }
 
         var listing = null;
@@ -412,13 +400,18 @@ var SelectVisitor = React.createClass({
                         'button',
                         { className: 'btn btn-default btn-lg', onClick: this.goBack },
                         React.createElement('i', { className: 'fa fa-undo' }),
-                        ' Go Back'
+                        'Go Back'
                     )
                 )
             );
         } else {
-            listing = React.createElement(SelectVisitorListing, { waiting: this.state.waiting, emergencies: this.state.emergencies,
-                setStage: this.props.setStage, clinician: this.props.clinician, reload: this.loadData, goBack: this.goBack,
+            listing = React.createElement(SelectVisitorListing, {
+                waiting: this.state.waiting,
+                emergencies: this.state.emergencies,
+                setStage: this.props.setStage,
+                clinician: this.props.clinician,
+                reload: this.loadData,
+                goBack: this.goBack,
                 select: this.select });
         }
         return React.createElement(
@@ -431,6 +424,7 @@ var SelectVisitor = React.createClass({
                 this.props.clinician.first_name
             ),
             React.createElement('hr', null),
+            ' ',
             listing
         );
     }
@@ -440,9 +434,7 @@ var ConfirmVisitor = React.createClass({
     displayName: 'ConfirmVisitor',
 
     getDefaultProps: function getDefaultProps() {
-        return {
-            visit: null
-        };
+        return { visit: null };
     },
 
     render: function render() {
@@ -455,7 +447,6 @@ var ConfirmVisitor = React.createClass({
                 null,
                 'You have chosen to start a consulation with ',
                 visitor.preferred_name,
-                '  ',
                 visitor.last_name
             ),
             React.createElement(
@@ -463,39 +454,46 @@ var ConfirmVisitor = React.createClass({
                 { className: 'go-back' },
                 React.createElement(
                     'button',
-                    { className: 'btn btn-success btn-lg', style: { marginBottom: '1em' }, onClick: this.props.startConsultation },
+                    {
+                        className: 'btn btn-success btn-lg',
+                        style: {
+                            marginBottom: '1em'
+                        },
+                        onClick: this.props.startConsultation },
                     React.createElement('i', { className: 'fa fa-check' }),
-                    ' Start consultation'
+                    'Start consultation'
                 ),
                 React.createElement('br', null),
                 React.createElement(
                     'button',
                     { className: 'btn btn-default btn-3x', onClick: this.props.goBack },
                     React.createElement('i', { className: 'fa fa-undo' }),
-                    ' Start over'
+                    'Start over'
                 )
             )
         );
     }
-
 });
 
 var SelectVisitorListing = React.createClass({
     displayName: 'SelectVisitorListing',
 
     getDefaultProps: function getDefaultProps() {
-        return {
-            waiting: null,
-            emergencies: null
-        };
+        return { waiting: null, emergencies: null };
     },
 
     render: function render() {
         return React.createElement(
             'div',
             { className: 'visitor-listing' },
-            React.createElement(Emergencies, { list: this.props.emergencies, clinician: this.props.clinician, select: this.props.select }),
-            React.createElement(Waiting, { list: this.props.waiting, clinician: this.props.clinician, select: this.props.select }),
+            React.createElement(Emergencies, {
+                list: this.props.emergencies,
+                clinician: this.props.clinician,
+                select: this.props.select }),
+            React.createElement(Waiting, {
+                waiting: this.props.waiting,
+                clinician: this.props.clinician,
+                select: this.props.select }),
             React.createElement(
                 'div',
                 { className: 'go-back text-center' },
@@ -503,7 +501,7 @@ var SelectVisitorListing = React.createClass({
                     'button',
                     { className: 'btn btn-default btn-lg', onClick: this.props.goBack },
                     React.createElement('i', { className: 'fa fa-undo' }),
-                    ' Go Back'
+                    'Go Back'
                 )
             )
         );
@@ -514,11 +512,7 @@ var Emergencies = React.createClass({
     displayName: 'Emergencies',
 
     getDefaultProps: function getDefaultProps() {
-        return {
-            list: null,
-            clinician: null,
-            select: null
-        };
+        return { list: null, clinician: null, select: null };
     },
 
     render: function render() {
@@ -526,7 +520,12 @@ var Emergencies = React.createClass({
             return null;
         } else {
             var visits = this.props.list.map(function (value, key) {
-                return React.createElement(VisitorRow, _extends({ key: value.id }, value, { clinician: this.props.clinician, buttonClass: 'danger', select: this.props.select.bind(null, value) }));
+                return React.createElement(VisitorRow, _extends({
+                    key: value.id
+                }, value, {
+                    clinician: this.props.clinician,
+                    buttonClass: 'danger',
+                    select: this.props.select.bind(null, value) }));
             }.bind(this));
 
             return React.createElement(
@@ -547,31 +546,36 @@ var Waiting = React.createClass({
     displayName: 'Waiting',
 
     getDefaultProps: function getDefaultProps() {
-        return {
-            list: null,
-            clinician: null
-        };
+        return { waiting: null, clinician: null };
     },
 
     render: function render() {
-        if (this.props.list === null || this.props.list.length === 0) {
-            return null;
-        } else {
-            var visits = this.props.list.map(function (value, key) {
-                return React.createElement(VisitorRow, _extends({ key: value.id }, value, { clinician: this.props.clinician, buttonClass: 'success', select: this.props.select.bind(null, value) }));
+        var visits = React.createElement(
+            'div',
+            null,
+            'No walk-ins waiting'
+        );
+        if (this.props.waiting !== null && this.props.waiting.length !== 0) {
+            visits = this.props.waiting.map(function (value, key) {
+                return React.createElement(VisitorRow, _extends({
+                    key: value.id
+                }, value, {
+                    clinician: this.props.clinician,
+                    buttonClass: value.color,
+                    select: this.props.select.bind(null, value) }));
             }.bind(this));
-
-            return React.createElement(
-                'div',
-                null,
-                React.createElement(
-                    'h3',
-                    null,
-                    'Waiting'
-                ),
-                visits
-            );
         }
+
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(
+                'h3',
+                null,
+                'Waiting'
+            ),
+            visits
+        );
     }
 });
 
@@ -579,16 +583,21 @@ var VisitorRow = React.createClass({
     displayName: 'VisitorRow',
 
     getDefaultProps: function getDefaultProps() {
-        return {
-            visitor: null,
-            buttonClass: 'success',
-            clinician: null,
-            select: null
-        };
+        return { visitor: null, buttonClass: 'success', clinician: null, select: null };
     },
 
     render: function render() {
         var _className = 'btn btn-block btn-lg btn-' + this.props.buttonClass;
+        var waiting = null;
+        if (this.props.category == '1') {
+            waiting = React.createElement(
+                'span',
+                null,
+                ' - Waiting: ',
+                this.props.wait_time,
+                ' min.'
+            );
+        }
         return React.createElement(
             'button',
             { className: _className, onClick: this.props.select },
@@ -601,22 +610,16 @@ var VisitorRow = React.createClass({
                 ' ',
                 this.props.visitor.last_name
             ),
-            ' - Waiting: ',
-            this.props.wait_time,
-            ' min.'
+            waiting
         );
     }
-
 });
 
 var CategoryIcon = React.createClass({
     displayName: 'CategoryIcon',
 
     getDefaultProps: function getDefaultProps() {
-        return {
-            category: 0,
-            title: null
-        };
+        return { category: 0, title: null };
     },
 
     render: function render() {

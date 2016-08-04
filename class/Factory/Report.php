@@ -8,7 +8,6 @@ namespace counseling\Factory;
  */
 class Report extends Base
 {
-
     public static function daily(\Request $request)
     {
         javascript('jquery');
@@ -30,19 +29,46 @@ class Report extends Base
 
         if (!empty($visits)) {
             foreach ($visits as $visit) {
-                if ($visit['complete_reason'] == CC_COMPLETE_SEEN) {
-                    $vars['seen'][] = $visit;
-                } else {
-                    $vars['unseen'][] = $visit;
-                }
+                self::sortByReason($visit, $vars, false);
             }
         }
+
         $vars['date'] = strftime('%a, %B %e, %Y', $start_time);
         $vars['startTime'] = strftime('%Y%m%d', $start_time);
 
         $template = new \Template($vars);
         $template->setModuleTemplate('counseling', 'Admin/Report/daily.html');
+
         return $template->get();
+    }
+
+    private static function sortByReason($visit, &$vars, $index_by_arrival = false)
+    {
+        $arrival_time = strftime('%Y%m%d', $visit['arrival_time']);
+        switch ($visit['complete_reason']) {
+            case CC_COMPLETE_SEEN:
+                if ($index_by_arrival) {
+                    $vars['seen'][$arrival_time][] = $visit;
+                } else {
+                    $vars['seen'][] = $visit;
+                }
+                break;
+
+            case CC_COMPLETE_SENT_BACK:
+                if ($index_by_arrival) {
+                    $vars['appointment'][$arrival_time][] = $visit;
+                } else {
+                    $vars['appointment'][] = $visit;
+                }
+                break;
+
+            default:
+                if ($index_by_arrival) {
+                    $vars['unseen'][$arrival_time][] = $visit;
+                } else {
+                    $vars['unseen'][] = $visit;
+                }
+        }
     }
 
     public static function weeklyCSV(\Request $request)
@@ -63,8 +89,9 @@ class Report extends Base
         $end_of_week = mktime(23, 59, 59, $start_month, $end_day, $start_year);
         $visits = Visit::getDaysVisits($start_of_week, $end_of_week);
 
-        $download_file = 'Weekly Report ' . strftime('%Y%m%d', $start_of_week) . ' to ' .
-                strftime('%Y%m%d', $end_of_week) . '.csv';
+        $download_file = 'Weekly Report '.strftime('%Y%m%d', $start_of_week).' to '.
+                strftime('%Y%m%d', $end_of_week).'.csv';
+
         return self::produceCSVReport($visits, $download_file);
     }
 
@@ -97,17 +124,16 @@ class Report extends Base
             $sub[] = $visit['phone_number'] = $visit['visitor']['phone_number'];
             $sub[] = $visit['email'] = $visit['visitor']['email'];
             $sub[] = $visit['wait_time'];
-            $csvRow[] = '"' . implode('","', $sub) . '"';
+            $csvRow[] = '"'.implode('","', $sub).'"';
         }
         $content = implode("\n", $csvRow);
-        $filename = COUNSELING_TEMP_FOLDER . time() . '.csv';
+        $filename = COUNSELING_TEMP_FOLDER.time().'.csv';
 
         file_put_contents($filename, $content);
 
-
         header("Content-Disposition: attachment; filename=\"$download_file\"");
-        header("Pragma: public");
-        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header('Pragma: public');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         readfile($filename);
         exit();
     }
@@ -140,19 +166,14 @@ class Report extends Base
 
         if (!empty($visits)) {
             foreach ($visits as $visit) {
-                $arrival_time = strftime('%Y%m%d', $visit['arrival_time']);
-                if ($visit['complete_reason'] == CC_COMPLETE_SEEN) {
-                    $vars['seen'][$arrival_time][] = $visit;
-                } else {
-                    $vars['unseen'][$arrival_time][] = $visit;
-                }
+                self::sortByReason($visit, $vars, true);
             }
         }
         $vars['date'] = strftime('%b %e, %Y', $start_of_week);
         $vars['startTime'] = strftime('%Y%m%d', $start_of_week);
-
         $template = new \Template($vars);
         $template->setModuleTemplate('counseling', 'Admin/Report/weekly.html');
+
         return $template->get();
     }
 
@@ -165,7 +186,8 @@ class Report extends Base
         $start_time = strtotime($start_date);
         $end_time = mktime(23, 59, 59, date('n', $start_time), date('j', $start_time), date('Y', $start_time));
         $visits = Visit::getDaysVisits($start_time, $end_time);
-        $download_file = 'Daily Report ' . $start_date . '.csv';
+        $download_file = 'Daily Report '.$start_date.'.csv';
+
         return self::produceCSVReport($visits, $download_file);
     }
 
@@ -176,9 +198,8 @@ class Report extends Base
         $day = date('j', $start_time);
 
         $script = "<script type='text/javascript'>var defaultDate = {year:$year, month:$month, day:$day};var reportType = '$report_type';</script>"
-                . '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/counseling/javascript/Admin/Report/script.js"></script>';
+                .'<script type="text/javascript" src="'.PHPWS_SOURCE_HTTP.'mod/counseling/javascript/Admin/Report/script.js"></script>';
         \Layout::addJSHeader($script);
         javascript('datepicker');
     }
-
 }

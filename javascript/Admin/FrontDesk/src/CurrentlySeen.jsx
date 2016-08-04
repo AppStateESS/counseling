@@ -85,7 +85,7 @@ var CurrentlySeen = React.createClass({
                     style={{
                     marginRight: '1em'
                 }}>
-                    <button className="btn btn-default" data-toggle="dropdown">{value.visitor.last_name}{' '}w/{' '} {value.clinician}&nbsp;<span className="caret"></span>
+                    <button className="btn btn-default" data-toggle="dropdown">{value.visitor.last_name}&nbsp;w/&nbsp; {value.clinician}&nbsp;<span className="caret"></span>
                     </button>
                     <ul className="dropdown-menu">
                         <li>
@@ -94,7 +94,7 @@ var CurrentlySeen = React.createClass({
                                 cursor: 'pointer'
                             }}
                                 onClick={this.moveBack.bind(this, value.id)}>
-                                <i className="fa fa-reply"></i>{' '}Move{' '}{value.visitor.preferred_name}{' '} {value.visitor.last_name}{' '}back to queue</a>
+                                <i className="fa fa-reply"></i>&nbsp;Move&nbsp;{value.visitor.preferred_name}&nbsp; {value.visitor.last_name}&nbsp;back to queue</a>
                         </li>
                         <li>
                             <a
@@ -102,7 +102,7 @@ var CurrentlySeen = React.createClass({
                                 cursor: 'pointer'
                             }}
                                 onClick={this.complete.bind(this, value.id)}>
-                                <i className="fa fa-flag-checkered"></i>{' '}Complete {value.visitor.preferred_name}{' '}{value.visitor.last_name}'s consultation</a>
+                                <i className="fa fa-flag-checkered"></i>&nbsp;Complete {value.visitor.preferred_name}&nbsp;{value.visitor.last_name}'s consultation</a>
                         </li>
                     </ul>
                 </span>

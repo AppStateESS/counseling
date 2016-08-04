@@ -22,7 +22,11 @@ var ButtonGroup = React.createClass({
 
     render: function render() {
         var options = this.props.options.map(function (value, key) {
-            return React.createElement(ButtonGroupOption, { key: key, label: value.label, handleClick: value.handleClick, divider: value.divider });
+            return React.createElement(ButtonGroupOption, {
+                key: key,
+                label: value.label,
+                handleClick: value.handleClick,
+                divider: value.divider });
         });
 
         return React.createElement(
@@ -30,10 +34,13 @@ var ButtonGroup = React.createClass({
             { className: 'btn-group' },
             React.createElement(
                 'button',
-                { type: 'button', className: 'btn btn-default btn-sm dropdown-toggle',
-                    'data-toggle': 'dropdown', 'aria-haspopup': 'true', 'aria-expanded': 'false' },
+                {
+                    type: 'button',
+                    className: 'btn btn-default btn-sm dropdown-toggle',
+                    'data-toggle': 'dropdown',
+                    'aria-haspopup': 'true',
+                    'aria-expanded': 'false' },
                 this.props.label,
-                ' ',
                 React.createElement('span', { className: 'caret' })
             ),
             React.createElement(
@@ -49,11 +56,7 @@ var ButtonGroupOption = React.createClass({
     displayName: 'ButtonGroupOption',
 
     getDefaultProps: function getDefaultProps() {
-        return {
-            label: null,
-            handleClick: null,
-            divider: false
-        };
+        return { label: null, handleClick: null, divider: false };
     },
 
     render: function render() {
@@ -65,13 +68,14 @@ var ButtonGroupOption = React.createClass({
                 { onClick: this.props.handleClick },
                 React.createElement(
                     'a',
-                    { style: { cursor: 'pointer' } },
+                    { style: {
+                            cursor: 'pointer'
+                        } },
                     this.props.label
                 )
             );
         }
     }
-
 });
 
 var WaitingListStatus = React.createClass({
@@ -79,11 +83,7 @@ var WaitingListStatus = React.createClass({
 
 
     getDefaultProps: function getDefaultProps() {
-        return {
-            visitor: null,
-            visitNumber: 0,
-            reload: null
-        };
+        return { visitor: null, visitNumber: 0, reload: null };
     },
 
     intakeComplete: function intakeComplete() {
@@ -124,13 +124,54 @@ var WaitingListStatus = React.createClass({
         } else {
             return React.createElement(
                 'span',
-                { className: 'label label-danger', style: { cursor: 'pointer' }, title: 'Click to acknowledge intake completion', onClick: this.intakeComplete },
+                {
+                    className: 'label label-danger',
+                    style: {
+                        cursor: 'pointer'
+                    },
+                    title: 'Click to acknowledge intake completion',
+                    onClick: this.intakeComplete },
                 'Intake incomplete'
             );
         }
     }
-
 });
+
+var ClipboardInput = React.createClass({
+    displayName: 'ClipboardInput',
+
+    /*
+    * silences javascript warning on input used for copy and paste
+    */
+    saveToClipboard: function saveToClipboard() {
+        $(this.refs.bannerId).select();
+        document.execCommand('copy');
+    },
+
+    nada: function nada() {},
+
+    render: function render() {
+        return React.createElement(
+            'div',
+            null,
+            React.createElement('input', {
+                size: '11',
+                ref: 'bannerId',
+                value: this.props.bannerId,
+                onChange: this.nada }),
+            ' ',
+            React.createElement(
+                'button',
+                { title: 'Copy to clipboard', onClick: this.saveToClipboard },
+                React.createElement('i', { className: 'glyphicon glyphicon-copy' })
+            )
+        );
+    }
+});
+
+var isEmpty = function isEmpty(value) {
+    return value === undefined || value === null || value.length === 0;
+};
 
 var Modal = React.createClass({
     displayName: 'Modal',
@@ -693,10 +734,7 @@ var CurrentlySeen = React.createClass({
                     'button',
                     { className: 'btn btn-default', 'data-toggle': 'dropdown' },
                     value.visitor.last_name,
-                    ' ',
-                    'w/',
-                    ' ',
-                    ' ',
+                    ' w/  ',
                     value.clinician,
                     ' ',
                     React.createElement('span', { className: 'caret' })
@@ -715,15 +753,11 @@ var CurrentlySeen = React.createClass({
                                 },
                                 onClick: this.moveBack.bind(this, value.id) },
                             React.createElement('i', { className: 'fa fa-reply' }),
-                            ' ',
-                            'Move',
-                            ' ',
+                            ' Move ',
                             value.visitor.preferred_name,
-                            ' ',
-                            ' ',
+                            '  ',
                             value.visitor.last_name,
-                            ' ',
-                            'back to queue'
+                            ' back to queue'
                         )
                     ),
                     React.createElement(
@@ -737,10 +771,9 @@ var CurrentlySeen = React.createClass({
                                 },
                                 onClick: this.complete.bind(this, value.id) },
                             React.createElement('i', { className: 'fa fa-flag-checkered' }),
-                            ' ',
-                            'Complete ',
+                            ' Complete ',
                             value.visitor.preferred_name,
-                            ' ',
+                            ' ',
                             value.visitor.last_name,
                             '\'s consultation'
                         )
@@ -763,6 +796,240 @@ var CurrentlySeen = React.createClass({
                 seen
             )
         );
+    }
+});
+
+var Appointment = React.createClass({
+    displayName: 'Appointment',
+
+    getDefaultProps: function getDefaultProps() {
+        return { appointments: null, reload: null };
+    },
+
+    render: function render() {
+        if (this.props.appointments === null) {
+            return React.createElement(
+                'div',
+                null,
+                'No appointments waiting'
+            );
+        }
+        var count = 0;
+
+        var listRows = this.props.appointments.map(function (value, key) {
+            count++;
+            return React.createElement(AppointmentRow, _extends({ key: key }, value, { count: count, reload: this.props.reload }));
+        }.bind(this));
+
+        return React.createElement(
+            'div',
+            { className: 'appointment-list' },
+            React.createElement(
+                'table',
+                { className: 'table' },
+                React.createElement(
+                    'tbody',
+                    null,
+                    React.createElement(
+                        'tr',
+                        null,
+                        React.createElement(
+                            'th',
+                            null,
+                            '#'
+                        ),
+                        React.createElement(
+                            'th',
+                            null,
+                            ' '
+                        ),
+                        React.createElement(
+                            'th',
+                            null,
+                            'Name'
+                        ),
+                        React.createElement(
+                            'th',
+                            null,
+                            'Banner id'
+                        ),
+                        React.createElement(
+                            'th',
+                            null,
+                            'Visits'
+                        ),
+                        React.createElement(
+                            'th',
+                            null,
+                            'Status'
+                        ),
+                        React.createElement(
+                            'th',
+                            null,
+                            ' '
+                        )
+                    ),
+                    listRows
+                )
+            )
+        );
+    }
+});
+
+var AppointmentRow = React.createClass({
+    displayName: 'AppointmentRow',
+
+    getDefaultProps: function getDefaultProps() {
+        return {
+            id: 0,
+            category: 0,
+            color: 'default',
+            reason_title: '',
+            total_visits: 0,
+            visitor: {},
+            visitor_id: 0,
+            reload: null
+        };
+    },
+
+    render: function render() {
+        var count = this.props.count;
+        var _className = 'bg-' + this.props.color;
+        return React.createElement(
+            'tr',
+            { className: _className },
+            React.createElement(
+                'td',
+                { style: {
+                        width: '3%'
+                    } },
+                count
+            ),
+            React.createElement(
+                'td',
+                {
+                    style: {
+                        width: '3%'
+                    },
+                    className: 'text-center' },
+                React.createElement(CategoryIcon, {
+                    category: this.props.category,
+                    reasonTitle: this.props.reason_title })
+            ),
+            React.createElement(
+                'td',
+                null,
+                React.createElement(VisitorName, { visitor: this.props.visitor })
+            ),
+            React.createElement(
+                'td',
+                null,
+                React.createElement(ClipboardInput, { bannerId: this.props.visitor.banner_id })
+            ),
+            React.createElement(
+                'td',
+                null,
+                React.createElement(WaitingListVisits, { visitNumber: this.props.total_visits })
+            ),
+            React.createElement(
+                'td',
+                null,
+                React.createElement(WaitingListStatus, {
+                    visitor: this.props.visitor,
+                    reload: this.props.reload,
+                    visitNumber: this.props.total_visits })
+            ),
+            React.createElement(
+                'td',
+                null,
+                React.createElement(AppointmentAction, { visitId: this.props.id, reload: this.props.reload })
+            )
+        );
+    }
+});
+
+var AppointmentAction = React.createClass({
+    displayName: 'AppointmentAction',
+
+
+    getDefaultProps: function getDefaultProps() {
+        return { visitId: 0 };
+    },
+
+    completeReason: function completeReason(reason) {
+        $.post('counseling/Admin/Dashboard/Waiting', {
+            command: 'setCompleteReason',
+            reason: reason,
+            visitId: this.props.visitId
+        }, null, 'json').done(function (data) {
+            this.props.reload();
+        }.bind(this));
+    },
+
+    remove: function remove() {
+        if (confirm('Are you sure you want to remove this visitor?')) {
+            $.post('counseling/Admin/Dashboard/Waiting', {
+                command: 'delete',
+                visitId: this.props.visitId
+            }, null, 'json').done(function (data) {
+                this.props.reload();
+            }.bind(this));
+        }
+    },
+
+    getOptions: function getOptions() {
+        var options = [];
+        options.push({
+            label: React.createElement(
+                'div',
+                { className: 'text-success' },
+                React.createElement(
+                    'strong',
+                    null,
+                    React.createElement('i', { className: 'fa fa-thumbs-o-up' }),
+                    '  Send back'
+                )
+            ),
+            visitId: this.props.visitId,
+            handleClick: this.completeReason.bind(null, 5)
+        }, {
+            divider: true
+        }, {
+            label: React.createElement(
+                'div',
+                null,
+                React.createElement('i', { className: 'fa fa-external-link' }),
+                '  Had to leave'
+            ),
+            visitId: this.props.visitId,
+            handleClick: this.completeReason.bind(null, 2)
+        }, {
+            label: React.createElement(
+                'div',
+                null,
+                React.createElement('i', { className: 'fa fa-eye-slash' }),
+                '  Missing'
+            ),
+            visitId: this.props.visitId,
+            handleClick: this.completeReason.bind(null, 3)
+        }, {
+            divider: true
+        }, {
+            label: React.createElement(
+                'div',
+                { className: 'text-danger' },
+                React.createElement('i', { className: 'fa fa-trash-o' }),
+                '  Remove'
+            ),
+            visitId: this.props.visitId,
+            handleClick: this.remove
+        });
+        return options;
+    },
+
+    render: function render() {
+        var options = this.getOptions();
+        return React.createElement(ButtonGroup, { options: options });
     }
 });
 
@@ -808,11 +1075,6 @@ var EmergencyRow = React.createClass({
         };
     },
 
-    saveToClipboard: function saveToClipboard() {
-        $(this.refs.bannerId).select();
-        document.execCommand('copy');
-    },
-
     render: function render() {
         var intakeComplete = null;
 
@@ -827,26 +1089,18 @@ var EmergencyRow = React.createClass({
             React.createElement(
                 'div',
                 { className: 'col-sm-2 visitor-name' },
-                this.props.visitor.preferred_name,
-                ' ',
-                this.props.visitor.last_name
+                React.createElement(VisitorName, { visitor: this.props.visitor })
             ),
             React.createElement(
                 'div',
                 { className: 'col-sm-3' },
-                React.createElement('input', { size: '11', ref: 'bannerId', value: this.props.visitor.banner_id }),
-                ' ',
-                React.createElement(
-                    'button',
-                    { title: 'Copy to clipboard', onClick: this.saveToClipboard },
-                    React.createElement('i', { className: 'glyphicon glyphicon-copy' })
-                )
+                React.createElement(ClipboardInput, { bannerId: this.props.visitor.banner_id })
             ),
             React.createElement(
                 'div',
                 { className: 'col-sm-2' },
                 this.props.wait_time,
-                ' min'
+                ' min.'
             ),
             React.createElement(
                 'div',
@@ -868,25 +1122,29 @@ var Waiting = React.createClass({
     displayName: 'Waiting',
 
     render: function render() {
-        if (this.props.emergency === undefined && this.props.waiting === undefined) {
-            return React.createElement(
-                'div',
-                { className: 'text-success text-center' },
-                React.createElement('i', { style: { fontSize: '200px' }, className: 'fa fa-smile-o' }),
-                React.createElement(
-                    'p',
-                    { style: { fontSize: '100px' } },
-                    'All clear!'
-                )
-            );
-        } else {
-            return React.createElement(
+        var waitingList = React.createElement(
+            'div',
+            null,
+            'No walk-ins waiting'
+        );
+        if (!isEmpty(this.props.waiting)) {
+            waitingList = React.createElement(
                 'div',
                 null,
-                React.createElement(Emergency, { list: this.props.emergency, reload: this.props.reload }),
+                React.createElement(
+                    'h3',
+                    null,
+                    'Walk-ins'
+                ),
                 React.createElement(WaitingList, { list: this.props.waiting, reload: this.props.reload })
             );
         }
+        return React.createElement(
+            'div',
+            null,
+            React.createElement(Emergency, { list: this.props.emergency, reload: this.props.reload }),
+            waitingList
+        );
     }
 });
 
@@ -894,10 +1152,7 @@ var WaitingList = React.createClass({
     displayName: 'WaitingList',
 
     getDefaultProps: function getDefaultProps() {
-        return {
-            list: null,
-            reload: null
-        };
+        return { list: null, reload: null };
     },
 
     render: function render() {
@@ -972,25 +1227,9 @@ var WaitingList = React.createClass({
 var WaitingListRow = React.createClass({
     displayName: 'WaitingListRow',
 
-
     getDefaultProps: function getDefaultProps() {
-        return {
-            value: {},
-            count: 0,
-            reload: null,
-            visitor: null
-        };
+        return { value: {}, count: 0, reload: null, visitor: null };
     },
-
-    saveToClipboard: function saveToClipboard() {
-        $(this.refs.bannerId).select();
-        document.execCommand('copy');
-    },
-
-    /*
-     * silences javascript warning on input used for copy and paste
-     */
-    nada: function nada() {},
 
     render: function render() {
         var count = this.props.count + 1;
@@ -1000,13 +1239,21 @@ var WaitingListRow = React.createClass({
             { className: _className },
             React.createElement(
                 'td',
-                { style: { width: '3%' } },
+                { style: {
+                        width: '3%'
+                    } },
                 count
             ),
             React.createElement(
                 'td',
-                { style: { width: '3%' }, className: 'text-center' },
-                React.createElement(CategoryIcon, { category: this.props.category, reasonTitle: this.props.reason_title })
+                {
+                    style: {
+                        width: '3%'
+                    },
+                    className: 'text-center' },
+                React.createElement(CategoryIcon, {
+                    category: this.props.category,
+                    reasonTitle: this.props.reason_title })
             ),
             React.createElement(
                 'td',
@@ -1016,19 +1263,13 @@ var WaitingListRow = React.createClass({
             React.createElement(
                 'td',
                 null,
-                React.createElement('input', { size: '11', ref: 'bannerId', value: this.props.visitor.banner_id, onChange: this.nada }),
-                ' ',
-                React.createElement(
-                    'button',
-                    { title: 'Copy to clipboard', onClick: this.saveToClipboard },
-                    React.createElement('i', { className: 'glyphicon glyphicon-copy' })
-                )
+                React.createElement(ClipboardInput, { bannerId: this.props.visitor.banner_id })
             ),
             React.createElement(
                 'td',
                 null,
                 this.props.wait_time,
-                ' min.'
+                'min.'
             ),
             React.createElement(
                 'td',
@@ -1038,7 +1279,9 @@ var WaitingListRow = React.createClass({
             React.createElement(
                 'td',
                 null,
-                React.createElement(WaitingListStatus, { visitor: this.props.visitor, reload: this.props.reload,
+                React.createElement(WaitingListStatus, {
+                    visitor: this.props.visitor,
+                    reload: this.props.reload,
                     visitNumber: this.props.total_visits })
             ),
             React.createElement(
@@ -1048,22 +1291,17 @@ var WaitingListRow = React.createClass({
             )
         );
     }
-
 });
 
 var VisitorName = React.createClass({
     displayName: 'VisitorName',
 
     getInitialState: function getInitialState() {
-        return {
-            tooltip: true
-        };
+        return { tooltip: true };
     },
 
     getDefaultProps: function getDefaultProps() {
-        return {
-            visitor: null
-        };
+        return { visitor: null };
     },
 
     componentDidMount: function componentDidMount() {
@@ -1093,22 +1331,16 @@ var VisitorName = React.createClass({
             );
         }
     }
-
 });
 
 var CategoryIcon = React.createClass({
     displayName: 'CategoryIcon',
 
     getInitialState: function getInitialState() {
-        return {
-            tooltip: true
-        };
+        return { tooltip: true };
     },
     getDefaultProps: function getDefaultProps() {
-        return {
-            category: 0,
-            reasonTitle: null
-        };
+        return { category: 0, reasonTitle: null };
     },
 
     componentDidMount: function componentDidMount() {
@@ -1128,7 +1360,6 @@ var CategoryIcon = React.createClass({
             icon
         );
     }
-
 });
 
 var WaitingListVisits = React.createClass({
@@ -1136,9 +1367,7 @@ var WaitingListVisits = React.createClass({
 
 
     getDefaultProps: function getDefaultProps() {
-        return {
-            visitNumber: '0'
-        };
+        return { visitNumber: '0' };
     },
 
     render: function render() {
@@ -1159,7 +1388,7 @@ var WaitingListVisits = React.createClass({
                     'span',
                     { className: 'label label-primary' },
                     this.props.visitNumber,
-                    ' visits'
+                    'visits'
                 );
 
             case '4':
@@ -1168,7 +1397,7 @@ var WaitingListVisits = React.createClass({
                     'span',
                     { className: 'label label-warning' },
                     this.props.visitNumber,
-                    ' visits'
+                    'visits'
                 );
 
             default:
@@ -1176,11 +1405,10 @@ var WaitingListVisits = React.createClass({
                     'span',
                     { className: 'label label-danger' },
                     this.props.visitNumber,
-                    ' visits'
+                    'visits'
                 );
         }
     }
-
 });
 
 var WaitingAction = React.createClass({
@@ -1188,9 +1416,7 @@ var WaitingAction = React.createClass({
 
 
     getDefaultProps: function getDefaultProps() {
-        return {
-            visitId: 0
-        };
+        return { visitId: 0 };
     },
 
     completeReason: function completeReason(reason) {
@@ -1221,7 +1447,7 @@ var WaitingAction = React.createClass({
                 'div',
                 null,
                 React.createElement('i', { className: 'fa fa-external-link' }),
-                ' Had to leave'
+                '  Had to leave'
             ),
             visitId: this.props.visitId,
             handleClick: this.completeReason.bind(null, 2)
@@ -1230,7 +1456,7 @@ var WaitingAction = React.createClass({
                 'div',
                 null,
                 React.createElement('i', { className: 'fa fa-eye-slash' }),
-                ' Missing'
+                '  Missing'
             ),
             visitId: this.props.visitId,
             handleClick: this.completeReason.bind(null, 3)
@@ -1239,7 +1465,7 @@ var WaitingAction = React.createClass({
                 'div',
                 null,
                 React.createElement('i', { className: 'fa fa-clock-o' }),
-                ' Made appointment'
+                '  Made appointment'
             ),
             visitId: this.props.visitId,
             handleClick: this.completeReason.bind(null, 4)
@@ -1250,7 +1476,7 @@ var WaitingAction = React.createClass({
                 'div',
                 { className: 'text-danger' },
                 React.createElement('i', { className: 'fa fa-trash-o' }),
-                ' Remove'
+                '  Remove'
             ),
             visitId: this.props.visitId,
             handleClick: this.remove
@@ -1262,7 +1488,6 @@ var WaitingAction = React.createClass({
         var options = this.getOptions();
         return React.createElement(ButtonGroup, { options: options });
     }
-
 });
 
 var refreshDashboard = null;
@@ -1275,6 +1500,7 @@ var Dashboard = React.createClass({
             refresh: true,
             emergencyList: null,
             waitingList: null,
+            appointmentList: null,
             summary: null,
             currentlySeen: null,
             time: null
@@ -1301,6 +1527,7 @@ var Dashboard = React.createClass({
             this.setState({
                 emergencyList: data.emergencies,
                 waitingList: data.waiting,
+                appointmentList: data.appointment,
                 summary: data.summary,
                 currentlySeen: data.currentlySeen,
                 time: data.time
@@ -1310,12 +1537,39 @@ var Dashboard = React.createClass({
     },
 
     render: function render() {
+        var visitors = null;
+        if (this.state.emergencyList === null && this.state.waitingList === null && this.appointmentList === null) {
+            visitors = React.createElement(
+                'div',
+                { className: 'text-success text-center' },
+                React.createElement('i', { style: { fontSize: '200px' }, className: 'fa fa-smile-o' }),
+                React.createElement(
+                    'p',
+                    { style: { fontSize: '100px' } },
+                    'All clear!'
+                )
+            );
+        } else {
+            visitors = React.createElement(
+                'div',
+                null,
+                React.createElement(Waiting, { emergency: this.state.emergencyList, waiting: this.state.waitingList,
+                    reload: this.loadData }),
+                React.createElement(
+                    'h3',
+                    null,
+                    'Appointments'
+                ),
+                React.createElement(Appointment, { appointments: this.state.appointmentList, reload: this.loadData })
+            );
+        }
         return React.createElement(
             'div',
             { className: 'dashboard' },
-            React.createElement(Summary, { data: this.state.summary, time: this.state.time, reload: this.loadData }),
+            React.createElement(Summary, { data: this.state.summary, time: this.state.time,
+                reload: this.loadData }),
             React.createElement(CurrentlySeen, { seen: this.state.currentlySeen, reload: this.loadData }),
-            React.createElement(Waiting, { emergency: this.state.emergencyList, waiting: this.state.waitingList, reload: this.loadData })
+            visitors
         );
     }
 

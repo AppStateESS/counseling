@@ -39,11 +39,6 @@ var EmergencyRow = React.createClass({
         };
     },
 
-    saveToClipboard: function() {
-        $(this.refs.bannerId).select();
-        document.execCommand('copy');
-    },
-
     render: function() {
         var intakeComplete = null;
 
@@ -53,14 +48,13 @@ var EmergencyRow = React.createClass({
                     <i className="fa fa-lg fa-exclamation-triangle"></i>
                 </div>
                 <div className="col-sm-2 visitor-name">
-                    {this.props.visitor.preferred_name} {this.props.visitor.last_name}
+                    <VisitorName visitor={this.props.visitor}/>
                 </div>
                 <div className="col-sm-3">
-                    <input size="11" ref="bannerId" value={this.props.visitor.banner_id} />&nbsp;
-                    <button title="Copy to clipboard" onClick={this.saveToClipboard}><i className="glyphicon glyphicon-copy"></i></button>
+                    <ClipboardInput bannerId={this.props.visitor.banner_id}/>
                 </div>
                 <div className="col-sm-2">
-                    {this.props.wait_time} min
+                    {this.props.wait_time} min.
                 </div>
                 <div className="col-sm-3">
                     <WaitingListStatus visitor={this.props.visitor} reload={this.props.reload}
