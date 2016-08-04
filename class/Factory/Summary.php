@@ -13,10 +13,13 @@ class Summary extends Base
      */
     public static function getEstimatedWait(array $arrivals)
     {
-        sort($arrivals);
+        if (empty($arrivals)) {
+            return 0;
+        }
         if (count($arrivals) == 1) {
             return $arrivals[0];
         }
+        sort($arrivals);
         $total = count($arrivals);
         $offset = CC_AVERAGE_OFFSET;
 
