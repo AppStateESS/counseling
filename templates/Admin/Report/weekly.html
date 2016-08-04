@@ -29,11 +29,11 @@
     <?php foreach($rows as $vus):?>
     <tr>
         <td>
-            <?php echo $vus['has_emergency']?'<i class="text-danger fa-lg fa ' . CC_CATEGORY_EMERGENCY_ICON . '"></i>':null?> </td>
+            <?php echo $vus['icon'];?></td>
         <td>
             <?php echo $vus['visitor']['first_name']?>
-                <?php echo empty($vus['visitor']['preferred_name']) ? null : '"' . $vus['visitor']['preferred_name'] . '"'?>
-                <?php echo $vus['visitor']['last_name']?>
+            <?php echo empty($vus['visitor']['preferred_name']) ? null : '"' . $vus['visitor']['preferred_name'] . '"'?>
+            <?php echo $vus['visitor']['last_name']?>
         </td>
         <td>
             <?php echo $vus['visitor']['banner_id']?>
@@ -55,7 +55,7 @@
 <hr />
 <h3>Walk-ins seen</h3>
 <?php if (empty($seen)):?>
-<p>No visitors seen this week.</p>
+<p>No walk-ins seen this week.</p>
 <?php endif;?>
 <?php if (!empty($seen)):?>
 <?php foreach($seen as $date => $rows):?>
@@ -73,11 +73,11 @@
     <?php foreach($rows as $vs):?>
     <tr>
         <td>
-            <?php echo $vs['has_emergency']?'<i class="text-danger fa-lg fa ' . CC_CATEGORY_EMERGENCY_ICON . '"></i>':null?> </td>
+            <?php echo $vs['icon'];?>
         <td>
             <?php echo $vs['visitor']['first_name']?>
-                <?php echo empty($vs['visitor']['preferred_name']) ? null : '"' . $vs['visitor']['preferred_name'] . '"'?>
-                <?php echo $vs['visitor']['last_name']?>
+            <?php echo empty($vs['visitor']['preferred_name']) ? null : '"' . $vs['visitor']['preferred_name'] . '"'?>
+            <?php echo $vs['visitor']['last_name']?>
         </td>
         <td>
             <?php echo $vs['visitor']['banner_id']?>
@@ -110,22 +110,23 @@
         <th>Type</th>
         <th>Banner Id</th>
         <th>Arrived</th>
+        <th>Waited</th>
     </tr>
     <?php foreach($rows as $vxs):?>
     <tr>
         <td>
             <?php echo $vxs['visitor']['first_name']?>
-                <?php echo empty($vxs['visitor']['preferred_name']) ? null : '"' . 
-                $vxs['visitor']['preferred_name'] . '"'?>
-                <?php echo $vxs['visitor']['last_name']?>
+            <?php echo empty($vxs['visitor']['preferred_name']) ? null : '"' . 
+            $vxs['visitor']['preferred_name'] . '"'?>
+            <?php echo $vxs['visitor']['last_name']?>
         </td>
         <td>
             <?php
-                if ($vxs['category'] == CC_CATEGORY_APPOINTMENT) {
-                    echo 'Individual';
-                } elseif ($vxs['category'] == CC_CATEGORY_GROUP) {
-                    echo 'Group';
-                }
+            if ($vxs['category'] == CC_CATEGORY_APPOINTMENT) {
+            echo 'Individual';
+            } elseif ($vxs['category'] == CC_CATEGORY_GROUP) {
+            echo 'Group';
+            }
             ?>
         </td>
         <td>
@@ -134,10 +135,19 @@
         <td>
             <?php echo strftime('%l:%M%p', $vxs['arrival_time'])?>
         </td>
+        <td>
+            <?php echo $vs['wait_time']?> mins.
+        </td>
     </tr>
     <?php endforeach;?>
 </table>
 <?php endforeach;?>
 <?php endif;?>
-
 <?php endif;?>
+
+<hr />
+<span style="margin-right:3em"><i class="fa <?php echo CC_CATEGORY_EMERGENCY_ICON;?>"></i> Emergency</span>
+<span style="margin-right:3em"><i class="fa <?php echo CC_CATEGORY_WALKIN_ICON;?>"></i> Walk-in</span>
+<span style="margin-right:3em"><i class="fa <?php echo CC_CATEGORY_APPOINTMENT_ICON;?>"></i> Appointment</span>
+<span style="margin-right:3em"><i class="fa <?php echo CC_CATEGORY_GROUP_ICON;?>"></i> Group</span>
+<span style="margin-right:3em"><i class="fa <?php echo CC_CATEGORY_OTHER_ICON;?>"></i> Other</span>

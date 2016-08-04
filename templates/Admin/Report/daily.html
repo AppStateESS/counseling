@@ -20,34 +20,34 @@
         <th>Arrived</th>
         <th>Waited</th>
     </tr>
-    <?php foreach($unseen as $vus):?>
+    <?php foreach ($unseen as $vus):?>
     <tr>
         <td>
-            <?=$vus['has_emergency']?'<i class="text-danger fa-lg fa ' . CC_CATEGORY_EMERGENCY_ICON . '"></i>':null?> </td>
+            <?php echo $vus['icon'] ?>
         <td>
-            <?=$vus['visitor']['first_name']?>
-            <?php echo empty($vus['visitor']['preferred_name']) ? null : '"' . $vus['visitor']['preferred_name'] . '"'?>
-            <?=$vus['visitor']['last_name']?>
+            <?php echo $vus['visitor']['first_name']?>
+            <?php echo empty($vus['visitor']['preferred_name']) ? null : '"'.$vus['visitor']['preferred_name'].'"'?>
+            <?php echo $vus['visitor']['last_name']?>
         </td>
         <td>
-            <?=$vus['visitor']['banner_id']?>
+            <?php echo $vus['visitor']['banner_id']?>
         </td>
         <td>
-            <?=$vus['visitor']['phone_number']?>
+            <?php echo $vus['visitor']['phone_number']?>
         </td>
         <td>
-            <?=$vus['complete_reason_title']?>
+            <?php echo $vus['complete_reason_title']?>
         </td>
         <td>
-            <?=strftime('%l:%M%p', $vus['arrival_time'])?>
+            <?php echo strftime('%l:%M%p', $vus['arrival_time'])?>
         </td>
         <td>
-            <?=$vus['wait_time']?> mins. </td>
+            <?php echo $vus['wait_time']?> mins. </td>
     </tr>
     <?php endforeach;endif;?> </table>
-<h3>Visitors seen</h3>
+<h3>Walk-ins seen</h3>
 <?php if (empty($seen)):?>
-<p>No visitors seen today.</p>
+<p>No walk-ins seen today.</p>
 <?php endif; if (!empty($seen)):?>
 <table class='table table-striped'>
     <tr>
@@ -59,29 +59,29 @@
         <th>Arrived</th>
         <th>Waited</th>
     </tr>
-    <?php foreach($seen as $vs):?>
+    <?php foreach ($seen as $vs):?>
     <tr>
         <td>
-            <?=$vs['has_emergency']?'<i class="text-danger fa-lg fa ' . CC_CATEGORY_EMERGENCY_ICON . '"></i>':null?> </td>
+            <?php echo $vs['icon'];?></td>
         <td>
-            <?=$vs['visitor']['first_name']?>
-            <?php echo empty($vs['visitor']['preferred_name']) ? null : '"' . $vs['visitor']['preferred_name'] . '"'?>
-            <?=$vs['visitor']['last_name']?>
+            <?php echo $vs['visitor']['first_name']?>
+            <?php echo empty($vs['visitor']['preferred_name']) ? null : '"'.$vs['visitor']['preferred_name'].'"'?>
+            <?php echo $vs['visitor']['last_name']?>
         </td>
         <td>
-            <?=$vs['visitor']['banner_id']?>
+            <?php echo $vs['visitor']['banner_id']?>
         </td>
         <td>
-            <?=$vs['clinician']?>
+            <?php echo $vs['clinician']?>
         </td>
         <td>
-            <?=$vs['disposition']?>
+            <?php echo $vs['disposition']?>
         </td>
         <td>
-            <?=strftime('%l:%M%p', $vs['arrival_time'])?>
+            <?php echo strftime('%l:%M%p', $vs['arrival_time'])?>
         </td>
         <td>
-            <?=$vs['wait_time']?> mins. </td>
+            <?php echo $vs['wait_time']?> mins. </td>
     </tr>
     <?php endforeach;endif;?> </table>
 
@@ -92,21 +92,40 @@
 <table class='table table-striped'>
     <tr>
         <th>Name</th>
+        <th>Type</th>
         <th>Banner Id</th>
         <th>Arrived</th>
+        <th>Waited</th>
     </tr>
-    <?php foreach($appointment as $vs):?>
+    <?php foreach ($appointment as $vs):?>
     <tr>
         <td>
-            <?=$vs['visitor']['first_name']?>
-            <?php echo empty($vs['visitor']['preferred_name']) ? null : '"' . $vs['visitor']['preferred_name'] . '"'?>
-            <?=$vs['visitor']['last_name']?>
+            <?php echo $vs['visitor']['first_name']?>
+            <?php echo empty($vs['visitor']['preferred_name']) ? null : '"'.$vs['visitor']['preferred_name'].'"'?>
+            <?php echo $vs['visitor']['last_name']?>
         </td>
         <td>
-            <?=$vs['visitor']['banner_id']?>
+            <?php
+            if ($vs['category'] == CC_CATEGORY_APPOINTMENT) {
+            echo 'Individual';
+            } elseif ($vs['category'] == CC_CATEGORY_GROUP) {
+            echo 'Group';
+            }
+            ?>
         </td>
         <td>
-            <?=strftime('%l:%M%p', $vs['arrival_time'])?>
+            <?php echo $vs['visitor']['banner_id']?>
         </td>
+        <td>
+            <?php echo strftime('%l:%M%p', $vs['arrival_time'])?>
+        </td>
+        <td>
+            <?php echo $vs['wait_time']?> mins. </td>
     </tr>
     <?php endforeach;endif;?> </table>
+<hr />
+<span style="margin-right:3em"><i class="fa <?php echo CC_CATEGORY_EMERGENCY_ICON;?>"></i> Emergency</span>
+<span style="margin-right:3em"><i class="fa <?php echo CC_CATEGORY_WALKIN_ICON;?>"></i> Walk-in</span>
+<span style="margin-right:3em"><i class="fa <?php echo CC_CATEGORY_APPOINTMENT_ICON;?>"></i> Appointment</span>
+<span style="margin-right:3em"><i class="fa <?php echo CC_CATEGORY_GROUP_ICON;?>"></i> Group</span>
+<span style="margin-right:3em"><i class="fa <?php echo CC_CATEGORY_OTHER_ICON;?>"></i> Other</span>
