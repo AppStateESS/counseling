@@ -435,7 +435,7 @@ var ReasonCategory = React.createClass({
                 matchOption = 'Individual appointment';
                 break;
 
-            case '4':
+            case '3':
                 matchOption = 'Group appointment';
                 break;
         }
@@ -451,7 +451,7 @@ var ReasonCategory = React.createClass({
                 value: '2',
                 label: 'Individual appointment',
             }, {
-                value: '4',
+                value: '3',
                 label: 'Group appointment'
             },
         ];
