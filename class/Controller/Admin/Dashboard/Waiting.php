@@ -93,6 +93,7 @@ class Waiting extends \counseling\Controller\Base
             $appointment = 0;
 
             $now = time();
+            $arrivals = array();
             foreach ($waiting as $visit) {
                 $id = $visit['id'];
 
