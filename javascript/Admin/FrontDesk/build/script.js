@@ -1131,11 +1131,6 @@ var Waiting = React.createClass({
             waitingList = React.createElement(
                 'div',
                 null,
-                React.createElement(
-                    'h3',
-                    null,
-                    'Walk-ins'
-                ),
                 React.createElement(WaitingList, { list: this.props.waiting, reload: this.props.reload })
             );
         }
@@ -1143,6 +1138,11 @@ var Waiting = React.createClass({
             'div',
             null,
             React.createElement(Emergency, { list: this.props.emergency, reload: this.props.reload }),
+            React.createElement(
+                'h3',
+                null,
+                'Walk-ins'
+            ),
             waitingList
         );
     }
