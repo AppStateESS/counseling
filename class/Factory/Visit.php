@@ -53,7 +53,6 @@ class Visit extends Base
         $db->addConditional($cr2);
         $tbl2 = $db->addTable('cc_reason');
         $tbl2->addField('title', 'reason_title');
-        $tbl2->addField('category');
         $tbl->addFieldConditional('reason_id', $tbl2->getField('id'));
         $visits = $db->select();
         if (empty($visits)) {
@@ -77,7 +76,6 @@ class Visit extends Base
         $tbl->addFieldConditional('complete_time', $end_time, '<');
         $tbl2 = $db->addTable('cc_reason');
         $tbl2->addField('title', 'reason_title');
-        $tbl2->addField('category');
         $tbl->addFieldConditional('reason_id', $tbl2->getField('id'));
         $visits = $db->select();
         if (empty($visits)) {
