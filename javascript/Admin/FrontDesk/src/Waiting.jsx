@@ -4,7 +4,6 @@ var Waiting = React.createClass({
         if (!isEmpty(this.props.waiting)) {
             waitingList = (
                 <div>
-                    <h3>Walk-ins</h3>
                     <WaitingList list={this.props.waiting} reload={this.props.reload}/>
                 </div>
             );
@@ -12,6 +11,7 @@ var Waiting = React.createClass({
         return (
             <div>
                 <Emergency list={this.props.emergency} reload={this.props.reload}/>
+                <h3>Walk-ins</h3>
                 {waitingList}
             </div>
         );
