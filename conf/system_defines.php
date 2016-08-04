@@ -8,8 +8,7 @@ define('COUNSELING_FRONT_DESK_INSTRUCTION', 'Please see one of our staff members
 define('CC_CATEGORY_OTHER', 0);
 define('CC_CATEGORY_WALKIN', 1);
 define('CC_CATEGORY_APPOINTMENT', 2);
-define('CC_CATEGORY_EMERGENCY', 3);
-define('CC_CATEGORY_GROUP', 4);
+define('CC_CATEGORY_GROUP', 3);
 
 define('CC_CATEGORY_OTHER_ICON', 'fa-question-circle');
 define('CC_CATEGORY_EMERGENCY_ICON', 'fa-exclamation-triangle');
