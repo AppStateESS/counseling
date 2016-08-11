@@ -56,3 +56,9 @@
 .bg-primary input, .bg-primary button>i.fa, .bg-primary i.glyphicon {
     color : black;
 }
+
+
+#dashboard tr.bg-primary span.label-primary {
+    background-color : white;
+    color : #337ab7;
+}

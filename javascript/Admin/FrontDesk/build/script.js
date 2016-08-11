@@ -1388,7 +1388,7 @@ var WaitingListVisits = React.createClass({
                     'span',
                     { className: 'label label-primary' },
                     this.props.visitNumber,
-                    'visits'
+                    '  visits'
                 );
 
             case '4':
@@ -1397,7 +1397,7 @@ var WaitingListVisits = React.createClass({
                     'span',
                     { className: 'label label-warning' },
                     this.props.visitNumber,
-                    'visits'
+                    '  visits'
                 );
 
             default:
@@ -1405,7 +1405,7 @@ var WaitingListVisits = React.createClass({
                     'span',
                     { className: 'label label-danger' },
                     this.props.visitNumber,
-                    'visits'
+                    '  visits'
                 );
         }
     }
