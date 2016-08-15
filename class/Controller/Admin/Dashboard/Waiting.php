@@ -102,7 +102,6 @@ class Waiting extends \counseling\Controller\Base
                     $json['emergencies'][] = $visit;
                     ++$emergencies;
                 } else {
-                    $json['waiting'][] = $visit;
                     switch ($visit['category']) {
                         case CC_CATEGORY_OTHER:
                             $other++;
