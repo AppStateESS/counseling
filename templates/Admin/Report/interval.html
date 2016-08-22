@@ -106,6 +106,7 @@
 <?php if (!empty($appointment)):?>
 
 <?php foreach($appointment as $date => $rows):?>
+<h4><?php echo strftime('%m/%d/%Y', strtotime($date)) ?> <a href="counseling/Admin/Report/DailyCSV/<?php echo $date?>" class="btn btn-default"><i class="fa fa-download"></i></a> </h4>
 <table class='table table-striped'>
     <tr>
         <th>Name</th>

@@ -96,6 +96,7 @@
     </tr>
     <?php endforeach;?> </table>
 <?php endforeach;?>
+<hr />
 <h3>Appointments seen</h3>
 <?php if (empty($appointment)):?>
 <p>No appointments seen this week.</p>
@@ -104,6 +105,7 @@
 <?php if (!empty($appointment)):?>
 
 <?php foreach($appointment as $date => $rows):?>
+<h4><?php echo strftime('%m/%d/%Y', strtotime($date)) ?> <a href="counseling/Admin/Report/DailyCSV/<?php echo $date?>" class="btn btn-default"><i class="fa fa-download"></i></a> </h4>
 <table class='table table-striped'>
     <tr>
         <th>Name</th>
