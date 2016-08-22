@@ -1,12 +1,12 @@
-<h2>Weekly Report for the week beginning <?php echo $date?>
-    <button id="pick-date" class="btn btn-default" title="Pick different week">
-        <i style="cursor:pointer" class="fa fa-calendar"></i>
-    </button>
-    <a href="counseling/Admin/Report/WeeklyCSV/<?php echo $startTime?>" class="btn btn-default" title="Download weekly report">
-        <i class="fa fa-download"></i>
-    </a>
-    <a href="counseling/Admin/Report/Daily/<?php echo $startTime?>" title=View daily report" class="btn btn-default"><i class="fa fa-bar-chart"></i> Daily report</a>
-</h2>
+<h2>Weekly Report for the week beginning <?php echo $date?> <button id="pick-date" class="btn btn-default" title="Pick different week">
+    <i style="cursor:pointer" class="fa fa-calendar"></i>
+</button></h2>
+
+<a href="counseling/Admin/Report/WeeklyCSV/<?php echo $startTime?>" class="btn btn-default" title="Download weekly report">
+    <i class="fa fa-download"></i>
+</a>
+<a href="counseling/Admin/Report/Daily/<?php echo $startTime?>" title=View daily report" class="btn btn-default"><i class="fa fa-bar-chart"></i> Daily</a>
+<a href="counseling/Admin/Report/Interval/<?php echo $startTime?>" title=View daily report" class="btn btn-default"><i class="fa fa-bar-chart"></i> Interval</a>
 <?php if (empty($seen) && empty($unseen) && empty($appointment)):?>
 <p>No visitors recorded for today.</p>
 <?php return; endif;?>

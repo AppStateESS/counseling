@@ -6,9 +6,11 @@ namespace counseling\Factory;
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
-class Report extends Base {
+class Report extends Base
+{
 
-    public static function daily(\Request $request) {
+    public static function daily(\Request $request)
+    {
         javascript('jquery');
         $datestamp = $request->shiftCommand();
 
@@ -17,7 +19,8 @@ class Report extends Base {
             $end_time = self::getTodayEndTime();
         } else {
             $start_time = strtotime($datestamp);
-            $end_time = mktime(23, 59, 59, date('n', $start_time), date('j', $start_time), date('Y', $start_time));
+            $end_time = mktime(23, 59, 59, date('n', $start_time),
+                    date('j', $start_time), date('Y', $start_time));
         }
 
         self::includeDatePicker($start_time, 'Daily');
@@ -40,7 +43,8 @@ class Report extends Base {
         return $template->get();
     }
 
-    private static function addIcon(&$visit) {
+    private static function addIcon(&$visit)
+    {
         if ($visit['has_emergency']) {
             $visit['icon'] = '<i class="text-danger fa-lg fa ' . CC_CATEGORY_EMERGENCY_ICON . '"></i>';
         } else {
@@ -64,7 +68,9 @@ class Report extends Base {
         }
     }
 
-    private static function sortByReason($visit, &$vars, $index_by_arrival = false) {
+    private static function sortByReason($visit, &$vars,
+            $index_by_arrival = false)
+    {
         $arrival_time = strftime('%Y%m%d', $visit['arrival_time']);
         switch ($visit['complete_reason']) {
             case CC_COMPLETE_SEEN:
@@ -92,7 +98,8 @@ class Report extends Base {
         }
     }
 
-    public static function weeklyCSV(\Request $request) {
+    public static function weeklyCSV(\Request $request)
+    {
         $start_date = $request->shiftCommand();
         if (empty($start_date) || !is_numeric($start_date)) {
             return '<p>Improperly formatted date. Cannot create report.</p>';
@@ -114,8 +121,41 @@ class Report extends Base {
 
         return self::produceCSVReport($visits, $download_file);
     }
+    
+    public static function intervalCSV(\Request $request)
+    {
+        $start_date = $request->shiftCommand();
+        $end_date = $request->shiftCommand();
+        
+        if (empty($start_date) || !is_numeric($start_date) || empty($end_date) ||
+                !is_numeric($end_date) || $start_date >= $end_date) {
+            return '<p>Improperly formatted date. Cannot create report.</p>';
+        }
+        
+        $start_time = strtotime($start_date);
+        $end_time = strtotime($end_date);
 
-    private static function produceCSVReport($visits, $download_file) {
+        $start_month = date('m', $start_time);
+        $start_day = date('d', $start_time);
+        $start_year = date('Y', $start_time);
+        
+        $end_month = date('m', $end_time);
+        $end_day = date('d', $end_time);
+        $end_year = date('Y', $end_time);        
+
+        $start_of_interval = mktime(0, 0, 0, $start_month, $start_day, $start_year);
+        $end_of_interval = mktime(23, 59, 59, $end_month, $end_day, $end_year);
+        $visits = Visit::getDaysVisits($start_of_interval, $end_of_interval);
+
+        $download_file = 'Interval Report ' . strftime('%Y%m%d', $start_of_interval) . ' to ' .
+                strftime('%Y%m%d', $end_of_interval) . '.csv';
+
+        return self::produceCSVReport($visits, $download_file);
+    }
+
+
+    private static function produceCSVReport($visits, $download_file)
+    {
         if (empty($visits)) {
             return '<p>No visits on this day. No CSV file created.</p>';
         }
@@ -175,7 +215,8 @@ class Report extends Base {
         exit();
     }
 
-    public static function weekly(\Request $request) {
+    public static function weekly(\Request $request)
+    {
         javascript('datepicker');
 
         $datestamp = $request->shiftCommand();
@@ -214,26 +255,103 @@ class Report extends Base {
         return $template->get();
     }
 
-    public static function dailyCSV(\Request $request) {
+    public static function interval(\Request $request)
+    {
+        javascript('datepicker');
+
+        $start_time_request = $request->shiftCommand();
+        $end_time_request = $request->shiftCommand();
+
+        if (empty($start_time_request) || !is_numeric($start_time_request)) {
+            $start_time = self::getTodayStartTime();
+        } else {
+            $start_time = strtotime($start_time_request);
+        }
+
+        if (empty($end_time_request) || !is_numeric($end_time_request) ||
+                $start_time_request >= $end_time_request) {
+            $end_time = $start_time + 86400 * 7; // one week
+        } else {
+            $end_time = strtotime($end_time_request);
+        }
+
+        $start_month = date('m', $start_time);
+        $start_day = date('d', $start_time);
+        $start_year = date('Y', $start_time);
+
+        $end_month = date('m', $end_time);
+        $end_day = date('d', $end_time);
+        $end_year = date('Y', $end_time);
+
+        $start_of_interval = mktime(0, 0, 0, $start_month, $start_day,
+                $start_year);
+        $end_of_interval = mktime(23, 59, 59, $end_month, $end_day,
+                $end_year);
+
+        self::intervalDatePicker($start_of_interval, $end_of_interval);
+
+        $visits = Visit::getDaysVisits($start_of_interval, $end_of_interval);
+        $seen = array();
+        $unseen = array();
+
+        if (!empty($visits)) {
+            foreach ($visits as $visit) {
+                self::addIcon($visit);
+                self::sortByReason($visit, $vars, true);
+            }
+        }
+        $vars['start_date'] = strftime('%b %e, %Y', $start_of_interval);
+        $vars['end_date'] = strftime('%b %e, %Y', $end_of_interval);
+        $vars['startTime'] = strftime('%Y%m%d', $start_of_interval);
+        $vars['endTime'] = strftime('%Y%m%d', $end_of_interval);
+        $template = new \Template($vars);
+        $template->setModuleTemplate('counseling', 'Admin/Report/interval.html');
+
+        return $template->get();
+    }
+
+    public static function dailyCSV(\Request $request)
+    {
         $start_date = $request->shiftCommand();
         if (empty($start_date) || !is_numeric($start_date)) {
             return '<p>Improperly formatted date. Cannot create report.</p>';
         }
         $start_time = strtotime($start_date);
-        $end_time = mktime(23, 59, 59, date('n', $start_time), date('j', $start_time), date('Y', $start_time));
+        $end_time = mktime(23, 59, 59, date('n', $start_time),
+                date('j', $start_time), date('Y', $start_time));
         $visits = Visit::getDaysVisits($start_time, $end_time);
         $download_file = 'Daily Report ' . $start_date . '.csv';
 
         return self::produceCSVReport($visits, $download_file);
     }
 
-    private static function includeDatePicker($start_time, $report_type) {
+    private static function includeDatePicker($start_time, $report_type)
+    {
         $year = date('Y', $start_time);
         $month = date('n', $start_time) - 1;
         $day = date('j', $start_time);
 
         $script = "<script type='text/javascript'>var defaultDate = {year:$year, month:$month, day:$day};var reportType = '$report_type';</script>"
                 . '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/counseling/javascript/Admin/Report/script.js"></script>';
+        \Layout::addJSHeader($script);
+        javascript('datepicker');
+    }
+
+    private static function intervalDatePicker($start_time, $end_time)
+    {
+        $syear = date('Y', $start_time);
+        $smonth = date('n', $start_time) - 1;
+        $sday = date('j', $start_time);
+
+        $eyear = date('Y', $end_time);
+        $emonth = date('n', $end_time) - 1;
+        $eday = date('j', $end_time);
+
+        $startstr = strftime('%Y%m%d', $start_time);
+        $endstr = strftime('%Y%m%d', $end_time);
+        
+        $script = "<script type='text/javascript'>var startStr= '$startstr';var endStr= '$endstr';var startDate = {year:$syear, month:$smonth, day:$sday};var endDate = {year:$eyear, month:$emonth, day:$eday};</script>"
+                . '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/counseling/javascript/Admin/Report/interval.js"></script>';
         \Layout::addJSHeader($script);
         javascript('datepicker');
     }

@@ -25,6 +25,10 @@ class Report extends \counseling\Controller\Base
             case 'Weekly':
                 $content = Factory::weekly($request);
                 break;
+            
+            case 'Interval':
+                $content = Factory::interval($request);
+                break;
 
             case 'DailyCSV':
                 $content = Factory::dailyCSV($request);
@@ -32,6 +36,10 @@ class Report extends \counseling\Controller\Base
 
             case 'WeeklyCSV':
                 Factory::weeklyCSV($request);
+                break;
+            
+            case 'IntervalCSV':
+                Factory::intervalCSV($request);
                 break;
         }
         $view = new \View\HtmlView($content);
