@@ -598,6 +598,7 @@ var VisitorRow = React.createClass({
                 ' min.'
             );
         }
+        var preferredName = this.props.visitor.preferred_name !== null ? this.props.visitor.preferred_name : this.props.visitor.first_name;
         return React.createElement(
             'button',
             { className: _className, onClick: this.props.select },
@@ -606,7 +607,7 @@ var VisitorRow = React.createClass({
             React.createElement(
                 'strong',
                 null,
-                this.props.visitor.preferred_name,
+                preferredName,
                 ' ',
                 this.props.visitor.last_name
             ),

@@ -205,10 +205,11 @@ var VisitorRow = React.createClass({
         if (this.props.category == '1') {
             waiting = <span>&nbsp;- Waiting: {this.props.wait_time} min.</span>;
         }
+        let preferredName = this.props.visitor.preferred_name !== null ? this.props.visitor.preferred_name : this.props.visitor.first_name;
         return (
             <button className={_className} onClick={this.props.select}>
                 <CategoryIcon category={this.props.category} title={this.props.reason_title}/>
-                &nbsp;<strong>{this.props.visitor.preferred_name} {this.props.visitor.last_name}</strong>
+                &nbsp;<strong>{preferredName} {this.props.visitor.last_name}</strong>
                 {waiting}
             </button>
         );
