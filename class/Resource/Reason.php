@@ -11,14 +11,14 @@ class Reason extends \Resource
     /**
      * One or two word description of reason.
      *
-     * @var \phpws2\Variable\String
+     * @var \phpws2\Variable\CanopyString
      */
     protected $title;
 
     /**
      * Longed description of reason.
      *
-     * @var \phpws2\Variable\String
+     * @var \phpws2\Variable\CanopyString
      */
     protected $description;
 
@@ -64,7 +64,7 @@ class Reason extends \Resource
     /**
      * Color of reason highlight.
      *
-     * @var \phpws2\Variable\String
+     * @var \phpws2\Variable\CanopyString
      */
     protected $color;
 
@@ -79,16 +79,16 @@ class Reason extends \Resource
     public function __construct()
     {
         parent::__construct();
-        $this->title = new \phpws2\Variable\String(null, 'title');
+        $this->title = new \phpws2\Variable\CanopyString(null, 'title');
         $this->title->setLimit(100);
-        $this->description = new \phpws2\Variable\String(null, 'description');
+        $this->description = new \phpws2\Variable\CanopyString(null, 'description');
         $this->description->setLimit(100);
         $this->instruction = new \phpws2\Variable\Integer(null, 'instruction');
         $this->instruction->setRange(0, 100);
         $this->show_emergency = new \phpws2\Variable\Bool(false, 'show_emergency');
         $this->category = new \phpws2\Variable\Integer(0, 'category');
         $this->category->setRange(0, 10);
-        $this->color = new \phpws2\Variable\String('default', 'color');
+        $this->color = new \phpws2\Variable\CanopyString('default', 'color');
         $this->color->setLimit(20);
         $this->ask_for_phone = new \phpws2\Variable\Bool(false, 'ask_for_phone');
         $this->sorting = new \phpws2\Variable\Integer(1, 'sorting');

@@ -12,12 +12,12 @@ namespace counseling\Resource;
 class Clinician extends \Resource
 {
     /**
-     * @var \Variable\String
+     * @var \Variable\CanopyString
      */
     protected $first_name;
 
     /**
-     * @var \Variable\String
+     * @var \Variable\CanopyString
      */
     protected $last_name;
 
@@ -32,13 +32,13 @@ class Clinician extends \Resource
     public function __construct()
     {
         parent::__construct();
-        $this->first_name = new \Variable\String(null, 'first_name');
+        $this->first_name = new \phpws2\Variable\CanopyString(null, 'first_name');
         $this->first_name->setLimit(50);
-        $this->last_name = new \Variable\String(null, 'last_name');
+        $this->last_name = new \phpws2\Variable\CanopyString(null, 'last_name');
         $this->last_name->setLimit(50);
-        $this->active = new \Variable\Bool(true, 'active');
-        $this->visitors_seen = new \Variable\Integer(0, 'visitors_seen');
-        $this->sorting = new \Variable\Integer(1, 'sorting');
+        $this->active = new \phpws2\Variable\Bool(true, 'active');
+        $this->visitors_seen = new \phpws2\Variable\Integer(0, 'visitors_seen');
+        $this->sorting = new \phpws2\Variable\Integer(1, 'sorting');
     }
 
     public function setLastName($var)
