@@ -36,7 +36,7 @@ class Clinician extends \Resource
         $this->first_name->setLimit(50);
         $this->last_name = new \phpws2\Variable\CanopyString(null, 'last_name');
         $this->last_name->setLimit(50);
-        $this->active = new \phpws2\Variable\Bool(true, 'active');
+        $this->active = new \phpws2\Variable\Boolean(true, 'active');
         $this->visitors_seen = new \phpws2\Variable\Integer(0, 'visitors_seen');
         $this->sorting = new \phpws2\Variable\Integer(1, 'sorting');
     }

@@ -98,7 +98,7 @@ class Visit extends \Resource
         $this->complete_staff_id = new \phpws2\Variable\Integer(0, 'complete_staff_id');
         $this->complete_time = new \phpws2\Variable\DateTime(0, 'complete_time');
         $this->disposition_id = new \phpws2\Variable\Integer(0, 'disposition_id');
-        $this->has_emergency = new \phpws2\Variable\Bool(null, 'has_emergency');
+        $this->has_emergency = new \phpws2\Variable\Boolean(null, 'has_emergency');
         $this->reason_id = new \phpws2\Variable\Integer(null, 'reason_id');
         $this->visitor_id = new \phpws2\Variable\Integer(null, 'visitor_id');
         $this->clinician_id = new \phpws2\Variable\Integer(null, 'clinician_id');

@@ -88,7 +88,7 @@ class Visitor extends \Resource
         $this->preferred_name->setLimit(50);
         $this->first_visit = new \phpws2\Variable\DateTime(0, 'first_visit');
         $this->first_visit->setFormat('%Y/%m/%d %l:%M%P');
-        $this->seen_last_visit = new \phpws2\Variable\Bool(false, 'seen_last_visit');
+        $this->seen_last_visit = new \phpws2\Variable\Boolean(false, 'seen_last_visit');
         $this->last_name = new \phpws2\Variable\CanopyString(null, 'last_name');
         $this->last_name->setLimit(50);
         $this->last_visit = new \phpws2\Variable\DateTime(null, 'last_visit');
@@ -97,7 +97,7 @@ class Visitor extends \Resource
         $this->phone_number->formatNumber(true);
         $this->email = new \phpws2\Variable\Email(null, 'email');
         $this->email->setLimit(100);
-        $this->intake_complete = new \phpws2\Variable\Bool(false, 'intake_complete');
+        $this->intake_complete = new \phpws2\Variable\Boolean(false, 'intake_complete');
         $this->previously_seen = new \phpws2\Variable\DateTime(0, 'previously_seen');
     }
 

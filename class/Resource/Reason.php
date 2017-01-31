@@ -85,14 +85,14 @@ class Reason extends \Resource
         $this->description->setLimit(100);
         $this->instruction = new \phpws2\Variable\Integer(null, 'instruction');
         $this->instruction->setRange(0, 100);
-        $this->show_emergency = new \phpws2\Variable\Bool(false, 'show_emergency');
+        $this->show_emergency = new \phpws2\Variable\Boolean(false, 'show_emergency');
         $this->category = new \phpws2\Variable\Integer(0, 'category');
         $this->category->setRange(0, 10);
         $this->color = new \phpws2\Variable\CanopyString('default', 'color');
         $this->color->setLimit(20);
-        $this->ask_for_phone = new \phpws2\Variable\Bool(false, 'ask_for_phone');
+        $this->ask_for_phone = new \phpws2\Variable\Boolean(false, 'ask_for_phone');
         $this->sorting = new \phpws2\Variable\Integer(1, 'sorting');
-        $this->active = new \phpws2\Variable\Bool(true, 'active');
+        $this->active = new \phpws2\Variable\Boolean(true, 'active');
     }
 
     public function getAskForPhone()

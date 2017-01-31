@@ -32,7 +32,7 @@ class Disposition extends \Resource
         $this->icon = new \phpws2\Variable\CanopyString(null, 'icon');
         $this->icon->setLimit(30);
         $this->sorting = new \phpws2\Variable\Integer(1, 'sorting');
-        $this->active = new \phpws2\Variable\Bool(1, 'active');
+        $this->active = new \phpws2\Variable\Boolean(1, 'active');
     }
 
     public function setTitle($title)
