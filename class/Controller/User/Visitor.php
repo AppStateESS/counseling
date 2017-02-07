@@ -11,7 +11,7 @@ use counseling\Resource\Visitor as Resource;
  */
 class Visitor extends \counseling\Controller\Base
 {
-    public function post(\Request $request)
+    public function post(\Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Reason command');

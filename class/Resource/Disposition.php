@@ -25,14 +25,14 @@ class Disposition extends \Resource
     public function __construct()
     {
         parent::__construct();
-        $this->title = new \phpws2\Variable\CanopyString(null, 'title');
+        $this->title = new \phpws2\Variable\StringVar(null, 'title');
         $this->title->setLimit(100);
         $this->color = new \phpws2\Variable\Attribute(null, 'color');
         $this->color->setLimit(30);
-        $this->icon = new \phpws2\Variable\CanopyString(null, 'icon');
+        $this->icon = new \phpws2\Variable\StringVar(null, 'icon');
         $this->icon->setLimit(30);
-        $this->sorting = new \phpws2\Variable\Integer(1, 'sorting');
-        $this->active = new \phpws2\Variable\Boolean(1, 'active');
+        $this->sorting = new \phpws2\Variable\IntegerVar(1, 'sorting');
+        $this->active = new \phpws2\Variable\BooleanVar(1, 'active');
     }
 
     public function setTitle($title)

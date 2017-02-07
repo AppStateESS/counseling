@@ -8,7 +8,7 @@ namespace counseling\Controller\Admin;
  */
 class Dashboard extends \counseling\Controller\Base
 {
-    public function get(\Request $request)
+    public function get(\Canopy\Request $request)
     {
         $command = $this->routeCommand($request);
         if (empty($command)) {
@@ -18,7 +18,7 @@ class Dashboard extends \counseling\Controller\Base
         }
     }
 
-    public function post(\Request $request)
+    public function post(\Canopy\Request $request)
     {
         $command = $this->routeCommand($request);
         if (empty($command)) {
@@ -28,7 +28,7 @@ class Dashboard extends \counseling\Controller\Base
         }
     }
 
-    public function getHtmlView($data, \Request $request)
+    public function getHtmlView($data, \Canopy\Request $request)
     {
         if (COUNSELING_REACT_DEV) {
             $script[] = \counseling\Factory\React::development('Admin/FrontDesk/', 'script.js');

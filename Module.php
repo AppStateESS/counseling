@@ -21,7 +21,7 @@ class Module extends \Module
         $this->setProperName('Counseling Center Check-In');
     }
 
-    public function beforeRun(\Request $request, \Controller $controller)
+    public function beforeRun(\Canopy\Request $request, \Controller $controller)
     {
         $this->checkDefine();
     }
@@ -41,7 +41,7 @@ class Module extends \Module
         require_once PHPWS_SOURCE_DIR .  'mod/counseling/conf/system_defines.php';
     }
 
-    public function getController(\Request $request)
+    public function getController(\Canopy\Request $request)
     {
         $cmd = $request->shiftCommand();
         if ($cmd == 'Admin') {
@@ -57,7 +57,7 @@ class Module extends \Module
         }
     }
 
-    public function runTime(\Request $request)
+    public function runTime(\Canopy\Request $request)
     {
         $this->checkDefine();
         if (\PHPWS_Core::atHome()) {

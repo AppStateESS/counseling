@@ -11,14 +11,14 @@ class Reason extends \Resource
     /**
      * One or two word description of reason.
      *
-     * @var \phpws2\Variable\CanopyString
+     * @var \phpws2\Variable\StringVar
      */
     protected $title;
 
     /**
      * Longed description of reason.
      *
-     * @var \phpws2\Variable\CanopyString
+     * @var \phpws2\Variable\StringVar
      */
     protected $description;
 
@@ -26,7 +26,7 @@ class Reason extends \Resource
      * What the visitor should do (sit down, see admin, etc.)
      * when done signing in.
      *
-     * @var \phpws2\Variable\Integer
+     * @var \phpws2\Variable\IntegerVar
      */
     protected $instruction;
 
@@ -45,7 +45,7 @@ class Reason extends \Resource
      * 3 - emergency
      * 4 - group appointment.
      *
-     * @var \phpws2\Variable\Integer
+     * @var \phpws2\Variable\IntegerVar
      */
     protected $category;
 
@@ -64,14 +64,14 @@ class Reason extends \Resource
     /**
      * Color of reason highlight.
      *
-     * @var \phpws2\Variable\CanopyString
+     * @var \phpws2\Variable\StringVar
      */
     protected $color;
 
     /**
      * Order listed in check in dialog.
      *
-     * @var \phpws2\Variable\Integer
+     * @var \phpws2\Variable\IntegerVar
      */
     protected $sorting;
     protected $table = 'cc_reason';
@@ -79,20 +79,20 @@ class Reason extends \Resource
     public function __construct()
     {
         parent::__construct();
-        $this->title = new \phpws2\Variable\CanopyString(null, 'title');
+        $this->title = new \phpws2\Variable\StringVar(null, 'title');
         $this->title->setLimit(100);
-        $this->description = new \phpws2\Variable\CanopyString(null, 'description');
+        $this->description = new \phpws2\Variable\StringVar(null, 'description');
         $this->description->setLimit(100);
-        $this->instruction = new \phpws2\Variable\Integer(null, 'instruction');
+        $this->instruction = new \phpws2\Variable\IntegerVar(null, 'instruction');
         $this->instruction->setRange(0, 100);
-        $this->show_emergency = new \phpws2\Variable\Boolean(false, 'show_emergency');
-        $this->category = new \phpws2\Variable\Integer(0, 'category');
+        $this->show_emergency = new \phpws2\Variable\BooleanVar(false, 'show_emergency');
+        $this->category = new \phpws2\Variable\IntegerVar(0, 'category');
         $this->category->setRange(0, 10);
-        $this->color = new \phpws2\Variable\CanopyString('default', 'color');
+        $this->color = new \phpws2\Variable\StringVar('default', 'color');
         $this->color->setLimit(20);
-        $this->ask_for_phone = new \phpws2\Variable\Boolean(false, 'ask_for_phone');
-        $this->sorting = new \phpws2\Variable\Integer(1, 'sorting');
-        $this->active = new \phpws2\Variable\Boolean(true, 'active');
+        $this->ask_for_phone = new \phpws2\Variable\BooleanVar(false, 'ask_for_phone');
+        $this->sorting = new \phpws2\Variable\IntegerVar(1, 'sorting');
+        $this->active = new \phpws2\Variable\BooleanVar(true, 'active');
     }
 
     public function getAskForPhone()

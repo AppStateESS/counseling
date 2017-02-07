@@ -23,14 +23,14 @@ class Visit extends \Resource
      * 3 - Missing
      * 4 - Made appointment.
      * 
-     * @var \phpws2\Variable\Integer
+     * @var \phpws2\Variable\IntegerVar
      */
     protected $complete_reason;
 
     /**
      * User id of admin that marked the visitor complete.
      *
-     * @var \phpws2\Variable\Integer
+     * @var \phpws2\Variable\IntegerVar
      */
     protected $complete_staff_id;
 
@@ -58,21 +58,21 @@ class Visit extends \Resource
     /**
      * Reason for visit. Id of reason from cc_reason table.
      *
-     * @var \phpws2\Variable\Integer
+     * @var \phpws2\Variable\IntegerVar
      */
     protected $reason_id;
 
     /**
      * Id of visitor from cc_visitor table.
      *
-     * @var \phpws2\Variable\Integer
+     * @var \phpws2\Variable\IntegerVar
      */
     protected $visitor_id;
 
     /**
      * Id of clinician from cc_clinician table.
      *
-     * @var \phpws2\Variable\Integer
+     * @var \phpws2\Variable\IntegerVar
      */
     protected $clinician_id;
 
@@ -84,7 +84,7 @@ class Visit extends \Resource
      * 3 = emergency
      * 4 = group appointment.
      *
-     * @var \phpws2\Variable\Integer
+     * @var \phpws2\Variable\IntegerVar
      */
     protected $category;
 
@@ -94,15 +94,15 @@ class Visit extends \Resource
     {
         parent::__construct();
         $this->arrival_time = new \phpws2\Variable\DateTime(null, 'arrival_time');
-        $this->complete_reason = new \phpws2\Variable\Integer(0, 'complete_reason');
-        $this->complete_staff_id = new \phpws2\Variable\Integer(0, 'complete_staff_id');
+        $this->complete_reason = new \phpws2\Variable\IntegerVar(0, 'complete_reason');
+        $this->complete_staff_id = new \phpws2\Variable\IntegerVar(0, 'complete_staff_id');
         $this->complete_time = new \phpws2\Variable\DateTime(0, 'complete_time');
-        $this->disposition_id = new \phpws2\Variable\Integer(0, 'disposition_id');
-        $this->has_emergency = new \phpws2\Variable\Boolean(null, 'has_emergency');
-        $this->reason_id = new \phpws2\Variable\Integer(null, 'reason_id');
-        $this->visitor_id = new \phpws2\Variable\Integer(null, 'visitor_id');
-        $this->clinician_id = new \phpws2\Variable\Integer(null, 'clinician_id');
-        $this->category = new \phpws2\Variable\Integer(null, 'category');
+        $this->disposition_id = new \phpws2\Variable\IntegerVar(0, 'disposition_id');
+        $this->has_emergency = new \phpws2\Variable\BooleanVar(null, 'has_emergency');
+        $this->reason_id = new \phpws2\Variable\IntegerVar(null, 'reason_id');
+        $this->visitor_id = new \phpws2\Variable\IntegerVar(null, 'visitor_id');
+        $this->clinician_id = new \phpws2\Variable\IntegerVar(null, 'clinician_id');
+        $this->category = new \phpws2\Variable\IntegerVar(null, 'category');
     }
 
     public function getArrivalTime()

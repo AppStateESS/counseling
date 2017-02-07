@@ -10,7 +10,7 @@ use counseling\Factory\Report as Factory;
  */
 class Report extends \counseling\Controller\Base
 {
-    public function getHtmlView($data, \Request $request)
+    public function getHtmlView($data, \Canopy\Request $request)
     {
         $command = $request->shiftCommand();
         if (empty($command)) {

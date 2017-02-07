@@ -10,7 +10,7 @@ use counseling\Factory\Reason as Factory;
  */
 class Reason extends \counseling\Controller\Base
 {
-    protected function getJsonView($data, \Request $request)
+    protected function getJsonView($data, \Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Settings command');
@@ -33,7 +33,7 @@ class Reason extends \counseling\Controller\Base
         return $view;
     }
 
-    public function post(\Request $request)
+    public function post(\Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Reason command');
@@ -94,7 +94,7 @@ class Reason extends \counseling\Controller\Base
         return $response;
     }
 
-    public function getHtmlView($data, \Request $request)
+    public function getHtmlView($data, \Canopy\Request $request)
     {
         $content = 'Reasons HTML works';
         $view = new \View\HtmlView($content);

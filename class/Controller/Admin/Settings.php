@@ -8,7 +8,7 @@ namespace counseling\Controller\Admin;
  */
 class Settings extends \counseling\Controller\Base
 {
-    public function get(\Request $request)
+    public function get(\Canopy\Request $request)
     {
         if (!\Current_User::isDeity()) {
             throw new \Http\NotAcceptableException($request);
@@ -21,7 +21,7 @@ class Settings extends \counseling\Controller\Base
         }
     }
 
-    public function post(\Request $request)
+    public function post(\Canopy\Request $request)
     {
         if (!\Current_User::isDeity()) {
             throw new \Http\NotAcceptableException($request);
@@ -34,7 +34,7 @@ class Settings extends \counseling\Controller\Base
         }
     }
 
-    public function getHtmlView($data, \Request $request)
+    public function getHtmlView($data, \Canopy\Request $request)
     {
         javascript('jquery_ui');
         \Layout::addStyle('counseling', 'Admin/style.css');

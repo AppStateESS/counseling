@@ -10,7 +10,7 @@ use counseling\Factory\Clinician as Factory;
  */
 class Clinician extends \counseling\Controller\Base
 {
-    protected function getJsonView($data, \Request $request)
+    protected function getJsonView($data, \Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Settings command');
@@ -28,7 +28,7 @@ class Clinician extends \counseling\Controller\Base
         return $view;
     }
 
-    public function post(\Request $request)
+    public function post(\Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Clinician command');

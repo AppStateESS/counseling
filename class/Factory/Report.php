@@ -9,7 +9,7 @@ namespace counseling\Factory;
 class Report extends Base
 {
 
-    public static function daily(\Request $request)
+    public static function daily(\Canopy\Request $request)
     {
         javascript('jquery');
         $datestamp = $request->shiftCommand();
@@ -98,7 +98,7 @@ class Report extends Base
         }
     }
 
-    public static function weeklyCSV(\Request $request)
+    public static function weeklyCSV(\Canopy\Request $request)
     {
         $start_date = $request->shiftCommand();
         if (empty($start_date) || !is_numeric($start_date)) {
@@ -122,7 +122,7 @@ class Report extends Base
         return self::produceCSVReport($visits, $download_file);
     }
     
-    public static function intervalCSV(\Request $request)
+    public static function intervalCSV(\Canopy\Request $request)
     {
         $start_date = $request->shiftCommand();
         $end_date = $request->shiftCommand();
@@ -215,7 +215,7 @@ class Report extends Base
         exit();
     }
 
-    public static function weekly(\Request $request)
+    public static function weekly(\Canopy\Request $request)
     {
         javascript('datepicker');
 
@@ -255,7 +255,7 @@ class Report extends Base
         return $template->get();
     }
 
-    public static function interval(\Request $request)
+    public static function interval(\Canopy\Request $request)
     {
         javascript('datepicker');
 
@@ -310,7 +310,7 @@ class Report extends Base
         return $template->get();
     }
 
-    public static function dailyCSV(\Request $request)
+    public static function dailyCSV(\Canopy\Request $request)
     {
         $start_date = $request->shiftCommand();
         if (empty($start_date) || !is_numeric($start_date)) {

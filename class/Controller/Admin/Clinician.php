@@ -11,7 +11,7 @@ use counseling\Factory\Visit as VisitFactory;
  */
 class Clinician extends \counseling\Controller\Base
 {
-    public function getHtmlView($data, \Request $request)
+    public function getHtmlView($data, \Canopy\Request $request)
     {
         \Layout::addStyle('counseling', 'Admin/Clinician/style.css');
 
@@ -36,7 +36,7 @@ EOF;
         return $view;
     }
 
-    public function post(\Request $request)
+    public function post(\Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown post command');
@@ -62,7 +62,7 @@ EOF;
         return $response;
     }
 
-    public function getJSONView($data, \Request $request)
+    public function getJSONView($data, \Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown Settings command');

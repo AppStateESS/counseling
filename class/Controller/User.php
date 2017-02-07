@@ -10,14 +10,14 @@ require_once PHPWS_SOURCE_DIR.'mod/counseling/conf/defines.php';
  */
 class User extends \Http\Controller
 {
-    public function get(\Request $request)
+    public function get(\Canopy\Request $request)
     {
         $command = $this->routeCommand($request);
 
         return $command->get($request);
     }
 
-    public function post(\Request $request)
+    public function post(\Canopy\Request $request)
     {
         $command = $this->routeCommand($request);
 

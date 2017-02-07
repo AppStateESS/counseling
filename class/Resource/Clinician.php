@@ -12,17 +12,17 @@ namespace counseling\Resource;
 class Clinician extends \Resource
 {
     /**
-     * @var \Variable\CanopyString
+     * @var \Variable\StringVar
      */
     protected $first_name;
 
     /**
-     * @var \Variable\CanopyString
+     * @var \Variable\StringVar
      */
     protected $last_name;
 
     /**
-     * @var \Variable\Integer
+     * @var \Variable\IntegerVar
      */
     protected $visitors_seen;
     protected $active;
@@ -32,13 +32,13 @@ class Clinician extends \Resource
     public function __construct()
     {
         parent::__construct();
-        $this->first_name = new \phpws2\Variable\CanopyString(null, 'first_name');
+        $this->first_name = new \phpws2\Variable\StringVar(null, 'first_name');
         $this->first_name->setLimit(50);
-        $this->last_name = new \phpws2\Variable\CanopyString(null, 'last_name');
+        $this->last_name = new \phpws2\Variable\StringVar(null, 'last_name');
         $this->last_name->setLimit(50);
-        $this->active = new \phpws2\Variable\Boolean(true, 'active');
-        $this->visitors_seen = new \phpws2\Variable\Integer(0, 'visitors_seen');
-        $this->sorting = new \phpws2\Variable\Integer(1, 'sorting');
+        $this->active = new \phpws2\Variable\BooleanVar(true, 'active');
+        $this->visitors_seen = new \phpws2\Variable\IntegerVar(0, 'visitors_seen');
+        $this->sorting = new \phpws2\Variable\IntegerVar(1, 'sorting');
     }
 
     public function setLastName($var)

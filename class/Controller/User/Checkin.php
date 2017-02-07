@@ -12,7 +12,7 @@ use counseling\Factory\Visit;
  */
 class Checkin extends \counseling\Controller\Base
 {
-    protected function getJsonView($data, \Request $request)
+    protected function getJsonView($data, \Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
             throw new \Exception('Unknown JSON command');

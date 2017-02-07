@@ -11,17 +11,17 @@ class Visitor extends \Resource
     /**
      * Banner Id.
      *
-     * @var \Variable\Integer
+     * @var \Variable\IntegerVar
      */
     protected $banner_id;
 
     /**
-     * @var \Variable\CanopyString
+     * @var \Variable\StringVar
      */
     protected $first_name;
 
     /**
-     * @var \Variable\CanopyString
+     * @var \Variable\StringVar
      */
     protected $preferred_name;
 
@@ -42,7 +42,7 @@ class Visitor extends \Resource
     protected $seen_last_visit;
 
     /**
-     * @var \Variable\CanopyString
+     * @var \Variable\StringVar
      */
     protected $last_name;
 
@@ -81,15 +81,15 @@ class Visitor extends \Resource
     public function __construct()
     {
         parent::__construct();
-        $this->banner_id = new \phpws2\Variable\Integer(null, 'banner_id');
-        $this->first_name = new \phpws2\Variable\CanopyString(null, 'first_name');
+        $this->banner_id = new \phpws2\Variable\IntegerVar(null, 'banner_id');
+        $this->first_name = new \phpws2\Variable\StringVar(null, 'first_name');
         $this->first_name->setLimit(50);
-        $this->preferred_name = new \phpws2\Variable\CanopyString(null, 'preferred_name');
+        $this->preferred_name = new \phpws2\Variable\StringVar(null, 'preferred_name');
         $this->preferred_name->setLimit(50);
         $this->first_visit = new \phpws2\Variable\DateTime(0, 'first_visit');
         $this->first_visit->setFormat('%Y/%m/%d %l:%M%P');
-        $this->seen_last_visit = new \phpws2\Variable\Boolean(false, 'seen_last_visit');
-        $this->last_name = new \phpws2\Variable\CanopyString(null, 'last_name');
+        $this->seen_last_visit = new \phpws2\Variable\BooleanVar(false, 'seen_last_visit');
+        $this->last_name = new \phpws2\Variable\StringVar(null, 'last_name');
         $this->last_name->setLimit(50);
         $this->last_visit = new \phpws2\Variable\DateTime(null, 'last_visit');
         $this->last_visit->setFormat('%Y/%m/%d %l:%M%P');
@@ -97,7 +97,7 @@ class Visitor extends \Resource
         $this->phone_number->formatNumber(true);
         $this->email = new \phpws2\Variable\Email(null, 'email');
         $this->email->setLimit(100);
-        $this->intake_complete = new \phpws2\Variable\Boolean(false, 'intake_complete');
+        $this->intake_complete = new \phpws2\Variable\BooleanVar(false, 'intake_complete');
         $this->previously_seen = new \phpws2\Variable\DateTime(0, 'previously_seen');
     }
 
