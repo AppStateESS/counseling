@@ -6,7 +6,7 @@ namespace counseling;
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
-class Module extends \Module
+class Module extends \Canopy\Module
 {
 
     public function __construct()
