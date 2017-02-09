@@ -12,7 +12,7 @@ class Reason extends Base
 {
     public static function listReasons($active_only = true)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_reason');
         $tbl->addOrderBy('sorting');
         if ($active_only) {

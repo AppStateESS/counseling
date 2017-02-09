@@ -15,7 +15,7 @@ class Banner
         }
         $fn = array('Matt', 'Doug', 'Lorrie', 'Sam', 'Morris', 'Elvis', 'Mike', 'Michelle', 'Lisa', 'Greg', 'Juan', 'Jacob');
         $ln = array('Douglas', 'Smith', 'Jones', 'Ito', 'Sampson', 'Valdez', 'Dallas', 'Simpson', 'Voggler', 'Husslehip', 'Nichols');
-        $username = randomString();
+        $username = \Canopy\TextString::randomString();
 
         return array(
             'userName' => $username,

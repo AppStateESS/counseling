@@ -12,7 +12,7 @@ class Clinician extends Base
 {
     public static function getList($active_only = true)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_clinician');
         $tbl->addFieldConditional('active', 1);
         $tbl->addOrderBy('sorting');
@@ -55,7 +55,7 @@ class Clinician extends Base
 
     public static function getCurrentlySeen($clinician_id)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_visit');
         $tbl->addFieldConditional('clinician_id', $clinician_id);
         $tbl->addFieldConditional('disposition_id', 0);
@@ -72,10 +72,10 @@ class Clinician extends Base
 
     private static function countClinicians()
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_clinician');
         $tbl->addFieldConditional('active', 1);
-        $tbl->addField(new \Database\Expression('count('.$tbl->getField('id').')', 'count'));
+        $tbl->addField(new \phpws2\Database\Expression('count('.$tbl->getField('id').')', 'count'));
         $count = $db->selectColumn();
 
         return $count;
@@ -102,7 +102,7 @@ class Clinician extends Base
             $next_sort = self::countClinicians();
         }
 
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_clinician');
         $tbl->addFieldConditional('active', 1);
 

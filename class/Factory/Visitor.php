@@ -12,7 +12,7 @@ class Visitor extends Base
 {
     public static function getByBannerId($banner_id)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_visitor');
         $tbl->addFieldConditional('banner_id', $banner_id);
         $visitorArray = $db->selectOneRow();

@@ -64,14 +64,14 @@ class Summary extends Base
         $starttime = parent::getTodayStartTime();
         $endtime = parent::getTodayEndTime();
 
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_visit');
         $tbl->addFieldConditional('complete_time', $starttime, '>');
         $tbl->addFieldConditional('complete_time', $endtime, '<');
         if ($seen_only) {
             $tbl->addFieldConditional('complete_reason', CC_COMPLETE_SEEN);
         }
-        $tbl->addField(new \Database\Expression('count('.$tbl->getField('id').')', 'visitCount'));
+        $tbl->addField(new \phpws2\Database\Expression('count('.$tbl->getField('id').')', 'visitCount'));
 
         return $db->selectColumn();
     }
@@ -81,7 +81,7 @@ class Summary extends Base
         $starttime = parent::getTodayStartTime();
         $endtime = parent::getTodayEndTime();
 
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_visit');
         $tbl->addFieldConditional('complete_time', $starttime, '>');
         $tbl->addFieldConditional('complete_time', $endtime, '<');
@@ -105,14 +105,14 @@ class Summary extends Base
         $starttime = parent::getTodayStartTime();
         $endtime = parent::getTodayEndTime();
 
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_visit');
         $tbl->addField('has_emergency');
         $tbl2 = $db->addTable('cc_reason');
         $category = $tbl2->addField('category');
         $tbl->addFieldConditional('complete_time', $starttime, '>');
         $tbl->addFieldConditional('complete_time', $endtime, '<');
-        $db->joinResources($tbl, $tbl2, new \Database\Conditional($db, $tbl->getField('reason_id'), $tbl2->getField('id'), '='));
+        $db->joinResources($tbl, $tbl2, new \phpws2\Database\Conditional($db, $tbl->getField('reason_id'), $tbl2->getField('id'), '='));
 
         $result = $db->select();
 
@@ -148,13 +148,13 @@ class Summary extends Base
         $starttime = parent::getTodayStartTime();
         $endtime = parent::getTodayEndTime();
 
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_visit');
         $complete_reason = $tbl->addField('complete_reason');
         $tbl->addFieldConditional('complete_time', $starttime, '>');
         $tbl->addFieldConditional('complete_time', $endtime, '<');
         $tbl->addFieldConditional('complete_reason', CC_COMPLETE_SEEN, '!=');
-        $tbl->addField(new \Database\Expression('count('.$tbl->getField('id').')', 'visitCount'));
+        $tbl->addField(new \phpws2\Database\Expression('count('.$tbl->getField('id').')', 'visitCount'));
         $db->setGroupBy($complete_reason);
         $result = $db->select();
 

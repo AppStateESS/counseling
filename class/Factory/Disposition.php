@@ -12,7 +12,7 @@ class Disposition extends Base
 {
     public static function getList($active_only = true)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_disposition');
         $tbl->addFieldConditional('active', 1);
         $tbl->addOrderBy('sorting');
@@ -57,10 +57,10 @@ class Disposition extends Base
 
     private static function countDispositions()
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_disposition');
         $tbl->addFieldConditional('active', 1);
-        $tbl->addField(new \Database\Expression('count('.$tbl->getField('id').')', 'count'));
+        $tbl->addField(new \phpws2\Database\Expression('count('.$tbl->getField('id').')', 'count'));
         $count = $db->selectColumn();
 
         return $count;
@@ -87,7 +87,7 @@ class Disposition extends Base
             $next_sort = self::countDispositions();
         }
 
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_disposition');
         $tbl->addFieldConditional('active', 1);
 

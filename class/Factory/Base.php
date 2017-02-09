@@ -51,10 +51,10 @@ class Base extends \ResourceFactory
 
     public static function getLastSorting($table_name)
     {
-        $db = \Database::getDB();
+        $db = \phpws2\Database::getDB();
         $tbl = $db->addTable($table_name, null, false);
         $col = $tbl->getField('sorting');
-        $exp = new \Database\Expression("max($col)", 'max');
+        $exp = new \phpws2\Database\Expression("max($col)", 'max');
         $db->addExpression($exp);
         $result = $db->selectOneRow();
         if (empty($result)) {
