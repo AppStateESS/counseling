@@ -6,7 +6,7 @@ namespace counseling\Resource;
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
-class Reason extends \Resource
+class Reason extends \phpws2\Resource
 {
     /**
      * One or two word description of reason.

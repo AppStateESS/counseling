@@ -37,7 +37,7 @@ class Report extends Base
         }
         $vars['date'] = strftime('%a, %B %e, %Y', $start_time);
         $vars['startTime'] = strftime('%Y%m%d', $start_time);
-        $template = new \Template($vars);
+        $template = new \phpws2\Template($vars);
         $template->setModuleTemplate('counseling', 'Admin/Report/daily.html');
 
         return $template->get();
@@ -249,7 +249,7 @@ class Report extends Base
         }
         $vars['date'] = strftime('%b %e, %Y', $start_of_week);
         $vars['startTime'] = strftime('%Y%m%d', $start_of_week);
-        $template = new \Template($vars);
+        $template = new \phpws2\Template($vars);
         $template->setModuleTemplate('counseling', 'Admin/Report/weekly.html');
 
         return $template->get();
@@ -304,7 +304,7 @@ class Report extends Base
         $vars['end_date'] = strftime('%b %e, %Y', $end_of_interval);
         $vars['startTime'] = strftime('%Y%m%d', $start_of_interval);
         $vars['endTime'] = strftime('%Y%m%d', $end_of_interval);
-        $template = new \Template($vars);
+        $template = new \phpws2\Template($vars);
         $template->setModuleTemplate('counseling', 'Admin/Report/interval.html');
 
         return $template->get();

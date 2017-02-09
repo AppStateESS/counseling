@@ -9,7 +9,7 @@ namespace counseling\Resource;
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
-class Clinician extends \Resource
+class Clinician extends \phpws2\Resource
 {
     /**
      * @var \Variable\StringVar

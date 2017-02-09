@@ -6,7 +6,7 @@ namespace counseling\Resource;
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
-class Visit extends \Resource
+class Visit extends \phpws2\Resource
 {
     /**
      * Time the visitor arrived.
