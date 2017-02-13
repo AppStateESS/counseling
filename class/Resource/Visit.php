@@ -93,16 +93,16 @@ class Visit extends \phpws2\Resource
     public function __construct()
     {
         parent::__construct();
-        $this->arrival_time = new \phpws2\Variable\DateTime(null, 'arrival_time');
+        $this->arrival_time = new \phpws2\Variable\DateTime(0, 'arrival_time');
         $this->complete_reason = new \phpws2\Variable\IntegerVar(0, 'complete_reason');
         $this->complete_staff_id = new \phpws2\Variable\IntegerVar(0, 'complete_staff_id');
         $this->complete_time = new \phpws2\Variable\DateTime(0, 'complete_time');
         $this->disposition_id = new \phpws2\Variable\IntegerVar(0, 'disposition_id');
         $this->has_emergency = new \phpws2\Variable\BooleanVar(null, 'has_emergency');
-        $this->reason_id = new \phpws2\Variable\IntegerVar(null, 'reason_id');
-        $this->visitor_id = new \phpws2\Variable\IntegerVar(null, 'visitor_id');
-        $this->clinician_id = new \phpws2\Variable\IntegerVar(null, 'clinician_id');
-        $this->category = new \phpws2\Variable\IntegerVar(null, 'category');
+        $this->reason_id = new \phpws2\Variable\IntegerVar(0, 'reason_id');
+        $this->visitor_id = new \phpws2\Variable\IntegerVar(0, 'visitor_id');
+        $this->clinician_id = new \phpws2\Variable\IntegerVar(0, 'clinician_id');
+        $this->category = new \phpws2\Variable\IntegerVar(0, 'category');
     }
 
     public function getArrivalTime()
