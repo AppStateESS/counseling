@@ -7,7 +7,7 @@
 
 function counseling_uninstall(&$content)
 {
-    $db = Database::newDB();
+    $db = \phpws2\Database::newDB();
 
     $db->buildTable('cc_clinician')->drop(true);
     $db->buildTable('cc_disposition')->drop(true);
