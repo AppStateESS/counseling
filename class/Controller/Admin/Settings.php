@@ -11,7 +11,7 @@ class Settings extends \counseling\Controller\Base
     public function get(\Canopy\Request $request)
     {
         if (!\Current_User::isDeity()) {
-            throw new \Http\NotAcceptableException($request);
+            throw new \phpws2\Http\NotAcceptableException($request);
         }
         $command = $this->routeCommand($request);
         if (empty($command)) {
@@ -24,7 +24,7 @@ class Settings extends \counseling\Controller\Base
     public function post(\Canopy\Request $request)
     {
         if (!\Current_User::isDeity()) {
-            throw new \Http\NotAcceptableException($request);
+            throw new \phpws2\Http\NotAcceptableException($request);
         }
         $command = $this->routeCommand($request);
         if (empty($command)) {
