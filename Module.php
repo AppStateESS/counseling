@@ -21,7 +21,7 @@ class Module extends \Canopy\Module
         $this->setProperName('Counseling Center Check-In');
     }
 
-    public function beforeRun(\Canopy\Request $request, \Controller $controller)
+    public function beforeRun(\Canopy\Request $request, \Canopy\Controller $controller)
     {
         $this->checkDefine();
     }
