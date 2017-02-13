@@ -25,7 +25,7 @@ class Waiting extends \counseling\Controller\Base
                 break;
         }
 
-        $view = new \View\JsonView($json);
+        $view = new \phpws2\View\JsonView($json);
 
         return $view;
     }
@@ -59,7 +59,7 @@ class Waiting extends \counseling\Controller\Base
                 throw new \Exception('Unknown post command');
         }
 
-        $view = new \View\JsonView(array('success' => true));
+        $view = new \phpws2\View\JsonView(array('success' => true));
         $response = new \Canopy\Response($view);
 
         return $response;

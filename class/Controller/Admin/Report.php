@@ -42,7 +42,7 @@ class Report extends \counseling\Controller\Base
                 Factory::intervalCSV($request);
                 break;
         }
-        $view = new \View\HtmlView($content);
+        $view = new \phpws2\View\HtmlView($content);
 
         return $view;
     }

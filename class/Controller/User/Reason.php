@@ -23,7 +23,7 @@ class Reason extends \counseling\Controller\Base
                 break;
         }
 
-        $view = new \View\JsonView($json);
+        $view = new \phpws2\View\JsonView($json);
 
         return $view;
     }

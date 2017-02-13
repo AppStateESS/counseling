@@ -49,7 +49,7 @@ class Dashboard extends \counseling\Controller\Base
 <div id="dashboard"></div>
 $react
 EOF;
-        $view = new \View\HtmlView($content);
+        $view = new \phpws2\View\HtmlView($content);
 
         return $view;
     }

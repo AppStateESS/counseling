@@ -28,7 +28,7 @@ class Disposition extends \counseling\Controller\Base
                 throw new \Exception('Unknown command');
         }
 
-        $view = new \View\JsonView($json);
+        $view = new \phpws2\View\JsonView($json);
 
         return $view;
     }
@@ -58,7 +58,7 @@ class Disposition extends \counseling\Controller\Base
                 throw new \Exception('Unknown Disposition command');
         }
 
-        $view = new \View\JsonView(array('success' => true));
+        $view = new \phpws2\View\JsonView(array('success' => true));
         $response = new \Canopy\Response($view);
 
         return $response;

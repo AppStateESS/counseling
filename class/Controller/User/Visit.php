@@ -23,7 +23,7 @@ class Visit extends \counseling\Controller\Base
                 $this->create();
                 break;
         }
-        $view = new \View\JsonView(array('success' => true));
+        $view = new \phpws2\View\JsonView(array('success' => true));
         $response = new \Canopy\Response($view);
 
         return $response;

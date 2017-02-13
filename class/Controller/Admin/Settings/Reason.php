@@ -28,7 +28,7 @@ class Reason extends \counseling\Controller\Base
                 throw new \Exception('Unknown command');
         }
 
-        $view = new \View\JsonView($json);
+        $view = new \phpws2\View\JsonView($json);
 
         return $view;
     }
@@ -88,7 +88,7 @@ class Reason extends \counseling\Controller\Base
 
         }
 
-        $view = new \View\JsonView(array('success' => true));
+        $view = new \phpws2\View\JsonView(array('success' => true));
         $response = new \Canopy\Response($view);
 
         return $response;
@@ -97,7 +97,7 @@ class Reason extends \counseling\Controller\Base
     public function getHtmlView($data, \Canopy\Request $request)
     {
         $content = 'Reasons HTML works';
-        $view = new \View\HtmlView($content);
+        $view = new \phpws2\View\HtmlView($content);
 
         return $view;
     }

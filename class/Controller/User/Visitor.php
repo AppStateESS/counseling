@@ -22,7 +22,7 @@ class Visitor extends \counseling\Controller\Base
             case 'updatePhone':
                 $this->updatePhone();
         }
-        $view = new \View\JsonView(array('success' => true));
+        $view = new \phpws2\View\JsonView(array('success' => true));
         $response = new \Canopy\Response($view);
 
         return $response;
