@@ -27,8 +27,12 @@ class Visit extends Base
         $tbl2->addField('color');
         $tbl->addFieldConditional('reason_id', $tbl2->getField('id'));
         if (!$get_appointments) {
-            $tbl->addFieldConditional('category', CC_CATEGORY_APPOINTMENT, '!=');
-            $tbl->addFieldConditional('category', CC_CATEGORY_GROUP, '!=');
+            $c1 = $db->createConditional($tbl->getField('has_emergency'), 1);
+            $c2 = $db->createConditional($tbl->getField('category'), CC_CATEGORY_APPOINTMENT, '!=');
+            $c3 = $db->createConditional($tbl->getField('category'), CC_CATEGORY_GROUP, '!=');
+            $c4 = $db->createConditional($c2, $c3, 'and');
+            $c5 = $db->createConditional($c1, $c4, 'or');
+            $db->addConditional($c5);
         }
         $visits = $db->select();
         if (empty($visits)) {
