@@ -589,7 +589,7 @@ var VisitorRow = React.createClass({
     render: function render() {
         var _className = 'btn btn-block btn-lg btn-' + this.props.buttonClass;
         var waiting = null;
-        if (this.props.category == '1') {
+        if (this.props.category == '1' || this.props.has_emergency == '1') {
             waiting = React.createElement(
                 'span',
                 null,

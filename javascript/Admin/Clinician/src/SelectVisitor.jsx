@@ -202,7 +202,7 @@ var VisitorRow = React.createClass({
     render: function() {
         let _className = 'btn btn-block btn-lg btn-' + this.props.buttonClass;
         let waiting = null;
-        if (this.props.category == '1') {
+        if (this.props.category == '1' || this.props.has_emergency == '1') {
             waiting = <span>&nbsp;- Waiting: {this.props.wait_time} min.</span>;
         }
         let preferredName = this.props.visitor.preferred_name !== null ? this.props.visitor.preferred_name : this.props.visitor.first_name;
