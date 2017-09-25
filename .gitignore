@@ -1,3 +1,6 @@
 /vendor/
 /conf/defines.php
 /node_modules/
+/javascript/build/
+/javascript/dev/
+/assets.json

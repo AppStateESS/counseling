@@ -2,6 +2,8 @@
 
 namespace counseling\Controller\Admin;
 
+use counseling\Factory\React;
+
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
  * @author Matthew McNaney <mcnaney at gmail dot com>
@@ -38,21 +40,17 @@ class Settings extends \counseling\Controller\Base
     {
         javascript('jquery_ui');
         \Layout::addStyle('counseling', 'Admin/style.css');
-        if (COUNSELING_REACT_DEV) {
-            $script[] = \counseling\Factory\React::development('Admin/Settings/', 'script.js');
-        } else {
-            $script[] = \counseling\Factory\React::production('Admin/Settings/', 'script.min.js');
-        }
-        $react = implode("\n", $script);
+        
+        $react = new React;
+        $script = $react->scriptView('Settings');
 
         \Layout::addStyle('counseling', 'Admin/Settings/style.css');
 
         $settings = \Current_User::isDeity() ? 'true' : 'false';
 
         $content = <<<EOF
-<script type="text/javascript">var settingsAllowed = $settings;</script>
-<div id="settings-dashboard"></div>
-$react
+<script type="text/javascript">const settingsAllowed = $settings;</script>
+$script
 EOF;
         $view = new \phpws2\View\HtmlView($content);
 

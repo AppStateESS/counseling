@@ -8,42 +8,52 @@ namespace counseling\Factory;
  */
 class React
 {
-    public static function development($directory, $filename)
-    {
-        self::requireReact(true, false);
 
-        return self::requireFiles($directory, $filename);
+    public function scriptView($view_name, $add_anchor = true)
+    {
+        static $vendor_included = false;
+        if (!$vendor_included) {
+            $script[] = $this->getScript('vendor');
+            $vendor_included = true;
+        }
+        $script[] = $this->getScript($view_name);
+        $react = implode("\n", $script);
+        if ($add_anchor) {
+            $content = <<<EOF
+<div id="$view_name"></div>
+$react
+EOF;
+            return $content;
+        } else {
+            return $react;
+        }
     }
 
-    public static function production($directory, $filename)
+    protected function getRootDirectory()
     {
-        self::requireReact(true, true);
-
-        return self::requireFiles($directory, $filename);
+        return PHPWS_SOURCE_HTTP . 'mod/counseling/';
     }
 
-    protected static function requireFiles($directory, $filename)
+    private function getScript($scriptName)
     {
-        $root_directory = PHPWS_SOURCE_HTTP.'mod/counseling/javascript/';
-        $script = "<script type='text/javascript' src='{$root_directory}{$directory}build/$filename'></script>";
-
+        $root_directory = $this->getRootDirectory() . 'javascript/';
+        if (COUNSELING_REACT_DEV) {
+            $path = "dev/$scriptName.js";
+        } else {
+            $path = $this->getAssetPath($scriptName);
+        }
+        $script = "<script type='text/javascript' src='{$root_directory}$path'></script>";
         return $script;
     }
 
-    public static function requireReact($addons = true, $minified = true)
+    private function getAssetPath($scriptName)
     {
-        $node_directory = PHPWS_SOURCE_HTTP.'mod/counseling/node_modules/';
-
-        $react_directory = $node_directory.'react/dist/';
-        $react_file = $react_directory.($addons ? 'react-with-addons' : 'react').($minified ? '.min.js' : '.js');
-
-        $react_dom_directory = $node_directory.'react-dom/dist/';
-        $react_dom_file = $react_dom_directory.'react-dom'.($minified ? '.min.js' : '.js');
-
-        $script_file = <<<EOF
-<script type="text/javascript" src="$react_file"></script>
-<script type="text/javascript" src="$react_dom_file"></script>
-EOF;
-        \Layout::addJSHeader($script_file, 'react_include');
+        $jsonRaw = file_get_contents($this->getRootDirectory() . 'assets.json');
+        $json = json_decode($jsonRaw, true);
+        if (!isset($json[$scriptName]['js'])) {
+            throw new \Exception('Script file not found among assets.');
+        }
+        return $json[$scriptName]['js'];
     }
+
 }

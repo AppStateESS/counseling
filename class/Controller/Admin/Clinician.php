@@ -102,7 +102,7 @@ EOF;
 
     private function getVisits()
     {
-        $visits = VisitFactory::getCurrentVisits(false);
+        $visits = VisitFactory::getCurrentVisits();
         if (empty($visits)) {
             return;
         }
