@@ -1,6 +1,7 @@
 <?php
 
 namespace counseling\Controller;
+use counseling\Factory\React;
 
 require_once PHPWS_SOURCE_DIR.'mod/counseling/conf/defines.php';
 
@@ -43,19 +44,10 @@ class User extends \phpws2\Http\Controller
 
     public function checkin()
     {
-        if (COUNSELING_REACT_DEV) {
-            $script[] = \counseling\Factory\React::development('User/Checkin/', 'script.js');
-        } else {
-            $script[] = \counseling\Factory\React::production('User/Checkin/', 'script.min.js');
-        }
-        $react = implode("\n", $script);
+        $react = new React;
+        $script = $react->scriptView('Settings');
         \Layout::addStyle('counseling', 'User/style.css');
 
-        $content = <<<EOF
-<div id="Login"></div>
-$react
-EOF;
-
-        return $content;
+        return $script;
     }
 }

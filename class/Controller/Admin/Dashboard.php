@@ -1,6 +1,7 @@
 <?php
 
 namespace counseling\Controller\Admin;
+use counseling\Factory\React;
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
@@ -30,12 +31,8 @@ class Dashboard extends \counseling\Controller\Base
 
     public function getHtmlView($data, \Canopy\Request $request)
     {
-        if (COUNSELING_REACT_DEV) {
-            $script[] = \counseling\Factory\React::development('Admin/FrontDesk/', 'script.js');
-        } else {
-            $script[] = \counseling\Factory\React::production('Admin/FrontDesk/', 'script.min.js');
-        }
-        $react = implode("\n", $script);
+        $react = new React;
+        $script = $react->scriptView('FrontDesk');
         \Layout::addStyle('counseling', 'Admin/Dashboard/style.css');
 
         $settings = \Current_User::isDeity() ? 'true' : 'false';
@@ -47,7 +44,7 @@ class Dashboard extends \counseling\Controller\Base
     var categoryIcons = $icons;
 </script>
 <div id="dashboard"></div>
-$react
+$script
 EOF;
         $view = new \phpws2\View\HtmlView($content);
 

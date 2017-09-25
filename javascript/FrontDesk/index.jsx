@@ -1,6 +1,6 @@
 'use strict'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import FrontDesk from './FrontDesk.jsx'
+import Dashboard from './Dashboard.jsx'
 
-ReactDOM.render(<FrontDesk/>, document.getElementById('FrontDesk'))
+ReactDOM.render(<Dashboard/>, document.getElementById('FrontDesk'))
