@@ -1,7 +1,7 @@
 0 info it worked if it ends with ok
 1 verbose cli [ '/usr/bin/nodejs', '/usr/bin/npm', 'run', 'dev' ]
-2 info using npm@3.10.3
-3 info using node@v6.4.0
+2 info using npm@3.10.10
+3 info using node@v6.9.4
 4 verbose stack Error: missing script: dev
 4 verbose stack     at run (/usr/lib/node_modules/npm/lib/run-script.js:151:19)
 4 verbose stack     at /usr/lib/node_modules/npm/lib/run-script.js:61:5
@@ -14,10 +14,10 @@
 4 verbose stack     at tryToString (fs.js:455:3)
 4 verbose stack     at FSReqWrap.readFileAfterClose [as oncomplete] (fs.js:442:12)
 5 verbose cwd /var/www/html/modules/counseling
-6 error Linux 3.19.0-32-generic
+6 error Linux 4.4.0-21-generic
 7 error argv "/usr/bin/nodejs" "/usr/bin/npm" "run" "dev"
-8 error node v6.4.0
-9 error npm  v3.10.3
+8 error node v6.9.4
+9 error npm  v3.10.10
 10 error missing script: dev
 11 error If you need help, you may report this error at:
 11 error     <https://github.com/npm/npm/issues>

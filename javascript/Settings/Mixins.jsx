@@ -56,32 +56,20 @@ export const TextInput = ({
   )
 }
 
-export class FormMixin extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
+TextInput.propTypes = {
+  label : PropTypes.string,
+  placeholder: PropTypes.string,
+  handleBlur : PropTypes.func,
+  required: PropTypes.bool,
+  handlePress: PropTypes.func,
+  handleChange: PropTypes.func,
+  inputId : PropTypes.string,
+  value : PropTypes.string,
+  tabIndex: PropTypes.number,
+}
 
-  componentDidMount() {
-    this.loadData()
-  }
-
-  closeForm() {
-    this.setState({showForm: false})
-  }
-
-  showForm() {
-    this.setState({showForm: true})
-  }
-
-  saveFailure() {
-    this.setState({saveFail: true})
-  }
-  render() {
-    return (
-      <div></div>
-    )
-  }
+TextInput.defaultProps = {
+  value: ''
 }
 
 export class sortable extends Component {
