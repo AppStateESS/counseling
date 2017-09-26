@@ -332,7 +332,7 @@ class Report extends Base
         $day = date('j', $start_time);
 
         $script = "<script type='text/javascript'>var defaultDate = {year:$year, month:$month, day:$day};var reportType = '$report_type';</script>"
-                . '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/counseling/javascript/Admin/Report/script.js"></script>';
+                . '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/counseling/javascript/Report/script.js"></script>';
         \Layout::addJSHeader($script);
         javascript('datepicker');
     }
@@ -351,7 +351,7 @@ class Report extends Base
         $endstr = strftime('%Y%m%d', $end_time);
         
         $script = "<script type='text/javascript'>var startStr= '$startstr';var endStr= '$endstr';var startDate = {year:$syear, month:$smonth, day:$sday};var endDate = {year:$eyear, month:$emonth, day:$eday};</script>"
-                . '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/counseling/javascript/Admin/Report/interval.js"></script>';
+                . '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/counseling/javascript/Report/interval.js"></script>';
         \Layout::addJSHeader($script);
         javascript('datepicker');
     }

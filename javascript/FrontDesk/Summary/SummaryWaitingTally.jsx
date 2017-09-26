@@ -48,13 +48,20 @@ const SummaryWaitingTally = (props) => {
   )
 }
 
+SummaryWaitingTally.defaultProps = {
+  emergency: 0,
+  walkin: 0,
+  appointment: 0,
+  other: 0,
+  showLabels: true,
+}
 
 SummaryWaitingTally.propTypes = {
   emergency: PropTypes.number,
   walkin: PropTypes.number,
   appointment: PropTypes.number,
   other: PropTypes.number,
-  showLabels: PropTypes.bool
+  showLabels: PropTypes.bool,
 }
 
 export default SummaryWaitingTally

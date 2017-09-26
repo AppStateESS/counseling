@@ -1,232 +1,255 @@
-var SelectVisitor = React.createClass({
-    getInitialState: function() {
-        return {waiting: null, emergencies: null, selectedVisit: null,};
-    },
+'use strict'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 
-    getDefaultProps: function() {
-        return {clinician: null};
-    },
+/* global $, categoryIcons */
 
-    componentDidMount: function() {
-        this.loadData();
-    },
+export default class SelectVisitor extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      waiting: null,
+      emergencies: null,
+      selectedVisit: null,
+    }
+    this.select = this.select.bind(this)
+    this.startConsultation = this.startConsultation.bind(this)
+    this.goBack = this.goBack.bind(this)
+    this.reset = this.reset.bind(this)
+  }
 
-    loadData: function() {
-        $.getJSON('counseling/Admin/Clinician', {command: 'visitorList'}).done(function(data) {
-            if (data !== null) {
-                this.setState({waiting: data.waiting, emergencies: data.emergencies,});
-            }
-        }.bind(this));
-    },
+  componentDidMount() {
+    this.loadData()
+  }
 
-    goBack: function() {
-        this.props.setStage('choose');
-    },
+  loadData() {
+    $.getJSON('counseling/Admin/Clinician', {command: 'visitorList'}).done(function (data) {
+      if (data !== null) {
+        this.setState({waiting: data.waiting, emergencies: data.emergencies,})
+      }
+    }.bind(this))
+  }
 
-    reset: function() {
-        this.setState({selectedVisit: null});
-    },
+  goBack() {
+    this.props.setStage('choose')
+  }
 
-    select: function(visit) {
-        this.setState({selectedVisit: visit});
-    },
+  reset() {
+    this.setState({selectedVisit: null})
+  }
 
-    startConsultation() {
-        var visitId = this.state.selectedVisit.id;
-        var clinicianId = this.props.clinician.id;
-        $.post('counseling/Admin/Clinician/', {
-            command: 'selectVisit',
-            visitId: visitId,
-            clinicianId: clinicianId,
-        }, null, 'json').done(function(data) {
-            this.reset();
-            this.props.setStage('reset');
-        }.bind(this));
-    },
+  select(visit) {
+    this.setState({selectedVisit: visit})
+  }
 
-    render: function() {
-        if (this.state.selectedVisit !== null) {
-            return <ConfirmVisitor
-                visit={this.state.selectedVisit}
-                goBack={this.reset}
-                startConsultation={this.startConsultation}/>;
-        }
+  startConsultation() {
+    var visitId = this.state.selectedVisit.id
+    var clinicianId = this.props.clinician.id
+    $.post('counseling/Admin/Clinician/', {
+      command: 'selectVisit',
+      visitId: visitId,
+      clinicianId: clinicianId,
+    }, null, 'json').done(function () {
+      this.reset()
+      this.props.setStage('reset')
+    }.bind(this))
+  }
 
-        var listing = null;
-        if (this.state.waiting === null && this.state.emergencies === null) {
-            listing = (
-                <div>
-                    <div className="alert alert-info">No visitors are currently waiting.</div>
-                    <div className="go-back text-center">
-                        <button className="btn btn-default btn-lg" onClick={this.goBack}>
-                            <i className="fa fa-undo"></i>
-                            Go Back</button>
-                    </div>
-                </div>
-            );
-        } else {
-            listing = <SelectVisitorListing
-                waiting={this.state.waiting}
-                emergencies={this.state.emergencies}
-                setStage={this.props.setStage}
-                clinician={this.props.clinician}
-                reload={this.loadData}
-                goBack={this.goBack}
-                select={this.select}/>;
-        }
-        return (
-            <div>
-                <h2>Hello {this.props.clinician.first_name}</h2>
-                <hr/> {listing}
-            </div>
-        );
-    },
-});
+  render() {
+    if (this.state.selectedVisit !== null) {
+      return <ConfirmVisitor
+        visit={this.state.selectedVisit}
+        goBack={this.reset}
+        startConsultation={this.startConsultation}/>
+    }
 
-var ConfirmVisitor = React.createClass({
-    getDefaultProps: function() {
-        return {visit: null};
-    },
+    var listing = null
+    if (this.state.waiting === null && this.state.emergencies === null) {
+      listing = (
+        <div>
+          <div className="alert alert-info">No visitors are currently waiting.</div>
+          <div className="go-back text-center">
+            <button className="btn btn-default btn-lg" onClick={this.goBack}>
+              <i className="fa fa-undo"></i>&nbsp;
+              Go Back</button>
+          </div>
+        </div>
+      )
+    } else {
+      listing = <SelectVisitorListing
+        waiting={this.state.waiting}
+        emergencies={this.state.emergencies}
+        setStage={this.props.setStage}
+        clinician={this.props.clinician}
+        reload={this.loadData}
+        goBack={this.goBack}
+        select={this.select}/>
+    }
+    return (
+      <div>
+        <h2>Hello {this.props.clinician.first_name}</h2>
+        <hr/> {listing}
+      </div>
+    )
+  }
+}
 
-    render: function() {
-        var visitor = this.props.visit.visitor;
-        return (
-            <div className="text-center well">
-                <h2>You have chosen to start a consulation with {visitor.preferred_name}
-                    {visitor.last_name}</h2>
-                <div className="go-back">
-                    <button
-                        className="btn btn-success btn-lg"
-                        style={{
-                        marginBottom: '1em'
-                    }}
-                        onClick={this.props.startConsultation}>
-                        <i className="fa fa-check"></i>
-                        Start consultation</button><br/>
-                    <button className="btn btn-default btn-3x" onClick={this.props.goBack}>
-                        <i className="fa fa-undo"></i>
-                        Start over</button>
-                </div>
-            </div>
-        );
-    },
-});
+SelectVisitor.propTypes = {
+  clinician: PropTypes.object,
+  setStage: PropTypes.func,
+}
 
-var SelectVisitorListing = React.createClass({
-    getDefaultProps: function() {
-        return {waiting: null, emergencies: null,};
-    },
+const ConfirmVisitor = (props) => {
+  const visitor = props.visit.visitor
+  return (
+    <div className="text-center well">
+      <h2>
+        {`You have chosen to start a consulation with ${visitor.preferred_name} \
+        ${visitor.last_name}`}
+      </h2>
+      <div className="go-back">
+        <button
+          className="btn btn-success btn-lg mb-1"
+          onClick={props.startConsultation}>
+          <i className="fa fa-check"></i>&nbsp;
+          Start consultation</button><br/>
+        <button className="btn btn-default btn-3x" onClick={props.goBack}>
+          <i className="fa fa-undo"></i>&nbsp;
+          Start over</button>
+      </div>
+    </div>
+  )
+}
 
-    render: function() {
-        return (
-            <div className='visitor-listing'>
-                <Emergencies
-                    list={this.props.emergencies}
-                    clinician={this.props.clinician}
-                    select={this.props.select}/>
-                <Waiting
-                    waiting={this.props.waiting}
-                    clinician={this.props.clinician}
-                    select={this.props.select}/>
-                <div className="go-back text-center">
-                    <button className="btn btn-default btn-lg" onClick={this.props.goBack}>
-                        <i className="fa fa-undo"></i>
-                        Go Back</button>
-                </div>
-            </div>
-        );
-    },
-});
+ConfirmVisitor.propTypes = {
+  visit : PropTypes.object,
+  startConsultation: PropTypes.func,
+  goBack: PropTypes.func,
+}
 
-var Emergencies = React.createClass({
-    getDefaultProps: function() {
-        return {list: null, clinician: null, select: null,};
-    },
+const SelectVisitorListing = (props) => {
+  return (
+    <div className="visitor-listing">
+      <Emergencies
+        list={props.emergencies}
+        clinician={props.clinician}
+        select={props.select}/>
+      <Waiting
+        waiting={props.waiting}
+        clinician={props.clinician}
+        select={props.select}/>
+      <div className="go-back text-center">
+        <button className="btn btn-default btn-lg" onClick={props.goBack}>
+          <i className="fa fa-undo"></i>&nbsp;
+          Go Back</button>
+      </div>
+    </div>
+  )
+}
 
-    render: function() {
-        if (this.props.list === null || this.props.list.length === 0) {
-            return null;
-        } else {
-            var visits = this.props.list.map(function(value, key) {
-                return (<VisitorRow
-                    key={value.id}
-                    {...value}
-                    clinician={this.props.clinician}
-                    buttonClass="danger"
-                    select={this.props.select.bind(null, value)}/>);
-            }.bind(this));
+SelectVisitorListing.propTypes = {
+  emergencies: PropTypes.array,
+  select: PropTypes.func,
+  waiting: PropTypes.array,
+  clinician: PropTypes.object,
+  goBack: PropTypes.func,
+}
 
-            return (
-                <div>
-                    <h3>Emergencies</h3>
-                    {visits}
-                </div>
-            );
-        }
-    },
-});
+const Emergencies = (props) => {
+  if (props.list === null || props.list.length === 0) {
+    return null
+  } else {
+    let visits = props.list.map(function (value, key) {
+      return (<VisitorRow
+        key={key}
+        {...value}
+        clinician={props.clinician}
+        buttonClass="danger"
+        select={props.select.bind(null, value)}/>)
+    }.bind(this))
 
-var Waiting = React.createClass({
-    getDefaultProps: function() {
-        return {waiting: null, clinician: null,};
-    },
+    return (
+      <div>
+        <h3>Emergencies</h3>
+        {visits}
+      </div>
+    )
+  }
+}
 
-    render: function() {
-        let visits = <div>No walk-ins waiting</div>;
-        if (this.props.waiting !== null && this.props.waiting.length !== 0) {
-            visits = this.props.waiting.map(function(value, key) {
-                return (<VisitorRow
-                    key={value.id}
-                    {...value}
-                    clinician={this.props.clinician}
-                    buttonClass={value.color}
-                    select={this.props.select.bind(null, value)}/>);
-            }.bind(this));
-        }
+Emergencies.propTypes = {
+  list: PropTypes.array,
+  clinician: PropTypes.object,
+  select: PropTypes.func,
+}
 
-        return (
-            <div>
-                <h3>Waiting</h3>
-                {visits}
-            </div>
-        );
+const Waiting = (props) => {
+  let visits = <div>No walk-ins waiting</div>
+  if (props.waiting !== null && props.waiting.length !== 0) {
+    visits = props.waiting.map(function (value, key) {
+      return (<VisitorRow
+        key={key}
+        {...value}
+        clinician={props.clinician}
+        buttonClass={value.color}
+        select={props.select.bind(null, value)}/>)
+    }.bind(this))
+  }
 
-    },
-});
+  return (
+    <div>
+      <h3>Waiting</h3>
+      {visits}
+    </div>
+  )
+}
 
-var VisitorRow = React.createClass({
-    getDefaultProps: function() {
-        return {visitor: null, buttonClass: 'success', clinician: null, select: null,};
-    },
+Waiting.propTypes = {
+  waiting: PropTypes.array,
+  clinician: PropTypes.object,
+  select: PropTypes.func,
+}
 
-    render: function() {
-        let _className = 'btn btn-block btn-lg btn-' + this.props.buttonClass;
-        let waiting = null;
-        if (this.props.category == '1' || this.props.has_emergency == '1') {
-            waiting = <span>&nbsp;- Waiting: {this.props.wait_time} min.</span>;
-        }
-        let preferredName = this.props.visitor.preferred_name !== null ? this.props.visitor.preferred_name : this.props.visitor.first_name;
-        return (
-            <button className={_className} onClick={this.props.select}>
-                <CategoryIcon category={this.props.category} title={this.props.reason_title}/>
-                &nbsp;<strong>{preferredName} {this.props.visitor.last_name}</strong>
-                {waiting}
-            </button>
-        );
-    },
-});
+const VisitorRow = (props) => {
+  let _className = 'btn btn-block btn-lg btn-' + props.buttonClass
+  let waiting = null
+  if (props.category == '1' || props.has_emergency == '1') {
+    waiting = <span>&nbsp;- Waiting: {props.wait_time}
+      min.</span>
+  }
+  let preferredName = props.visitor.preferred_name !== null
+    ? props.visitor.preferred_name
+    : props.visitor.first_name
+  return (
+    <button className={_className} onClick={props.select}>
+      <CategoryIcon category={props.category} title={props.reason_title}/>
+      &nbsp;<strong>{preferredName} {props.visitor.last_name}</strong>
+      {waiting}
+    </button>
+  )
+}
 
-var CategoryIcon = React.createClass({
-    getDefaultProps: function() {
-        return {category: 0, title: null,};
-    },
+VisitorRow.propTypes = {
+  buttonClass: PropTypes.string,
+  has_emergency: PropTypes.string,
+  visitor: PropTypes.object,
+  select: PropTypes.func,
+  reason_title: PropTypes.string,
+  category: PropTypes.string,
+  wait_time: PropTypes.number,
+}
 
-    render: function() {
-        var icon = null;
-        var _className = 'category fa fa-lg ' + categoryIcons[this.props.category];
-        icon = <i className={_className} title={this.props.title}></i>;
-        return (
-            <span>{icon}</span>
-        );
-    },
-});
+
+const CategoryIcon = (props) => {
+
+  const _className = 'category fa fa-lg ' + categoryIcons[props.category]
+  const icon = <i className={_className} title={props.title}></i>
+  return (
+    <span>{icon}</span>
+  )
+}
+
+CategoryIcon.propTypes = {
+  title: PropTypes.string,
+  category: PropTypes.string,
+}

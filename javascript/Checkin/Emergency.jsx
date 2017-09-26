@@ -1,14 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const Emergency = (props) => {
+const Emergency = ({update}) => {
 
   const hasEmergency = (answer) => {
-    props.update(answer)
+    update(answer)
   }
 
-  var content = (
-    <div>
+  return (
+    <div className="checkin-box">
       <div className="text-center">
         <p className="title">A few quick questions</p>
         <p className="subtitle">Are you currently experiencing an emergency?</p>
@@ -25,19 +25,19 @@ const Emergency = (props) => {
           <li>other similar events</li>
         </ul>
         <button
-          style={{
-          marginRight: '1em',
-          width: '100px',
-        }}
-          className="btn btn-default btn-lg"
-          onClick={this.hasEmergency.bind(this, true)}>Yes</button>
+          className="btn btn-default btn-lg mr-1 emergency"
+          onClick={hasEmergency.bind(this, true)}>Yes</button>
         <button
-          style={{
-          width: '100px'
-        }}
-          onClick={this.hasEmergency.bind(this, false)}className="btn btn-default btn-lg" >No</button>
+          onClick={hasEmergency.bind(this, false)}
+          className="btn btn-default btn-lg emergency">No</button>
       </div>
       <div className="clearfix"></div>
     </div>
-  return (<Box content={content}/>)
+  )
 }
+
+Emergency.propTypes = {
+  update: PropTypes.func,
+}
+
+export default Emergency

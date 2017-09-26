@@ -4,7 +4,7 @@ import Waiting from './Waiting'
 import Appointment from './Appointment'
 import Summary from './Summary'
 import CurrentlySeen from './CurrentlySeen'
-import './style.css'
+import '../css/style.css'
 
 /* global $ */
 
@@ -22,6 +22,7 @@ export default class Dashboard extends Component {
       currentlySeen: null,
       time: null,
     }
+    this.loadData = this.loadData.bind(this)
   }
 
   componentDidMount() {

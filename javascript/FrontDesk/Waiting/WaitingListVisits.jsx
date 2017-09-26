@@ -12,14 +12,14 @@ const WaitingListVisits = ({visitNumber}) => {
 
     case '2':
     case '3':
-      return <span className="label label-primary">{this.props.visitNumber}&nbsp; visits</span>
+      return <span className="label label-primary">{visitNumber}&nbsp; visits</span>
 
     case '4':
     case '5':
-      return <span className="label label-warning">{this.props.visitNumber}&nbsp; visits</span>
+      return <span className="label label-warning">{visitNumber}&nbsp; visits</span>
 
     default:
-      return <span className="label label-danger">{this.props.visitNumber}&nbsp; visits</span>
+      return <span className="label label-danger">{visitNumber}&nbsp; visits</span>
   }
 }
 

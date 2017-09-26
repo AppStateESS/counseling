@@ -45,7 +45,7 @@ class User extends \phpws2\Http\Controller
     public function checkin()
     {
         $react = new React;
-        $script = $react->scriptView('Settings');
+        $script = $react->scriptView('Checkin');
         \Layout::addStyle('counseling', 'User/style.css');
 
         return $script;

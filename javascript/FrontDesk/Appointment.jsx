@@ -74,13 +74,13 @@ const AppointmentRow = (props) => {
 }
 
 AppointmentRow.propTypes = {
-  id: PropTypes.number,
-  category: PropTypes.number,
+  id: PropTypes.string,
+  category: PropTypes.string,
   color: PropTypes.string,
   reason_title: PropTypes.string,
-  total_visits: PropTypes.number,
+  total_visits: PropTypes.string,
   visitor: PropTypes.object,
-  visitor_id: PropTypes.number,
+  visitor_id: PropTypes.string,
   reload: PropTypes.func,
   count: PropTypes.number
 }
@@ -122,7 +122,7 @@ const AppointmentAction = (props) => {
   const getOptions = () => {
     var options = []
     options.push({
-      label: <div className="text-success">
+      label: <div className="text-success pointer">
         <strong>
           <i className="fa fa-thumbs-o-up"></i>&nbsp; Send back</strong>
       </div>,
@@ -131,19 +131,19 @@ const AppointmentAction = (props) => {
     }, {
       divider: true
     }, {
-      label: <div>
+      label: <div className="pointer">
         <i className="fa fa-external-link"></i>&nbsp; Had to leave</div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 2)
     }, {
-      label: <div>
+      label: <div className="pointer">
         <i className="fa fa-eye-slash"></i>&nbsp; Missing</div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 3)
     }, {
       divider: true
     }, {
-      label: <div className="text-danger">
+      label: <div className="text-danger pointer">
         <i className="fa fa-trash-o"></i>&nbsp; Remove</div>,
       visitId: props.visitId,
       handleClick: remove

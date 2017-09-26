@@ -1,148 +1,160 @@
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
-var swipeTimeout = null;
+'use strict'
+import React from 'react'
+import PropTypes from 'prop-types'
+import ErrorTimeout from './ErrorTimeout'
+//import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-var Swipe = React.createClass({
-    mixins: [errorTimeout],
+/* global $ */
 
-    getInitialState: function() {
-        return {
-            error : 0,
-            visitor : '',
-        };
-    },
+var swipeTimeout = null
 
-    getDefaultProps: function() {
-        return {
-            handleClick : null
-        };
-    },
+class Swipe extends ErrorTimeout {
+  constructor(props) {
+    super(props)
+    this.state = {
+      error: 0,
+      visitor: ''
+    }
+    this.handleChange = this.handleChange.bind(this)
+    this.logInVisitor = this.logInVisitor.bind(this)
+    this.submitVisitor = this.submitVisitor.bind(this)
+  }
 
-    loginFailure : function() {
-        this.setState({
-            visitor : '',
-            error : 1
-        });
-        this.timedReset();
-    },
+  loginFailure() {
+    this.setState({visitor: '', error: 1,})
+    this.timedReset()
+  }
 
-    alreadyVisiting : function() {
-        this.setState({
-            visitor : '',
-            error : 2
-        });
-    },
+  alreadyVisiting() {
+    this.setState({visitor: '', error: 2,})
+  }
 
-    timedReset : function() {
-        swipeTimeout = setTimeout(function(){
-            this.resetSwipe();
-        }.bind(this), 4000);
-    },
+  timedReset() {
+    swipeTimeout = setTimeout(function () {
+      this.resetSwipe()
+    }.bind(this), 4000)
+  }
 
-    resetSwipe : function() {
-        clearTimeout(swipeTimeout);
-        this.setState({
-            error : 0,
-            visitor : null,
-        });
-    },
+  resetSwipe() {
+    clearTimeout(swipeTimeout)
+    this.setState({error: 0, visitor: ''})
+  }
 
-    logInVisitor : function() {
-        var visitor = this.state.visitor;
-        if (visitor && visitor.length > 3) {
-            if (visitor.charAt(0) === ';' && visitor.charAt(10) === '=') {
-                visitor = visitor.slice(1,10);
-            }
+  logInVisitor() {
+    var visitor = this.state.visitor
+    if (visitor && visitor.length > 3) {
+      if (visitor.charAt(0) === ';' && visitor.charAt(10) === '=') {
+        visitor = visitor.slice(1, 10)
+      }
 
-            $.getJSON('counseling/User/Checkin', {
-            	command : 'loginVisitor',
-                bannerId : visitor
-            })
-            .done(function(data){
-                if(data.waiting !== undefined) {
-                    this.alreadyVisiting();
-                    this.timedReset();
-                } else if (data.visitor === null) {
-                    this.loginFailure();
-                } else {
-                    this.props.update(data);
-                }
-            }.bind(this))
-            .fail(function() {
-                this.loginFailure();
-            }.bind(this));
+      $.getJSON('counseling/User/Checkin', {
+        command: 'loginVisitor',
+        bannerId: visitor,
+      }).done(function (data) {
+        if (data.waiting !== undefined) {
+          this.alreadyVisiting()
+          this.timedReset()
+        } else if (data.visitor === null) {
+          this.loginFailure()
         } else {
-            this.loginFailure();
+          this.props.update(data)
         }
-    },
+      }.bind(this)).fail(function () {
+        this.loginFailure()
+      }.bind(this))
+    } else {
+      this.loginFailure()
+    }
+  }
 
-    handleChange : function(e) {
-        var character = e.target.value;
-        this.setState({
-            visitor : character
-        });
-    },
+  handleChange(e) {
+    var character = e.target.value
+    this.setState({visitor: character})
+  }
 
-    submitVisitor : function(e)
-    {
-        e.preventDefault();
-        this.logInVisitor();
-    },
+  submitVisitor(e)
+  {
+    e.preventDefault()
+    this.logInVisitor()
+  }
 
-    focusSwiper : function() {
-        $('#swiper').focus();
-    },
+  focusSwiper() {
+    $('#swiper').focus()
+  }
 
-    componentDidUpdate: function(prevProps, prevState) {
-        this.focusSwiper();
-    },
+  componentDidUpdate() {
+    this.focusSwiper()
+  }
 
-    componentDidMount: function(prevProps, prevState) {
-        this.focusSwiper();
-    },
+  componentDidMount() {
+    this.focusSwiper()
+  }
 
-    render: function() {
-        var field = null;
-        var button = null;
+  render() {
+    var field = null
+    var button = null
 
-        if (this.state.error === 1) {
-            field = (
-                <div className="text-center">
-                    <div className="alert alert-danger alert-dismissible" role="alert" ref="errorAlert">
-                        Account not found. Please try again or see the front desk.
-                    </div>
-                    <button className="btn btn-default" type="button" onClick={this.resetSwipe}><i className="fa fa-repeat"></i> Try again</button>
-                </div>
-            );
-        } else if (this.state.error === 2) {
-            field = (
-                <div className="alert alert-warning alert-dismissible" role="alert" ref="errorAlert">
-                    <button className="close" type="button" onClick={this.resetSwipe}><i className="fa fa-times"></i></button>
-                    You are already logged in. Please visit the front desk if you have a question or concern.
-                </div>
-            );
-        } else {
-            field = <input id="swiper" type="text" placeholder="Banner ID" onChange={this.handleChange}
-                 className="form-control" value={this.state.visitor} />;
-            button = <button className="continue pull-right btn btn-default" onClick={this.logInVisitor}>Continue <i className="fa fa-chevron-right fa-sm"></i></button>;
-        }
-
-        var content = (
-            <div>
-                <div className="text-center">
-                    <p className="title">Welcome! Please Check-in</p>
-                    <p className="subtitle">Swipe your AppCard to get started</p>
-                    <p>Don't have your AppCard?<br />Enter your Banner ID number instead.</p>
-                    <form onSubmit={this.submitVisitor}>
-                    {field}
-                    </form>
-                </div>
-                {button}
-                <div className="clearfix"></div>
-            </div>
-        );
-        return (
-            <Box content={content}/>
-        );
+    if (this.state.error === 1) {
+      field = (
+        <div className="text-center">
+          <div
+            className="alert alert-danger alert-dismissible"
+            role="alert"
+            ref="errorAlert">
+            Account not found. Please try again or see the front desk.
+          </div>
+          <button className="btn btn-default" type="button" onClick={this.resetSwipe}>
+            <i className="fa fa-repeat"></i>&nbsp;
+            Try again</button>
+        </div>
+      )
+    } else if (this.state.error === 2) {
+      field = (
+        <div
+          className="alert alert-warning alert-dismissible"
+          role="alert"
+          ref="errorAlert">
+          <button className="close" type="button" onClick={this.resetSwipe}>
+            <i className="fa fa-times"></i>
+          </button>
+          You are already logged in. Please visit the front desk if you have a question or
+          concern.
+        </div>
+      )
+    } else {
+      field = <input
+        id="swiper"
+        type="text"
+        placeholder="Banner ID"
+        onChange={this.handleChange}
+        className="form-control"
+        value={this.state.visitor}/>
+      button = <button
+        className="continue pull-right btn btn-default"
+        onClick={this.logInVisitor}>Continue&nbsp;
+        <i className="fa fa-chevron-right fa-sm"></i>
+      </button>
     }
 
-});
+    return (
+      <div className="checkin-box">
+        <div className="text-center">
+          <p className="title">Welcome! Please Check-in</p>
+          <p className="subtitle">Swipe your AppCard to get started</p>
+          <p>Don't have your AppCard?<br/>Enter your Banner ID number instead.</p>
+          <form onSubmit={this.submitVisitor}>
+            {field}
+          </form>
+        </div>
+        {button}
+        <div className="clearfix"></div>
+      </div>
+    )
+  }
+}
+
+Swipe.propTypes = {
+  update: PropTypes.func,
+}
+
+export default Swipe

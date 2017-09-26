@@ -4,6 +4,7 @@ namespace counseling\Controller\Admin;
 
 use counseling\Factory\Clinician as Factory;
 use counseling\Factory\Visit as VisitFactory;
+use counseling\Factory\React;
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
@@ -17,18 +18,12 @@ class Clinician extends \counseling\Controller\Base
 
         $icons = json_encode(\counseling\Factory\Base::categoryIcons());
 
-        if (COUNSELING_REACT_DEV) {
-            $script[] = \counseling\Factory\React::development('Admin/Clinician/', 'script.js');
-        } else {
-            $script[] = \counseling\Factory\React::production('Admin/Clinician/', 'script.min.js');
-        }
-
-        $react = implode("\n", $script);
+        $reactFactory = new React;
+        $react = $reactFactory->scriptView('Clinician');
         $content = <<<EOF
 <script type="text/javascript">
     var categoryIcons = $icons;
 </script>
-<div id="clinician-dashboard"></div>
 $react
 EOF;
         $view = new \phpws2\View\HtmlView($content);

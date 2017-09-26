@@ -9,12 +9,12 @@ export default class Summary extends Component {
     super(props)
     this.state = {
       error: null,
-      errorMessage: null
+      errorMessage: null,
     }
   }
 
   serverError() {
-    this.setState({error: true, errorMessage: 'Could not retrieve server data'})
+    this.setState({error: true, errorMessage: 'Could not retrieve server data',})
   }
 
   render() {
@@ -28,7 +28,7 @@ export default class Summary extends Component {
         emergencies: 0,
         walkin: 0,
         appointment: 0,
-        other: 0
+        other: 0,
       }
       totalTally = currentTally
     }
@@ -78,7 +78,7 @@ export default class Summary extends Component {
 
 Summary.propTypes = {
   data: PropTypes.object,
-  time: PropTypes.string
+  time: PropTypes.string,
 }
 
 const SummaryTotalWaiting = ({totalWaiting}) => {
@@ -88,6 +88,10 @@ const SummaryTotalWaiting = ({totalWaiting}) => {
       <div>Waiting</div>
     </div>
   )
+}
+
+SummaryTotalWaiting.defaultProps = {
+  totalWaiting: 0
 }
 
 SummaryTotalWaiting.propTypes = {
@@ -104,6 +108,10 @@ const SummaryEstimatedWait = ({estimatedWait}) => {
       <div>Est. Wait</div>
     </div>
   )
+}
+
+SummaryEstimatedWait.defaultProps = {
+  estimatedWait: 0
 }
 
 SummaryEstimatedWait.propTypes = {

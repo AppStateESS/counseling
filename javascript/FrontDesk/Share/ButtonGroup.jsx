@@ -22,19 +22,18 @@ const ButtonGroup = (props) => {
         {props.label}
         <span className="caret"></span>
       </button>
-      <ul className="dropdown-menu">
+      <ul className="dropdown-menu dropdown-menu-right">
         {options}
       </ul>
     </div>
   )
 }
 
-/*
 ButtonGroup.propTypes = {
   options: PropTypes.array,
   label :PropTypes.func,
 }
-*/
+
 ButtonGroup.defaultProps = {
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.object,]),
   options: [

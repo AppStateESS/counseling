@@ -1,0 +1,19 @@
+.large {
+  fontSize : '200px'
+}
+
+.mr-1 {
+  margin-right : 1em;
+}
+
+button.emergency {
+  width : 100px;
+}
+
+.pointer:hover {
+  cursor : pointer;
+}
+
+.mb-1 {
+  margin-bottom: 1em;
+}

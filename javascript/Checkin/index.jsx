@@ -1,6 +1,7 @@
 'use strict'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Checkin from './Checkin.jsx'
+import Login from './Login.jsx'
+import '../css/style.css'
 
-ReactDOM.render(<Checkin/>, document.getElementById('Checkin'))
+ReactDOM.render(<Login/>, document.getElementById('Checkin'))

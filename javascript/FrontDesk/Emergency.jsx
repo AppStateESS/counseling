@@ -6,7 +6,7 @@ import VisitorName from './Share/VisitorName'
 import ClipboardInput from './Share/ClipboardInput'
 
 const Emergency = (props) => {
-  if (props.list === null) {
+  if (props.list === null || props.list === undefined) {
     return null
   }
 

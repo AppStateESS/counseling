@@ -105,7 +105,7 @@ export default class CurrentlySeen extends Component {
       <div>
         {modal}
         <div className="alert alert-info">
-          <strong>Currently seen:&nbsp
+          <strong>Currently seen:&nbsp;
           </strong>
           {seen}
         </div>

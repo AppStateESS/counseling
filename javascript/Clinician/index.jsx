@@ -1,6 +1,6 @@
 'use strict'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Clinician from './Clinician.jsx'
+import ClinicianDashboard from './Dashboard.jsx'
 
-ReactDOM.render(<Clinician/>, document.getElementById('Clinician'))
+ReactDOM.render(<ClinicianDashboard/>, document.getElementById('Clinician'))
