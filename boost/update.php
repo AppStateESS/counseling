@@ -48,11 +48,21 @@ EOF;
             $active->setDefault(1);
             $tbl2->create();
             $content[] = <<<EOF
-            <pre>2.1.0
+            <pre>2.2.0
 --------------
-+ Adding 'category' flag to visits, handles wait status now.
++ Added location
++ Removed grunt
 </pre>
 EOF;
+        case version_compare($version, '2.2.1', '<'):
+            $content[] = <<<EOF
+            <pre>2.2.1
+--------------
++ Added travis
+</pre>
+EOF;
+            
+            
     }
 
     return true;
