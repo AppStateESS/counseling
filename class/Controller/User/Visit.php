@@ -33,6 +33,7 @@ class Visit extends \counseling\Controller\Base
     {
         $visitor_id = Factory::pullPostInteger('visitorId');
         $reason_id = Factory::pullPostInteger('reasonId');
+        $location_id = Factory::pullPostInteger('locationId');
         $emergency = Factory::pullPostCheck('emergency');
 
         $reason = \counseling\Factory\Reason::build($reason_id);
@@ -41,6 +42,7 @@ class Visit extends \counseling\Controller\Base
         $visit->stampArrivalTime();
         $visit->setCategory($reason->getCategory());
         $visit->setHasEmergency($emergency);
+        $visit->setLocation($location_id);
         $visit->setReasonId($reason_id);
         $visit->setVisitorId($visitor_id);
         Factory::saveResource($visit);

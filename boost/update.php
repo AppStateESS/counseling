@@ -34,6 +34,25 @@ EOF;
 + Adding 'category' flag to visits, handles wait status now.
 </pre>
 EOF;
+        case version_compare($version, '2.2.0', '<'):
+            $db = \phpws2\Database::getDB();
+            $tbl = $db->addTable('cc_visit');
+            $dt = new \phpws2\Database\Datatype\Integer($tbl, 'location_id');
+            $dt->setDefault(0);
+            $dt->add();
+            $db->clearTables();
+            $tbl2 = $db->buildTable('cc_location');
+            $tbl2->addPrimaryIndexId();
+            $tbl2->addDataType('title', 'varchar');
+            $active = $tbl2->addDataType('active', 'smallint');
+            $active->setDefault(1);
+            $tbl2->create();
+            $content[] = <<<EOF
+            <pre>2.1.0
+--------------
++ Adding 'category' flag to visits, handles wait status now.
+</pre>
+EOF;
     }
 
     return true;

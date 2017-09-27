@@ -11,7 +11,7 @@
 }
 
 .editItem:hover {
-    cursor : pointer;
+    cursor : text;
     border-color : #d6d6d6;
 }
 

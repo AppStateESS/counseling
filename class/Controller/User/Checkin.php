@@ -56,4 +56,10 @@ class Checkin extends \counseling\Controller\Base
             return $jsonVisitor;
         }
     }
+    
+    public function post(\Canopy\Request $request) {
+        $session = \phpws2\Session::getInstance();
+        $session->defaultCounselingLocation = $request->pullPostInteger('location');
+        \Canopy\Server::forward('./');
+    }
 }

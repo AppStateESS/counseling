@@ -2,6 +2,7 @@ var setup = require('./exports.js')
 var webpack = require('webpack')
 var WebpackStripLoader = require('strip-loader')
 var Promise = require('es6-promise').polyfill()
+var AssetsPlugin = require('assets-webpack-plugin');
 
 module.exports = {
   entry: setup.entry,

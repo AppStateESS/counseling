@@ -40,7 +40,7 @@ EOF;
         if (COUNSELING_REACT_DEV) {
             $path = "dev/$scriptName.js";
         } else {
-            $path = $this->getAssetPath($scriptName);
+            $path = 'build/' . $this->getAssetPath($scriptName);
         }
         $script = "<script type='text/javascript' src='{$root_directory}$path'></script>";
         return $script;
@@ -48,7 +48,7 @@ EOF;
 
     private function getAssetPath($scriptName)
     {
-        $jsonRaw = file_get_contents($this->getRootDirectory() . 'assets.json');
+        $jsonRaw = file_get_contents(PHPWS_SOURCE_DIR . 'mod/counseling/assets.json');
         $json = json_decode($jsonRaw, true);
         if (!isset($json[$scriptName]['js'])) {
             throw new \Exception('Script file not found among assets.');

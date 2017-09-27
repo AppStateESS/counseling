@@ -29,6 +29,7 @@ const Appointment = (props) => {
             <th>&nbsp;</th>
             <th>Name</th>
             <th>Banner id</th>
+            <th>Location</th>
             <th>Visits</th>
             <th>Status</th>
             <th>&nbsp;</th>
@@ -61,6 +62,8 @@ const AppointmentRow = (props) => {
       <td>
         <ClipboardInput bannerId={props.visitor.banner_id}/>
       </td>
+      <td>{props.location}
+      </td>
       <td><WaitingListVisits visitNumber={props.total_visits}/></td>
       <td>
         <WaitingListStatus
@@ -82,6 +85,7 @@ AppointmentRow.propTypes = {
   visitor: PropTypes.object,
   visitor_id: PropTypes.string,
   reload: PropTypes.func,
+  location: PropTypes.string,
   count: PropTypes.number
 }
 

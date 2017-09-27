@@ -73,19 +73,19 @@ export default class DispositionList extends sortable {
     let rows = null
     let failure = null
     if (this.props.dispositions !== null) {
-      rows = this.props.dispositions.map(function (value, key) {
-        if (this.state.editRow === key) {
+      rows = this.props.dispositions.map(function (value) {
+        if (this.state.editRow === value.id) {
           return <DispositionEditRow
-            key={key}
+            key={value.id}
             {...value}
             cancel={this.cancel}
             reload={this.props.reload}
             fail={this.fail}/>
         } else {
           return <DispositionListRow
-            key={key}
+            key={value.id}
             {...value}
-            edit={this.edit.bind(null, key)}
+            edit={this.edit.bind(null, value.id)}
             delete={this.delete}/>
         }
       }.bind(this))

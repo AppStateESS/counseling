@@ -5,6 +5,7 @@ namespace counseling\Controller\Admin\Dashboard;
 use counseling\Factory\Visitor as VisitorFactory;
 use counseling\Factory\Visit as VisitFactory;
 use counseling\Factory\Summary as SummaryFactory;
+use counseling\Factory\Location as LocationFactory;
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
@@ -78,6 +79,10 @@ class Waiting extends \counseling\Controller\Base
     private function getLists()
     {
         $waiting = VisitFactory::getCurrentVisits();
+        $locations = LocationFactory::listLocations();
+        foreach ($locations as $loc) {
+            $indexedLocations[$loc['id']] = $loc['title'];
+        }
 
         if (empty($waiting)) {
             $json['emergencyList'] = null;
@@ -96,7 +101,7 @@ class Waiting extends \counseling\Controller\Base
             $arrivals = array();
             foreach ($waiting as $visit) {
                 $id = $visit['id'];
-
+                $visit['location'] = $indexedLocations[$visit['location_id']];
                 if ($visit['has_emergency']) {
                     ++$count;
                     $json['emergencies'][] = $visit;

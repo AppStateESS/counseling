@@ -73,8 +73,8 @@ export default class ClinicianList extends sortable {
     var failure = null
 
     if (this.props.clinicians !== null) {
-      rows = this.props.clinicians.map(function (value, key) {
-        if (this.state.editRow === key) {
+      rows = this.props.clinicians.map(function (value) {
+        if (this.state.editRow === value.id) {
           return <ClinicianEditRow
             key={value.id}
             {...value}
@@ -85,7 +85,7 @@ export default class ClinicianList extends sortable {
           return <ClinicianListRow
             key={value.id}
             {...value}
-            edit={this.edit.bind(null, key)}
+            edit={this.edit.bind(null, value.id)}
             deleteClinician={this.deleteClinician}/>
         }
       }.bind(this))

@@ -18,6 +18,7 @@ class Swipe extends ErrorTimeout {
     this.handleChange = this.handleChange.bind(this)
     this.logInVisitor = this.logInVisitor.bind(this)
     this.submitVisitor = this.submitVisitor.bind(this)
+    this.resetSwipe = this.resetSwipe.bind(this)
   }
 
   loginFailure() {

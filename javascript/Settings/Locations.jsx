@@ -1,38 +1,44 @@
 'use strict'
 import React, {Component} from 'react'
-import DispositionList from './Dispositions/DispositionList'
-import DispositionForm from './Dispositions/DispositionForm'
+import LocationForm from './Location/LocationForm'
+import LocationList from './Location/LocationList'
 
 /* global $ */
 
-export default class Dispositions extends Component {
+export default class Locations extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      dispositions: null,
+      showForm: false,
+      allowAdd: true,
+      locations: [],
       saveFail: false,
       currentEdit: null,
-      showForm: false,
-      currentDisposition: null
     }
+    this.loadData = this.loadData.bind(this)
     this.showForm = this.showForm.bind(this)
     this.closeForm = this.closeForm.bind(this)
-    this.loadData = this.loadData.bind(this)
-    this.setDispositions = this.setDispositions.bind(this)
+    this.saveFailure = this.saveFailure.bind(this)
+    this.setCurrentEdit = this.setCurrentEdit.bind(this)
+  }
+
+  loadData() {
+    $.getJSON('./counseling/Admin/Settings/Location', {command: 'list'}).done(function (data) {
+      console.log('setting locations')
+      this.setState({locations: data})
+    }.bind(this))
+  }
+
+  setLocations(locations) {
+    this.setState({locations : locations})
   }
 
   componentDidMount() {
     this.loadData()
   }
 
-  saveFailure() {
-    this.setState({saveFail: true})
-  }
-
-  loadData() {
-    $.getJSON('counseling/Admin/Settings/Disposition', {command: 'list'}).done(function (data) {
-      this.setState({dispositions: data})
-    }.bind(this))
+  saveFailure(fail = true) {
+    this.setState({saveFail: fail})
   }
 
   closeForm() {
@@ -43,13 +49,17 @@ export default class Dispositions extends Component {
     this.setState({showForm: true, allowAdd: false,})
   }
 
-  setCurrentEdit(value) {
-    this.setState({currentEdit: value})
+  setCurrentEdit(locationId, section) {
+    var currentEdit = null
+    if (locationId !== null) {
+      currentEdit = {
+        id: locationId,
+        section: section,
+      }
+    }
+    this.setState({currentEdit: currentEdit})
   }
 
-  setDispositions(value) {
-    this.setState({dispositions: value})
-  }
 
   render() {
     let form
@@ -58,7 +68,7 @@ export default class Dispositions extends Component {
     if (this.state.showForm) {
       form = (
         <div className="form-box">
-          <DispositionForm
+          <LocationForm
             closeForm={this.closeForm}
             reload={this.loadData}
             fail={this.saveFailure}/>
@@ -66,7 +76,7 @@ export default class Dispositions extends Component {
       )
     } else {
       button = (
-        <button className="btn btn-success mb-1" onClick={this.showForm}>Add disposition&nbsp;
+        <button className="btn btn-success mb-1" onClick={this.showForm}>Add location&nbsp;
           <i className="fa fa-caret-down"></i>
         </button>
       )
@@ -75,9 +85,9 @@ export default class Dispositions extends Component {
       alert = (
         <div className="alert alert-danger">
           <strong>
-            <i className="fa fa-exclamation-triangle"></i>
-            Error:</strong>
-          Disposition save failed</div>
+            <i className="fa fa-exclamation-triangle"></i>&nbsp;
+            Error:</strong>&nbsp;
+          Location save failed</div>
       )
     }
     const style = {
@@ -85,7 +95,7 @@ export default class Dispositions extends Component {
     }
     return (
       <div>
-        <div className="disposition-form-area">
+        <div className="location-form-area">
           <div className="reason-form">
             {form}
           </div>
@@ -95,18 +105,16 @@ export default class Dispositions extends Component {
         </div>
         {alert}
         <div>
-          <DispositionList
-            dispositions={this.state.dispositions}
+          <LocationList
+            locations={this.state.locations}
             reload={this.loadData}
             currentEdit={this.state.currentEdit}
             setCurrentEdit={this.setCurrentEdit}
             showForm={this.showForm}
             setCurrent={this.setCurrentEdit}
-            setDispositions={this.setDispositions}/>
+            setLocations={this.setLocations}/>
         </div>
       </div>
     )
   }
 }
-
-Dispositions.propTypes = {}

@@ -12,7 +12,8 @@ export default class DispositionForm extends Component {
       title: '',
       color: 'default',
       icon: null,
-      formError: ''
+      formError: '',
+      dispositionId: 0,
     }
     this.updateTitle = this.updateTitle.bind(this)
     this.pickColor = this.pickColor.bind(this)

@@ -1,0 +1,10 @@
+<form method="post" action="./counseling/">
+    <div style="max-width: 400px; margin: 0 auto; text-align: center">
+        <select name="location" class="form-control" style="font-size : 18px">
+            <?php foreach ($locations as $loc): ?>
+            <option value="<?=$loc['id']?>"><?=$loc['title']?></option>
+            <?php endforeach; ?>
+        </select>
+        <button class="btn btn-lg btn-primary" style="margin-top: 1em">Select current check in location</button>
+    </div>
+</form>

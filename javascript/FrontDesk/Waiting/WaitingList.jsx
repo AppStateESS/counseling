@@ -21,6 +21,7 @@ const WaitingList = (props) => {
             <th>Name</th>
             <th>Banner id</th>
             <th>Wait time</th>
+            <th>Location</th>
             <th>Visits</th>
             <th>Status</th>
             <th>&nbsp;</th>

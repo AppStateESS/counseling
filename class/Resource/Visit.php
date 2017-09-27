@@ -75,6 +75,12 @@ class Visit extends \phpws2\Resource
      * @var \phpws2\Variable\IntegerVar
      */
     protected $clinician_id;
+    
+    /**
+     * Id of current visit location
+     * @var \phpws2\Variable\IntegerVar
+     */
+    protected $location_id;
 
     /**
      * Indicates if student is walk-in or has an appointment.
@@ -102,6 +108,7 @@ class Visit extends \phpws2\Resource
         $this->reason_id = new \phpws2\Variable\IntegerVar(0, 'reason_id');
         $this->visitor_id = new \phpws2\Variable\IntegerVar(0, 'visitor_id');
         $this->clinician_id = new \phpws2\Variable\IntegerVar(0, 'clinician_id');
+        $this->location_id = new \phpws2\Variable\IntegerVar(0, 'location_id');
         $this->category = new \phpws2\Variable\IntegerVar(0, 'category');
     }
 
@@ -133,6 +140,11 @@ class Visit extends \phpws2\Resource
     public function getHasEmergency()
     {
         return $this->has_emergency->get();
+    }
+    
+    public function getLocationId()
+    {
+        return $this->location_id->get();
     }
 
     public function getReasonId()
@@ -178,6 +190,10 @@ class Visit extends \phpws2\Resource
     public function setFullName($var)
     {
         $this->full_name->set($var);
+    }
+    
+    public function setLocation($var) {
+        $this->location_id->set($var);
     }
 
     public function setReasonId($var)

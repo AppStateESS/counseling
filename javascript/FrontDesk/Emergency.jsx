@@ -39,8 +39,9 @@ const EmergencyRow = (props) => {
         <ClipboardInput bannerId={props.visitor.banner_id}/>
       </div>
       <div className="col-sm-2">
-        {props.wait_time}
-        min.
+        {props.wait_time}&nbsp;
+        min. in<br />
+        {props.location}
       </div>
       <div className="col-sm-3">
         <WaitingListStatus
@@ -56,10 +57,12 @@ const EmergencyRow = (props) => {
 }
 
 EmergencyRow.propTypes = {
+  id: PropTypes.string,
   visitor: PropTypes.object,
   reload: PropTypes.func,
   wait_time: PropTypes.number,
   total_visits: PropTypes.string,
+  location: PropTypes.string,
 }
 
 export default Emergency

@@ -110,9 +110,9 @@ export default class Reasons extends Component {
 const ReasonList = ({reasons, reload, currentEdit, setCurrentEdit}) => {
   let reasonResult
   if (reasons) {
-    reasonResult = reasons.map(function (value, key) {
+    reasonResult = reasons.map(function (value) {
       return (<ReasonRow
-        key={key}
+        key={value.id}
         {...value}
         reload={reload}
         currentEdit={currentEdit}

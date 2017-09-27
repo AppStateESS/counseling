@@ -4,12 +4,13 @@ import PropTypes from 'prop-types'
 import Clinicians from './Clinicians'
 import Dispositions from './Dispositions'
 import Reasons from './Reasons'
+import Locations from './Locations'
 
 export default class Settings extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      tab: 'Clinicians'
+      tab: 'Locations'
     }
   }
 
@@ -34,6 +35,10 @@ export default class Settings extends Component {
             active={this.state.tab == 'Dispositions'}
             label={'Dispositions'}
             handleClick={this.selectTab.bind(this, 'Dispositions')}/>
+          <Tab
+            active={this.state.tab == 'Locations'}
+            label={'Locations'}
+            handleClick={this.selectTab.bind(this, 'Locations')}/>
         </ul>
         <div style={{
           marginTop: '1em'
@@ -78,6 +83,10 @@ const Content = ({tab}) => {
 
     case 'Dispositions':
       content = <Dispositions/>
+      break
+
+    case 'Locations':
+      content = <Locations/>
       break
   }
 

@@ -26,6 +26,7 @@ const WaitingListRow = (props) => {
       </td>
       <td>{props.wait_time}
         min.</td>
+      <td>{props.location}</td>
       <td><WaitingListVisits visitNumber={props.total_visits}/></td>
       <td>
         <WaitingListStatus
@@ -47,7 +48,8 @@ WaitingListRow.propTypes = {
   reason_title: PropTypes.string,
   wait_time: PropTypes.number,
   reload: PropTypes.func,
-  id : PropTypes.string,
+  id: PropTypes.string,
+  location: PropTypes.string,
 }
 
 export default WaitingListRow

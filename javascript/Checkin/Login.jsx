@@ -7,7 +7,7 @@ import Phone from './Phone'
 import Emergency from './Emergency'
 import Instruction from './Instruction'
 
-/* global $ */
+/* global $, currentLocation */
 
 let resetTimeout = null
 
@@ -108,6 +108,7 @@ class Stage extends Component {
   completeCheckin() {
     $.post('counseling/User/Visit', {
       command: 'create',
+      locationId: currentLocation,
       visitorId: this.state.visitor.id,
       reasonId: this.state.reason.id,
       emergency: this.state.emergency,
