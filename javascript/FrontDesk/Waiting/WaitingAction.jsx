@@ -11,7 +11,7 @@ const WaitingAction = (props) => {
     $.post('counseling/Admin/Dashboard/Waiting', {
       command: 'setCompleteReason',
       reason: reason,
-      visitId: props.visitId
+      visitId: props.visitId,
     }, null, 'json').done(function () {
       props.reload()
     }.bind(this))
@@ -21,7 +21,7 @@ const WaitingAction = (props) => {
     if (confirm('Are you sure you want to remove this visitor?')) {
       $.post('counseling/Admin/Dashboard/Waiting', {
         command: 'delete',
-        visitId: props.visitId
+        visitId: props.visitId,
       }, null, 'json').done(function () {
         props.reload()
       }.bind(this))
@@ -34,24 +34,29 @@ const WaitingAction = (props) => {
       label: <div>
         <i className="fa fa-external-link"></i>&nbsp; Had to leave</div>,
       visitId: props.visitId,
-      handleClick: completeReason.bind(null, 2)
+      handleClick: completeReason.bind(null, 2),
+    }, {
+      label: <div>
+        <i className="fa fa-user-plus"></i>&nbsp; Full, agreed to return</div>,
+      visitId: props.visitId,
+      handleClick: completeReason.bind(null, 6),
     }, {
       label: <div>
         <i className="fa fa-eye-slash"></i>&nbsp; Missing</div>,
       visitId: props.visitId,
-      handleClick: completeReason.bind(null, 3)
+      handleClick: completeReason.bind(null, 3),
     }, {
       label: <div>
         <i className="fa fa-clock-o"></i>&nbsp; Made appointment</div>,
       visitId: props.visitId,
-      handleClick: completeReason.bind(null, 4)
+      handleClick: completeReason.bind(null, 4),
     }, {
       divider: true
     }, {
       label: <div className="text-danger">
         <i className="fa fa-trash-o"></i>&nbsp; Remove</div>,
       visitId: props.visitId,
-      handleClick: remove
+      handleClick: remove,
     })
     return options
   }

@@ -141,6 +141,11 @@ const AppointmentAction = (props) => {
       handleClick: completeReason.bind(null, 2)
     }, {
       label: <div className="pointer">
+        <i className="fa fa-user-plus"></i>&nbsp; Full, agreed to return</div>,
+      visitId: props.visitId,
+      handleClick: completeReason.bind(null, 6)
+    }, {
+      label: <div className="pointer">
         <i className="fa fa-eye-slash"></i>&nbsp; Missing</div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 3)

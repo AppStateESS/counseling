@@ -234,6 +234,9 @@ class Visit extends Base
             case CC_COMPLETE_SENT_BACK:
                 return 'Sent back for appointment';
 
+            case CC_COMPLETE_FULL:
+                return 'Full, agreed to return';
+                
             default:
                 return 'Unknown reason';
         }

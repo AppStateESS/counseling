@@ -23,3 +23,4 @@ define('CC_COMPLETE_LEFT', 2);
 define('CC_COMPLETE_MISSING', 3);
 define('CC_COMPLETE_APPOINTMENT', 4);
 define('CC_COMPLETE_SENT_BACK', 5);
+define('CC_COMPLETE_FULL', 6);
