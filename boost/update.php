@@ -1,6 +1,5 @@
 <?php
 
-
 function counseling_update(&$content, $version)
 {
     switch ($version) {
@@ -61,8 +60,14 @@ EOF;
 + Added travis
 </pre>
 EOF;
-            
-            
+
+        case version_compare($version, '2.2.2', '<'):
+            $content[] = <<<EOF
+            <pre>2.2.2
+--------------
++ Added new leave reason
+</pre>
+EOF;
     }
 
     return true;

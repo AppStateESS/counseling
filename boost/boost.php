@@ -5,6 +5,6 @@
  * @author Matthew McNaney <mcnaney at gmail dot com>
  */
 $proper_name = 'Counseling Check In';
-$version = '2.2.1';
+$version = '2.2.2';
 $import_sql = false;
 $image_dir = true;
