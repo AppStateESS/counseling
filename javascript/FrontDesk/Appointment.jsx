@@ -153,7 +153,7 @@ const AppointmentAction = (props) => {
       divider: true
     }, {
       label: <div className="text-danger pointer">
-        <i className="fa fa-trash-o"></i>&nbsp; Remove</div>,
+        <i className="far fa-trash-alt"></i>&nbsp; Remove</div>,
       visitId: props.visitId,
       handleClick: remove
     })
