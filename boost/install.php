@@ -25,13 +25,17 @@ function counseling_install(&$content)
         $visitor = new \counseling\Resource\Visitor;
         $visitor->createTable($db);
 
+        $location = new \counseling\Resource\Location;
+        $location->createTable($db);
+        
     } catch (\Exception $e) {
         $db->buildTable('cc_clinician')->drop(true);
         $db->buildTable('cc_disposition')->drop(true);
         $db->buildTable('cc_reason')->drop(true);
         $db->buildTable('cc_visit')->drop(true);
         $db->buildTable('cc_visitor')->drop(true);
-        
+        $db->buildTable('cc_location')->drop(true);
+
         $db->rollback();
         throw $e;
     }
