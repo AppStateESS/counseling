@@ -6,6 +6,5 @@ exports.entry = {
   Clinician: exports.APP_DIR + '/Clinician/index.jsx',
   FrontDesk: exports.APP_DIR + '/FrontDesk/index.jsx',
   //Report: exports.APP_DIR + '/Report/index.jsx',
-  Settings: exports.APP_DIR + '/Settings/index.jsx',
-  vendor: ['react', 'react-dom']
+  Settings: exports.APP_DIR + '/Settings/index.jsx'
 }

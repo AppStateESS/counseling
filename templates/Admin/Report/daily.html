@@ -1,7 +1,7 @@
 <h2>Daily Report - <?php echo $date?> <button title="Pick different day" id="pick-date" class="btn btn-default"><i style="cursor:pointer" class="fa fa-calendar"></i></button></h2>
     <a href="counseling/Admin/Report/DailyCSV/<?php echo $startTime?>" title="Download CSV file" class="btn btn-default"><i class="fa fa-download"></i></a>
-    <a href="counseling/Admin/Report/Weekly/<?php echo $startTime?>" title=View weekly report" class="btn btn-default"><i class="fa fa-bar-chart"></i> Weekly</a>
-    <a href="counseling/Admin/Report/Interval/<?php echo $startTime?>" title=View interval report" class="btn btn-default"><i class="fa fa-bar-chart"></i> Interval</a>
+    <a href="counseling/Admin/Report/Weekly/<?php echo $startTime?>" title=View weekly report" class="btn btn-default"><i class="far fa-chart-bar"></i> Weekly</a>
+    <a href="counseling/Admin/Report/Interval/<?php echo $startTime?>" title=View interval report" class="btn btn-default"><i class="far fa-chart-bar"></i> Interval</a>
 <?php if (empty($seen) && empty($unseen)):?>
 <p>No visitors recorded for today.</p>
 <?php return; endif;?>

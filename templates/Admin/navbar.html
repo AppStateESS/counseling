@@ -1,35 +1,28 @@
 <!-- Brand and toggle get grouped for better mobile display -->
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
+<nav class="navbar navbar-expand-lg navbar-light bg-light border rounded">
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+      <span class="navbar-toggler-icon">Toggle navigation</span>
     </button>
     <a class="navbar-brand" href="#">Counseling Check-in</a>
-  </div>
 <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse">
-    <ul class="nav navbar-nav">
-      <li><a href="counseling/Admin/Dashboard"><i class="fa fa-inbox"></i> Front desk</a></li>
-      <li><a href="counseling/Admin/Clinician"><i class="fa fa-clipboard"></i> Clinician</a></li>
-      <li><a href="counseling/Admin/Report/Daily"><i class="fa fa-area-chart"></i> Report</a></li>
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item dropdown">
+        <a class="nav-link" href="counseling/Admin/Dashboard"><i class="fa fa-inbox"></i> Front desk</a>
+        <a class="nav-link" href="counseling/Admin/Clinician"><i class="fa fa-clipboard"></i> Clinician</a>
+        <a class="nav-link" href="counseling/Admin/Report/Daily"><i class="far fa-chart-bar"></i> Report</a>
+      </li>
     </ul>
-
-
-    <ul class="nav navbar-nav navbar-right">
+    <ul class="navbar-nav ml-auto">
       <!-- BEGIN admin_links -->
       <?php if ($is_deity): ?>
-      <li class="dropdown">
-        <a href="counseling/Admin/Settings" class=""><i class="fa fa-cog"></i> Settings</a>
-      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link" href="counseling/Admin/Settings" class=""><i class="fa fa-cog"></i> Settings</a>
       <?php endif; ?>
       <!-- END admin_links -->
-      <li>
-        <a href="index.php?module=controlpanel"><?=$username?></a>
-      </li>
-      <li>
-          <a href="<?=$logout_uri?>"><i class="fa fa-sign-out"></i> Sign out</a>
+        <a class="nav-link" href="index.php?module=controlpanel"><?=$username?></a>
+        <a class="nav-link" href="<?=$logout_uri?>"><i class="fas fa-sign-out-alt"></i> Sign out</a>
       </li>
     </ul>
   </div><!-- /.navbar-collapse -->
+</nav>

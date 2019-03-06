@@ -88,34 +88,38 @@ export default class ClinicianForm extends Component {
     return (
       <div>
         {alert}
-        <div className="row">
+        <div>
           <form method="post" action="counseling/Admin/Settings/Clinicians">
             <input type="hidden" name="command" value="add"/>
-            <div className="col-sm-6">
-              <TextInput
-                inputId="firstName"
-                label="First name"
-                handleChange={this.updateFirstName}
-                required={true}
-                tabIndex={1}
-                value={this.state.firstName}/>
-              <button className="pull-left btn btn-primary" onClick={this.save} tabIndex={2}>
-                <i className="fa fa-check"></i>
-                Save Clinician</button>&nbsp;
-              <button className="btn btn-danger" onClick={this.closeForm} tabIndex={3}>
-                <i className="fa fa-exclamation-triangle"></i>
-                Cancel</button>
+            <div className="row">
+                <div className="col-sm-6">
+                    <TextInput
+                      inputId="firstName"
+                      label="First name"
+                      handleChange={this.updateFirstName}
+                      required={true}
+                      tabIndex={1}
+                      value={this.state.firstName}/>
+                </div>
+                <div className="col-sm-6">
+                    <TextInput
+                      inputId="lastName"
+                      label="Last name"
+                      handleChange={this.updateLastName}
+                      required={true}
+                      tabIndex={1}
+                      value={this.state.lastName}/>
+                </div>
             </div>
-            <div className="col-sm-6">
-              <TextInput
-                inputId="lastName"
-                label="Last name"
-                handleChange={this.updateLastName}
-                required={true}
-                tabIndex={1}
-                value={this.state.lastName}/>
+            <div className="row">
+                <div className="col-sm-9">
+                    <button className="pull-left btn btn-primary" onClick={this.save} tabIndex={2}>
+                    <i className="fa fa-check"></i>Save Clinician</button>&nbsp;
+                    <button className="btn btn-danger" onClick={this.closeForm} tabIndex={3}>
+                    <i className="fa fa-exclamation-triangle"></i>Cancel</button>
+                </div>
             </div>
-          </form>
+         </form>
         </div>
       </div>
     )

@@ -98,7 +98,7 @@ export default class ReasonForm extends Component {
 
   render() {
     return (
-      <div className="setting-form">
+            <div className="setting-form">
         <form method="post" action="counseling/Admin/Settings/Reasons">
           <input type="hidden" name="command" value="add"/> {this.state.formError
             ? <div className="alert alert-danger required-alert">

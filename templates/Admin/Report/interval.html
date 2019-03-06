@@ -7,8 +7,8 @@
     <a href="counseling/Admin/Report/IntervalCSV/<?php echo $startTime?>/<?php echo $endTime?>" class="btn btn-default" title="Download interval report">
         <i class="fa fa-download"></i> Download CSV
     </a>
-    <a href="counseling/Admin/Report/Daily/<?php echo $startTime?>" title=View daily report" class="btn btn-default"><i class="fa fa-bar-chart"></i> Daily</a>
-    <a href="counseling/Admin/Report/Weekly/<?php echo $startTime?>" title=View weekly report" class="btn btn-default"><i class="fa fa-bar-chart"></i> Weekly</a>
+    <a href="counseling/Admin/Report/Daily/<?php echo $startTime?>" title=View daily report" class="btn btn-default"><i class="far fa-chart-bar"></i> Daily</a>
+    <a href="counseling/Admin/Report/Weekly/<?php echo $startTime?>" title=View weekly report" class="btn btn-default"><i class="far fa-chart-bar"></i> Weekly</a>
 <?php if (empty($seen) && empty($unseen) && empty($appointment)):?>
 <p>No visitors recorded for today.</p>
 <?php return; endif;?>

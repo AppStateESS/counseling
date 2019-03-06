@@ -21,8 +21,8 @@ class React
         if ($add_anchor) {
             $content = <<<EOF
 <div id="$view_name"></div>
-$react
 EOF;
+            \Layout::addJSHeader($react);
             return $content;
         } else {
             return $react;

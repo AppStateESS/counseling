@@ -11,7 +11,6 @@ class Report extends Base
 
     public static function daily(\Canopy\Request $request)
     {
-        javascript('jquery');
         $datestamp = $request->shiftCommand();
 
         if (empty($datestamp) || !is_numeric($datestamp)) {

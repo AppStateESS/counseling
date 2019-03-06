@@ -55,10 +55,10 @@ const Tab = ({active, label, handleClick,}) => {
     <li
       role="presentation"
       onClick={handleClick}
-      className={active
-      ? 'active'
-      : null}>
-      <a className="pointer">{label}</a>
+      className="nav-item">
+      <a className={active
+      ? 'active nav-link pointer'
+      : 'nav-link pointer'}>{label}</a>
     </li>
   )
 }
