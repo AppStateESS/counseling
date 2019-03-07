@@ -13,8 +13,11 @@ after_success:
 - tar -czf counseling.tar.gz *
 deploy:
   provider: releases
+  skip_cleanup: true
   api_key:
     secure: JROiJALvmW13HaUqdzbKuDsn5oXASh3UO1H9jkz3M9ZmwUb1vzSAR8LUPlxjDOa+zn5YKHUcmWEs66oyGWS9iyhOkUfQDnqy6+54klUk86RhygSEGJo4m0wUjjmTXEIMmn9oqh7HI1hQvSVhBtiJIiNsvZiB3f/h5SmU72jwu1w=
   file: counseling.tar.gz
   on:
     repo: AppStateESS/counseling
+    branch: master
+    tags: true
