@@ -26,7 +26,7 @@ const SummaryWaitingTally = (props) => {
           </tr>
           <tr>
             <td className="text-center">
-              <i className="fa fa-clock-o"></i>
+              <i className="fas fa-clock"></i>
             </td>
             {props.showLabels
               ? <td>Appointment</td>

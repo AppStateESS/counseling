@@ -74,7 +74,7 @@ export default class Reasons extends Component {
         closeForm={this.closeForm}
         reload={this.loadData}
         fail={this.saveFailure}/>
-      background = <div className="modal-background"></div>
+      background = <div></div>
     }
 
     if (this.state.saveFail) {

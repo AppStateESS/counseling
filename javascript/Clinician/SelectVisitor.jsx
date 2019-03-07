@@ -242,7 +242,7 @@ VisitorRow.propTypes = {
 
 const CategoryIcon = (props) => {
 
-  const _className = 'category fa fa-lg ' + categoryIcons[props.category]
+  const _className = 'category fa ' + categoryIcons[props.category]
   const icon = <i className={_className} title={props.title}></i>
   return (
     <span>{icon}</span>

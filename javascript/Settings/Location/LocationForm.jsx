@@ -66,7 +66,7 @@ export default class LocationForm extends Component {
         {this.state.formError}</div>
     }
     return (
-      <div className="locationForm">
+      <div className="setting-form">
         {alert}
         <form method="post" action="counseling/Admin/Settings/Location">
           <TextInput

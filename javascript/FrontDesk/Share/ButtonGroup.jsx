@@ -12,19 +12,18 @@ const ButtonGroup = (props) => {
   })
 
   return (
-    <div className="btn-group">
+    <div className="dropdown">
       <button
         type="button"
-        className="btn btn-default btn-sm dropdown-toggle"
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false">
         {props.label}
-        <span className="caret"></span>
+        <i class="far fa-caret-square-down"></i>
       </button>
-      <ul className="dropdown-menu dropdown-menu-right">
+      <div className="dropdown-menu">
         {options}
-      </ul>
+      </div>
     </div>
   )
 }
@@ -49,13 +48,13 @@ const ButtonGroupOption = (props) => {
 
   if (props.divider) {
     return (
-      <li role="separator" className="divider"></li>
+      <span role="separator" className="divider"></span>
     )
   } else {
     return (
-      <li onClick={props.handleClick}>
-        <a className="pointer">{props.label}</a>
-      </li>
+      
+        <a onClick={props.handleClick} className="dropdown-item">{props.label}</a>
+      
     )
   }
 }

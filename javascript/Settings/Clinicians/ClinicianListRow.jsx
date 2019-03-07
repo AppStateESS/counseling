@@ -14,7 +14,7 @@ const ClinicianListRow = ({
     <tr className="sorting-row" data-rowid={id} id={id}>
       <td className="col-sm-3">
         <button className="btn btn-default handle">
-          <i className="fa fa-arrows"></i>
+          <i className="fas fa-arrows-alt"></i>
         </button>&nbsp;
         <button
           className="btn btn-primary btn-sm"

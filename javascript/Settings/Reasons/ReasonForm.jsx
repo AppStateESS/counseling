@@ -98,7 +98,7 @@ export default class ReasonForm extends Component {
 
   render() {
     return (
-            <div className="setting-form">
+      <div className="setting-form">
         <form method="post" action="counseling/Admin/Settings/Reasons">
           <input type="hidden" name="command" value="add"/> {this.state.formError
             ? <div className="alert alert-danger required-alert">
@@ -212,7 +212,7 @@ const GroupSelect = ({update}) => {
       <div>
         <label>
           <input type="radio" name="summaryGroup" defaultValue="1" onClick={update}/>&nbsp;
-          <i className="fa fa-clock-o fa-lg"></i>&nbsp; Walk-in
+          <i className="fa fa-clock fa-lg"></i>&nbsp; Walk-in
         </label>
       </div>
       <div>
@@ -223,7 +223,7 @@ const GroupSelect = ({update}) => {
       </div>
       <div>
         <label>
-          <input type="radio" name="summaryGroup" defaultValue="4" onClick={update}/>&nbsp;
+          <input type="radio" name="summaryGroup" defaultValue="3" onClick={update}/>&nbsp;
           <i className="fa fa-users fa-lg"></i>&nbsp; Group appointment
         </label>
       </div>

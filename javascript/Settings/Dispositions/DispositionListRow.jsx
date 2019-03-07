@@ -22,7 +22,7 @@ export default class DispositionListRow extends Component {
       <tr className="sorting-row" data-rowid={this.props.id} id={this.props.id}>
         <td className="col-xs-3">
           <button className="btn btn-default handle">
-            <i className="fa fa-arrows"></i>
+            <i className="fas fa-arrows-alt"></i>
           </button>&nbsp;
           <button
             className="btn btn-primary btn-sm"

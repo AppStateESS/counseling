@@ -83,13 +83,17 @@ export default class DispositionForm extends Component {
       }}>
         {this.state.formError}</div>
     }
-    return (
-      <div className="disposition-form">
-        {alert}
-        <CurrentIcon
+
+    let sample = <CurrentIcon
           icon={this.state.icon}
           color={this.state.color}
           title={this.state.title}/>
+    sample = '';// till we can figure out how to force font awesome to redraw icons
+
+    return (
+      <div className="disposition-form">
+        {alert}
+        {sample}
         <form method="post" action="counseling/Admin/Settings/Disposition">
           <input type="hidden" name="command" value="add"/>
           <TextInput
@@ -133,16 +137,15 @@ DispositionForm.defaultProps = {
 const CurrentIcon = ({color, icon, title}) => {
 
   const buttonClass = 'btn btn-block btn-lg btn-' + color
-  const iconClass = 'fa fa-' + icon
+  const iconClass = icon
   const iconTitle = (title === null || title.length === 0)
     ? 'Sample'
     : title
-
+  
   return (
     <div className="text-center">
-      <button className={buttonClass}>
-        <i className={iconClass}></i>
-        {iconTitle}</button>
+        <button className={buttonClass}><i className={iconClass}></i>
+{iconTitle}</button>
     </div>
   )
 }
@@ -159,63 +162,63 @@ const DispositionIcons = ({handleClick}) => {
       <table className="table">
         <tbody>
           <tr>
-            <td><IconButton label="archive" handleClick={handleClick}/></td>
-            <td><IconButton label="automobile" handleClick={handleClick}/></td>
-            <td><IconButton label="balance-scale" handleClick={handleClick}/></td>
-            <td><IconButton label="ban" handleClick={handleClick}/></td>
-            <td><IconButton label="bank" handleClick={handleClick}/></td>
-            <td><IconButton label="bed" handleClick={handleClick}/></td>
-            <td><IconButton label="bell" handleClick={handleClick}/></td>
-            <td><IconButton label="binoculars" handleClick={handleClick}/></td>
-            <td><IconButton label="book" handleClick={handleClick}/></td>
-            <td><IconButton label="briefcase" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-archive" handleClick={handleClick}/></td>
+            <td><IconButton label="fas fa-car" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-balance-scale" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-ban" handleClick={handleClick}/></td>
+            <td><IconButton label="fas fa-university" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-bed" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-bell" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-binoculars" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-book" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-briefcase" handleClick={handleClick}/></td>
           </tr>
           <tr>
-            <td><IconButton label="building" handleClick={handleClick}/></td>
-            <td><IconButton label="bullhorn" handleClick={handleClick}/></td>
-            <td><IconButton label="camera" handleClick={handleClick}/></td>
-            <td><IconButton label="coffee" handleClick={handleClick}/></td>
-            <td><IconButton label="cog" handleClick={handleClick}/></td>
-            <td><IconButton label="comment" handleClick={handleClick}/></td>
-            <td><IconButton label="envelope" handleClick={handleClick}/></td>
-            <td><IconButton label="exclamation-circle" handleClick={handleClick}/></td>
-            <td><IconButton label="eye" handleClick={handleClick}/></td>
-            <td><IconButton label="flag" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-building" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-bullhorn" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-camera" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-coffee" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-cog" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-comment" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-envelope" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-exclamation-circle" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-eye" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-flag" handleClick={handleClick}/></td>
           </tr>
           <tr>
-            <td><IconButton label="flask" handleClick={handleClick}/></td>
-            <td><IconButton label="folder-o" handleClick={handleClick}/></td>
-            <td><IconButton label="gavel" handleClick={handleClick}/></td>
-            <td><IconButton label="globe" handleClick={handleClick}/></td>
-            <td><IconButton label="users" handleClick={handleClick}/></td>
-            <td><IconButton label="heart" handleClick={handleClick}/></td>
-            <td><IconButton label="home" handleClick={handleClick}/></td>
-            <td><IconButton label="hourglass-1" handleClick={handleClick}/></td>
-            <td><IconButton label="calendar" handleClick={handleClick}/></td>
-            <td><IconButton label="life-ring" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-flask" handleClick={handleClick}/></td>
+            <td><IconButton label="far fa-folder" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-gavel" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-globe" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-users" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-heart" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-home" handleClick={handleClick}/></td>
+            <td><IconButton label="fas fa-hourglass" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-calendar" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-life-ring" handleClick={handleClick}/></td>
           </tr>
           <tr>
-            <td><IconButton label="lightbulb-o" handleClick={handleClick}/></td>
-            <td><IconButton label="male" handleClick={handleClick}/></td>
-            <td><IconButton label="female" handleClick={handleClick}/></td>
-            <td><IconButton label="map-o" handleClick={handleClick}/></td>
-            <td><IconButton label="microphone" handleClick={handleClick}/></td>
-            <td><IconButton label="money" handleClick={handleClick}/></td>
-            <td><IconButton label="music" handleClick={handleClick}/></td>
-            <td><IconButton label="paint-brush" handleClick={handleClick}/></td>
-            <td><IconButton label="pencil" handleClick={handleClick}/></td>
-            <td><IconButton label="phone" handleClick={handleClick}/></td>
+            <td><IconButton label="fas fa-lightbulb" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-male" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-female" handleClick={handleClick}/></td>
+            <td><IconButton label="fas fa-map" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-microphone" handleClick={handleClick}/></td>
+            <td><IconButton label="far fa-money-bill-alt" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-music" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-paint-brush" handleClick={handleClick}/></td>
+            <td><IconButton label="fas fa-pencil-alt" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-phone" handleClick={handleClick}/></td>
           </tr>
           <tr>
-            <td><IconButton label="plug" handleClick={handleClick}/></td>
-            <td><IconButton label="print" handleClick={handleClick}/></td>
-            <td><IconButton label="puzzle-piece" handleClick={handleClick}/></td>
-            <td><IconButton label="trophy" handleClick={handleClick}/></td>
-            <td><IconButton label="umbrella" handleClick={handleClick}/></td>
-            <td><IconButton label="user-plus" handleClick={handleClick}/></td>
-            <td><IconButton label="warning" handleClick={handleClick}/></td>
-            <td><IconButton label="wrench" handleClick={handleClick}/></td>
-            <td><IconButton label="comments-o" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-plug" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-print" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-puzzle-piece" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-trophy" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-umbrella" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-user-plus" handleClick={handleClick}/></td>
+            <td><IconButton label="fas fa-exclamation-triangle" handleClick={handleClick}/></td>
+            <td><IconButton label="fa fa-wrench" handleClick={handleClick}/></td>
+            <td><IconButton label="fas fa-comments" handleClick={handleClick}/></td>
             <td>&nbsp;</td>
           </tr>
         </tbody>
@@ -228,8 +231,8 @@ DispositionIcons.propTypes = {
   handleClick: PropTypes.func
 }
 
-const IconButton = ({label, handleClick,}) => {
-  const iconClassName = 'fa fa-' + label
+const IconButton = ({prefix, label, handleClick,}) => {
+  const iconClassName = label
   return (
     <button className="btn btn-default" onClick={handleClick.bind(null, label)}>
       <i className={iconClassName}></i>

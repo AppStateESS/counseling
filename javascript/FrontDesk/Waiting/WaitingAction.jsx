@@ -32,7 +32,7 @@ const WaitingAction = (props) => {
     var options = []
     options.push({
       label: <div>
-        <i className="fa fa-external-link"></i>&nbsp; Had to leave</div>,
+        <i className="fas fa-external-link-alt"></i>&nbsp; Had to leave</div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 2),
     }, {
@@ -47,7 +47,7 @@ const WaitingAction = (props) => {
       handleClick: completeReason.bind(null, 3),
     }, {
       label: <div>
-        <i className="fa fa-clock-o"></i>&nbsp; Made appointment</div>,
+        <i className="fas fa-clock"></i>&nbsp; Made appointment</div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 4),
     }, {

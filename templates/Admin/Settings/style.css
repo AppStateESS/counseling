@@ -4,7 +4,7 @@
 
 .form-box {
     position: absolute;
-    width: 600px;
+    width: auto;
     background-color: white;
     border: 1px solid black;
     padding: 1em;

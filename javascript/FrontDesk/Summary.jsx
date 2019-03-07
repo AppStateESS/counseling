@@ -53,7 +53,7 @@ export default class Summary extends Component {
             </div>
           </div>
           <div className="col-sm-6 right">
-            <h4 className="pull-right">{this.props.time}</h4>
+            <h4 className="float-right">{this.props.time}</h4>
             <h3>Today</h3>
             <div className="row">
               <div className="col-sm-2">

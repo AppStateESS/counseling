@@ -85,7 +85,7 @@ export default class Clinicians extends Component {
     return (
       <div>
         <div className="clinician-form-area">
-          <div style={pos}>
+        <div>
             {form}
           </div>
           <div style={height}>

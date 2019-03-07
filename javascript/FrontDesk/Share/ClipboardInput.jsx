@@ -23,7 +23,7 @@ class ClipboardInput extends Component {
       <div>
         <input size="11" ref="bannerId" value={this.props.bannerId} onChange={this.nada}/>&nbsp;
         <button title="Copy to clipboard" onClick={this.saveToClipboard}>
-          <i className="glyphicon glyphicon-copy"></i>
+          <i className="far fa-copy"></i>
         </button>
       </div>
     )

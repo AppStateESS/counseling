@@ -67,7 +67,7 @@ export default class Locations extends Component {
     let alert
     if (this.state.showForm) {
       form = (
-        <div className="form-box">
+        <div>
           <LocationForm
             closeForm={this.closeForm}
             reload={this.loadData}
@@ -96,7 +96,7 @@ export default class Locations extends Component {
     return (
       <div>
         <div className="location-form-area">
-          <div className="reason-form">
+          <div>
             {form}
           </div>
           <div style={style}>
