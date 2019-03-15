@@ -131,7 +131,7 @@ class Swipe extends ErrorTimeout {
         className="form-control"
         value={this.state.visitor}/>
       button = <button
-        className="continue pull-right btn btn-default"
+        className="continue btn btn-default"
         onClick={this.logInVisitor}>Continue&nbsp;
         <i className="fa fa-chevron-right fa-sm"></i>
       </button>
@@ -139,15 +139,15 @@ class Swipe extends ErrorTimeout {
 
     return (
       <div className="checkin-box">
-        <div className="text-center">
+        <div className="text-center center-block">
           <p className="title">Welcome! Please Check-in</p>
           <p className="subtitle">Swipe your AppCard to get started</p>
           <p>Don't have your AppCard?<br/>Enter your Banner ID number instead.</p>
           <form onSubmit={this.submitVisitor}>
             {field}
           </form>
-        </div>
-        {button}
+          {button}
+        </div>        
         <div className="clearfix"></div>
       </div>
     )
