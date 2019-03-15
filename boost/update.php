@@ -68,6 +68,13 @@ EOF;
 + Added new leave reason
 </pre>
 EOF;
+        case version_compare($version, '2.3.1', '<'):
+            $content[] = <<<EOF
+            <pre>2.3.1
+--------------
++ Added react-fontawesome
+</pre>
+EOF;
     }
 
     return true;
