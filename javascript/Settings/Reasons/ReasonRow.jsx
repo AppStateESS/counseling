@@ -406,6 +406,7 @@ class ReasonInstruction extends Component {
     this.state = {
       editMode: false
     }
+    this.formMode = this.formMode.bind(this)
   }
 
   componentDidUpdate() {
@@ -499,8 +500,8 @@ ReasonInstruction.propTypes = {
   setCurrentEdit: PropTypes.func
 }
 
-const ReasonSelect = (match, handleChange, options) => {
-  let optionList
+const ReasonSelect = (options, match, handleChange) => {
+  let optionList = []
   optionList.displayName = 'asd'
   options.displayName = 'asd'
   optionList = options.map(function (value, key) {
