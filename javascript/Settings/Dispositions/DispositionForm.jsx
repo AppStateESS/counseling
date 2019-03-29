@@ -215,7 +215,7 @@ const DispositionIcons = ({handleClick}) => {
             <td><IconButton iconPrefix='fas' label="phone" handleClick={handleClick}/></td>
           </tr>
           <tr>
-            <td><IconButton iconPrefix='fas'label="plug" handleClick={handleClick}/></td>
+            <td><IconButton iconPrefix='fas' label="plug" handleClick={handleClick}/></td>
             <td><IconButton iconPrefix='fas' label="print" handleClick={handleClick}/></td>
             <td><IconButton iconPrefix='fas' label="puzzle-piece" handleClick={handleClick}/></td>
             <td><IconButton iconPrefix='fas' label="trophy" handleClick={handleClick}/></td>

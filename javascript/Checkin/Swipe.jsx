@@ -105,7 +105,7 @@ class Swipe extends ErrorTimeout {
             Account not found. Please try again or see the front desk.
           </div>
           <button className="btn btn-default" type="button" onClick={this.resetSwipe}>
-            <i className="fa fa-repeat"></i>&nbsp;
+            <i className="fas fa-redo-alt"></i>&nbsp;
             Try again</button>
         </div>
       )
@@ -116,7 +116,7 @@ class Swipe extends ErrorTimeout {
           role="alert"
           ref="errorAlert">
           <button className="close" type="button" onClick={this.resetSwipe}>
-            <i className="fa fa-times"></i>
+            <i className="fas fa-times"></i>
           </button>
           You are already logged in. Please visit the front desk if you have a question or
           concern.

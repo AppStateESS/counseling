@@ -128,7 +128,7 @@ const AppointmentAction = (props) => {
     options.push({
       label: <div className="text-success pointer">
         <strong>
-          <i className="fa fa-thumbs-o-up"></i>&nbsp; Send back</strong>
+          <i className="fas fa-thumbs-up"></i>&nbsp; Send back</strong>
       </div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 5)
@@ -136,7 +136,7 @@ const AppointmentAction = (props) => {
       divider: true
     }, {
       label: <div className="pointer">
-        <i className="fa fa-external-link"></i>&nbsp; Had to leave</div>,
+        <i className="fas fa-external-link-square-alt"></i>&nbsp; Had to leave</div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 2)
     }, {

@@ -32,7 +32,7 @@ const WaitingAction = (props) => {
     var options = []
     options.push({
       label: <div>
-        <i className="fas fa-external-link-alt"></i>&nbsp; Had to leave</div>,
+        <i className="fas fa-external-link-square-alt"></i>&nbsp; Had to leave</div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 2),
     }, {

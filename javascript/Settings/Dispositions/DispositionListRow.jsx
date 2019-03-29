@@ -1,6 +1,8 @@
 'use strict'
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { fas } from '@fortawesome/free-solid-svg-icons'
 
 export default class DispositionListRow extends Component {
   constructor(props) {
@@ -15,9 +17,10 @@ export default class DispositionListRow extends Component {
   }
 
   render() {
-    const iconClass = 'fa fa-' + this.props.icon
+    const iconClass = this.props.icon
     const buttonClass = 'btn btn-block btn-' + this.props.color
-
+    const iconPrefix = 'fas'
+    
     return (
       <tr className="sorting-row" data-rowid={this.props.id} id={this.props.id}>
         <td className="col-xs-3">
@@ -39,7 +42,7 @@ export default class DispositionListRow extends Component {
         </td>
         <td>
           <button className={buttonClass}>
-            <i className={iconClass}></i>&nbsp;{this.props.title}</button>
+            <FontAwesomeIcon icon={[iconPrefix, iconClass]}/>&nbsp;{this.props.title}</button>
         </td>
       </tr>
     )
