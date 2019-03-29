@@ -12,8 +12,8 @@ const ClinicianListRow = ({
 
   return (
     <tr className="sorting-row" data-rowid={id} id={id}>
-      <td className="col-sm-3">
-        <button className="btn btn-default handle">
+      <td>
+        <button className="btn btn-default btn-sm handle">
           <i className="fas fa-arrows-alt"></i>
         </button>&nbsp;
         <button

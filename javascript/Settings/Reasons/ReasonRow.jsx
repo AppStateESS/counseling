@@ -164,7 +164,7 @@ export default class ReasonRow extends Component {
     let deleteButton = null
     if (settingsAllowed) {
       deleteButton = <button
-        className="pull-right btn btn-danger btn-sm"
+        className="float-right btn btn-danger btn-sm"
         onClick={this.deleteReason}>
         <i className="fa fa-exclamation-triangle"></i>
         Delete</button>
@@ -184,7 +184,8 @@ export default class ReasonRow extends Component {
       label="Phone number"
       icon="fa-phone"/>
 
-    let panelClass = 'panel panel-' + this.state.color
+    let cardHeaderClass = 'card-header bg-' + this.state.color
+    let cardClass = 'card mb-3 border-' + this.state.color    
     let props = {
       reasonId: this.state.id,
       reload: this.props.reload,
@@ -193,13 +194,13 @@ export default class ReasonRow extends Component {
     }
 
     return (
-      <div className={panelClass}>
-        <div className="panel-heading">
+      <div className={cardClass}>
+        <div className={cardHeaderClass}>
           <span className="badge">{this.state.ordering}</span>
           {deleteButton}
           <div className="clearfix"></div>
         </div>
-        <div className="panel-body">
+        <div className="card-body">
           <div className="row">
             <div className="col-sm-6">
               <div className="section">
