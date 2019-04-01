@@ -19,7 +19,7 @@ const ButtonGroup = (props) => {
         aria-haspopup="true"
         aria-expanded="false">
         {props.label}
-        <i class="far fa-caret-square-down"></i>
+        <i class="fas fa-caret-down"></i>
       </button>
       <div className="dropdown-menu dropdown-menu-right">
         {options}

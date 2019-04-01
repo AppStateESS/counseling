@@ -88,16 +88,12 @@ export default class CurrentlySeen extends Component {
         <span key={key} className="dropdown mr-1">
           <button className="btn btn-default" data-toggle="dropdown">{value.visitor.last_name}&nbsp;w/&nbsp; {value.clinician}&nbsp;<span className="caret"></span>
           </button>
-          <ul className="dropdown-menu">
-            <li>
-              <a className="pointer" onClick={this.moveBack.bind(this, value.id)}>
+          <div className="dropdown-menu">
+              <a className="dropdown-item pointer" onClick={this.moveBack.bind(this, value.id)}>
                 <i className="fa fa-reply"></i>&nbsp;Move&nbsp;{value.visitor.preferred_name}&nbsp; {value.visitor.last_name}&nbsp;back to queue</a>
-            </li>
-            <li>
-              <a className="pointer" onClick={this.complete.bind(this, value.id)}>
+              <a className="dropdown-item pointer" onClick={this.complete.bind(this, value.id)}>
                 <i className="fa fa-flag-checkered"></i>&nbsp;Complete {value.visitor.preferred_name}&nbsp;{value.visitor.last_name}'s consultation</a>
-            </li>
-          </ul>
+          </div>
         </span>
       )
     }.bind(this))

@@ -31,29 +31,29 @@ const WaitingAction = (props) => {
   const getOptions = () => {
     var options = []
     options.push({
-      label: <div>
+      label: <div className="pointer">
         <i className="fas fa-external-link-square-alt"></i>&nbsp; Had to leave</div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 2),
     }, {
-      label: <div>
+      label: <div className="pointer">
         <i className="fa fa-user-plus"></i>&nbsp; Full, agreed to return</div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 6),
     }, {
-      label: <div>
+      label: <div className="pointer">
         <i className="fa fa-eye-slash"></i>&nbsp; Missing</div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 3),
     }, {
-      label: <div>
+      label: <div className="pointer">
         <i className="fas fa-clock"></i>&nbsp; Made appointment</div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 4),
     }, {
       divider: true
     }, {
-      label: <div className="text-danger">
+      label: <div className="text-danger pointer">
         <i className="far fa-trash-alt"></i>&nbsp; Remove</div>,
       visitId: props.visitId,
       handleClick: remove,

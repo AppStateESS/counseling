@@ -22,9 +22,9 @@ class CategoryIcon extends Component {
   render() {
     var icon = null
     var _className = 'category fa fa-lg ' + categoryIcons[this.props.category]
-    icon = <i className={_className} data-toggle="tooltip" title={this.props.reasonTitle}></i>
+    icon = <i className={_className}></i>
     return (
-      <div>{icon}</div>
+      <div data-toggle="tooltip" title={this.props.reasonTitle}>{icon}</div>
     )
   }
 }
