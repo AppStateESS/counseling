@@ -1,16 +1,20 @@
 <!-- Brand and toggle get grouped for better mobile display -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light border rounded">
-    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-      <span class="navbar-toggler-icon">Toggle navigation</span>
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent">
+      <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand" href="#">Counseling Check-in</a>
 <!-- Collect the nav links, forms, and other content for toggling -->
-  <div class="collapse navbar-collapse">
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item dropdown">
         <a class="nav-link" href="counseling/Admin/Dashboard"><i class="fa fa-inbox"></i> Front desk</a>
-        <a class="nav-link" href="counseling/Admin/Clinician"><i class="fa fa-clipboard"></i> Clinician</a>
-        <a class="nav-link" href="counseling/Admin/Report/Daily"><i class="far fa-chart-bar"></i> Report</a>
+      </li>
+      <li class="navbar-item dropdown">
+          <a class="nav-link" href="counseling/Admin/Clinician"><i class="fa fa-clipboard"></i> Clinician</a>
+      </li>
+      <li clasds="navbar-item dropdown">
+        <a class="nav-link" href="counseling/Admin/Report/Daily"><i class="far fa-chart-bar"></i> Report</a>          
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
@@ -21,7 +25,9 @@
       <?php endif; ?>
       <!-- END admin_links -->
         <a class="nav-link" href="index.php?module=controlpanel"><?=$username?></a>
-        <a class="nav-link" href="<?=$logout_uri?>"><i class="fas fa-sign-out-alt"></i> Sign out</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link" href="<?=$logout_uri?>"><i class="fas fa-sign-out-alt"></i> Sign out</a>          
       </li>
     </ul>
   </div><!-- /.navbar-collapse -->

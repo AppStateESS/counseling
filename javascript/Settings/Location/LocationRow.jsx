@@ -58,7 +58,7 @@ export default class LocationRow extends Component {
       deleteButton = <button
         className="btn btn-danger btn-sm"
         onClick={this.deleteLocation}>
-        <i className="fa fa-exclamation-triangle"></i>
+        <i className="fas fa-exclamation-triangle"></i>
         Delete</button>
     }
 
@@ -70,20 +70,21 @@ export default class LocationRow extends Component {
     }
 
     return (
-      <tr>
-        <td style={{width : '5%'}}>
-          {deleteButton}
-        </td>
+        <tr>
         <td>
+          {deleteButton}
+       </td>
+        <td style={{width:'75%'}}>
           <LocationTitle
             value={this.state.title}
             reset={this.resetTitle}
             update={this.updateTitle}
-            save={this.saveTitle}
+           save={this.saveTitle}
             {...props}/>
         </td>
       </tr>
-    )
+
+          )
   }
 }
 
