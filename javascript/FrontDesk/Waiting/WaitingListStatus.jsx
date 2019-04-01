@@ -20,20 +20,20 @@ const WaitingListStatus = (props) => {
   if (props.visitor.intake_complete === '1') {
     if (props.visitNumber > 1) {
       if (props.visitor.seen_last_visit === '0') {
-        return <span className="label label-danger">Unseen last visit</span>
+        return <span className="badge badge-danger">Unseen last visit</span>
       } else {
         return (
-          <span className="label label-primary">
+          <span className="badge badge-primary">
             Previously seen @ {props.visitor.previously_seen}
           </span>
         )
       }
     } else {
-      return <span className="label label-success">Intake complete</span>
+      return <span className="badge badge-success">Intake complete</span>
     }
   } else {
     return <span
-      className="label label-danger pointer"
+      className="badge badge-danger pointer"
       title="Click to acknowledge intake completion"
       onClick={intakeComplete}>Intake incomplete</span>
   }
