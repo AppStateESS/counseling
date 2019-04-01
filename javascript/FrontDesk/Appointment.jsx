@@ -161,7 +161,7 @@ const AppointmentAction = (props) => {
   }
 
   var options = getOptions()
-  return <ButtonGroup options={options}/>
+  return <ButtonGroup label="action " options={options}/>
 }
 
 AppointmentAction.propTypes = {

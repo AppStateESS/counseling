@@ -62,7 +62,7 @@ const WaitingAction = (props) => {
   }
 
   var options = getOptions()
-  return <ButtonGroup options={options}/>
+  return <ButtonGroup label="action " options={options}/>
 }
 
 WaitingAction.propTypes = {

@@ -43,13 +43,13 @@ const EmergencyRow = (props) => {
         min. in<br />
         {props.location}
       </div>
-      <div className="col-sm-3">
+      <div className="col-sm-2">
         <WaitingListStatus
           visitor={props.visitor}
           reload={props.reload}
           visitNumber={props.total_visits}/>
       </div>
-      <div className="col-sm-1">
+      <div className="col-sm-2">
         <WaitingAction visitId={props.id} reload={props.reload}/>
       </div>
     </div>

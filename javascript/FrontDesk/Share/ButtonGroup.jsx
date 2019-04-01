@@ -21,7 +21,7 @@ const ButtonGroup = (props) => {
         {props.label}
         <i class="far fa-caret-square-down"></i>
       </button>
-      <div className="dropdown-menu">
+      <div className="dropdown-menu dropdown-menu-right">
         {options}
       </div>
     </div>
