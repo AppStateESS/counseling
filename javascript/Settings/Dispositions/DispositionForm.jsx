@@ -88,7 +88,7 @@ export default class DispositionForm extends Component {
     }
 
     let sample = <CurrentIcon
-          iconPrefix={this.state.iconPrefix}
+          iconPrefix={this.state.iconPrefix ? this.state.iconPrefix : 'fas'}
           icon={this.state.icon}
           color={this.state.color}
           title={this.state.title}/>

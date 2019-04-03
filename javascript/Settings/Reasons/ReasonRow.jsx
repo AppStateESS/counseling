@@ -26,6 +26,16 @@ export default class ReasonRow extends Component {
     this.deleteReason = this.deleteReason.bind(this)
     this.flipEmergency = this.flipEmergency.bind(this)
     this.flipAskForPhone = this.flipAskForPhone.bind(this)
+    this.saveCategory = this.saveCategory.bind(this)
+    this.updateCategory = this.updateCategory.bind(this)
+    this.resetCategory = this.resetCategory.bind(this)
+    this.saveInstruction = this.saveInstruction.bind(this)
+    this.updateInstruction = this.updateInstruction.bind(this)
+    this.resetInstruction = this.resetInstruction.bind(this)
+    this.saveDescription = this.saveDescription.bind(this)
+    this.updateDescription = this.updateDescription.bind(this)
+    this.resetDescription = this.resetDescription.bind(this)
+    this.resetTitle = this.resetTitle.bind(this)
   }
 
   componentDidMount() {
@@ -288,6 +298,10 @@ class ReasonCategory extends Component {
     this.state = {
       editMode: false
     }
+    this.formMode = this.formMode.bind(this)
+    this.save = this.save.bind(this)
+    this.closeForm = this.closeForm.bind(this)
+
   }
 
   componentDidMount() {
@@ -407,6 +421,7 @@ class ReasonInstruction extends Component {
       editMode: false
     }
     this.formMode = this.formMode.bind(this)
+    this.save = this.save.bind(this)
   }
 
   componentDidUpdate() {
@@ -502,16 +517,17 @@ ReasonInstruction.propTypes = {
 
 const ReasonSelect = (options, match, handleChange) => {
   let optionList = []
+  let reasonOptions = []
   optionList.displayName = 'asd'
-  options.displayName = 'asd'
-  optionList = options.map(function (value, key) {
+  options.options.displayName = 'asd'
+  optionList = options.options.map(function (value, key) {
     return (
       <option key={key} value={value.value}>{value.label}</option>
     )
   }.bind(this))
 
   return (
-    <select defaultValue={match} className="form-control" onChange={handleChange}>
+    <select defaultValue={options.match} className="form-control" onChange={options.handleChange}>
       {optionList}
     </select>
   )
