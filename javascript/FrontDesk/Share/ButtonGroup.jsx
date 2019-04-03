@@ -19,7 +19,7 @@ const ButtonGroup = (props) => {
         aria-haspopup="true"
         aria-expanded="false">
         {props.label}
-        <i class="fas fa-caret-down"></i>
+        <i className="fas fa-caret-down"></i>
       </button>
       <div className="dropdown-menu dropdown-menu-right">
         {options}
@@ -34,7 +34,7 @@ ButtonGroup.propTypes = {
 }
 
 ButtonGroup.defaultProps = {
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.object,]),
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.element]),
   options: [
     {
       label: 'Action1',
@@ -62,7 +62,7 @@ const ButtonGroupOption = (props) => {
 ButtonGroupOption.propTypes = {
   divider: PropTypes.bool,
   handleClick: PropTypes.func,
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.object,]),
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.element,])
 }
 
 export default ButtonGroup
