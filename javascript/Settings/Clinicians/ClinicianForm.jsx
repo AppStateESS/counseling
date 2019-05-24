@@ -20,7 +20,9 @@ export default class ClinicianForm extends Component {
   }
 
   componentWillMount() {
-    this.setState({firstName: this.props.firstName, lastName: this.props.lastName, clinicianId: this.props.clinicianId})
+    this.setState(
+      {firstName: this.props.firstName, lastName: this.props.lastName, clinicianId: this.props.clinicianId}
+    )
   }
   componentDidMount() {
     $('#firstName').focus()
@@ -50,7 +52,9 @@ export default class ClinicianForm extends Component {
     if (this.state.lastName === null || this.state.lastName.length === 0) {
       var splitString = this.state.firstName.split(' ')
       if (splitString.length === 2) {
-        this.setState({firstName: splitString[0], lastName: splitString[1], formError: 'Last name empty. Did you type the full name in the first name field?'})
+        this.setState(
+          {firstName: splitString[0], lastName: splitString[1], formError: 'Last name empty. Did you type the full name in the first name field?'}
+        )
         return
       }
 
@@ -79,9 +83,11 @@ export default class ClinicianForm extends Component {
   render() {
     let alert = null
     if (this.state.formError.length > 0) {
-      alert = <div className="alert alert-danger" style={{
-        fontSize: '1em'
-      }}>
+      alert = <div
+        className="alert alert-danger"
+        style={{
+          fontSize: '1em'
+        }}>
         {this.state.formError}</div>
     }
 
@@ -92,34 +98,34 @@ export default class ClinicianForm extends Component {
           <form method="post" action="counseling/Admin/Settings/Clinicians">
             <input type="hidden" name="command" value="add"/>
             <div className="row">
-                <div className="col-sm-6">
-                    <TextInput
-                      inputId="firstName"
-                      label="First name"
-                      handleChange={this.updateFirstName}
-                      required={true}
-                      tabIndex={1}
-                      value={this.state.firstName}/>
-                </div>
-                <div className="col-sm-6">
-                    <TextInput
-                      inputId="lastName"
-                      label="Last name"
-                      handleChange={this.updateLastName}
-                      required={true}
-                      tabIndex={1}
-                      value={this.state.lastName}/>
-                </div>
+              <div className="col-sm-6">
+                <TextInput
+                  inputId="firstName"
+                  label="First name"
+                  handleChange={this.updateFirstName}
+                  required={true}
+                  tabIndex={1}
+                  value={this.state.firstName}/>
+              </div>
+              <div className="col-sm-6">
+                <TextInput
+                  inputId="lastName"
+                  label="Last name"
+                  handleChange={this.updateLastName}
+                  required={true}
+                  tabIndex={1}
+                  value={this.state.lastName}/>
+              </div>
             </div>
             <div className="row">
-                <div className="col-sm-9">
-                    <button className="pull-left btn btn-primary" onClick={this.save} tabIndex={2}>
-                    <i className="fa fa-check"></i>Save Clinician</button>&nbsp;
-                    <button className="btn btn-danger" onClick={this.closeForm} tabIndex={3}>
-                    <i className="fa fa-exclamation-triangle"></i>Cancel</button>
-                </div>
+              <div className="col-sm-9">
+                <button className="pull-left btn btn-primary" onClick={this.save} tabIndex={2}>
+                  <i className="fa fa-check"></i>&#32;Save Clinician</button>&nbsp;
+                <button className="btn btn-danger" onClick={this.closeForm} tabIndex={3}>
+                  <i className="fa fa-exclamation-triangle"></i>&#32;Cancel</button>
+              </div>
             </div>
-         </form>
+          </form>
         </div>
       </div>
     )

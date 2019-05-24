@@ -32,29 +32,29 @@ const WaitingAction = (props) => {
     var options = []
     options.push({
       label: <div className="pointer">
-        <i className="fas fa-external-link-square-alt"></i>&nbsp; Had to leave</div>,
+        <i className="fas fa-external-link-square-alt"></i>&nbsp;Had to leave</div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 2),
     }, {
       label: <div className="pointer">
-        <i className="fa fa-user-plus"></i>&nbsp; Full, agreed to return</div>,
+        <i className="fa fa-user-plus"></i>&nbsp;Full, agreed to return</div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 6),
     }, {
       label: <div className="pointer">
-        <i className="fa fa-eye-slash"></i>&nbsp; Missing</div>,
+        <i className="fa fa-eye-slash"></i>&nbsp;Missing</div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 3),
     }, {
       label: <div className="pointer">
-        <i className="fas fa-clock"></i>&nbsp; Made appointment</div>,
+        <i className="fas fa-clock"></i>&nbsp;Made appointment</div>,
       visitId: props.visitId,
       handleClick: completeReason.bind(null, 4),
     }, {
       divider: true
     }, {
       label: <div className="text-danger pointer">
-        <i className="far fa-trash-alt"></i>&nbsp; Remove</div>,
+        <i className="far fa-trash-alt"></i>&nbsp;Remove</div>,
       visitId: props.visitId,
       handleClick: remove,
     })
@@ -62,11 +62,13 @@ const WaitingAction = (props) => {
   }
 
   var options = getOptions()
-  return <ButtonGroup label="action " options={options}/>
+  const label = <i className="fas fa-cog"></i>
+  return <ButtonGroup label={label} options={options}/>
 }
 
 WaitingAction.propTypes = {
-  visitId: PropTypes.string
+  visitId: PropTypes.string,
+  reload: PropTypes.func,
 }
 
 export default WaitingAction

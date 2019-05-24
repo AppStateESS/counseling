@@ -13,12 +13,8 @@ const WaitingListRow = (props) => {
   let _className = 'bg-' + props.color
   return (
     <tr className={_className}>
-      <td style={{
-        width: '3%'
-      }}>{count}</td>
-      <td style={{
-        width: '3%'
-      }} className="text-center">
+      <td>{count}</td>
+      <td className="text-center">
         <CategoryIcon category={props.category} reasonTitle={props.reason_title}/></td>
       <td><VisitorName visitor={props.visitor}/></td>
       <td>

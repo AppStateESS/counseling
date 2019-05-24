@@ -56,14 +56,14 @@ export default class Dashboard extends Component {
     let visitors = null
     if (this.state.emergencyList === null && this.state.waitingList === null && this.appointmentList === null) {
       visitors = <div className="text-success text-center">
-        <i className="large" className="fa fa-smile-o"></i>
+        <i className="fa fa-smile-o"></i>
         <p style={{
           fontSize: '100px'
         }}>All clear!</p>
       </div>
     } else {
       visitors = (
-        <div>
+        <div className="awaiting">
           <Waiting
             emergency={this.state.emergencyList}
             waiting={this.state.waitingList}

@@ -9,7 +9,7 @@ export default class CurrentlySeen extends Component {
     super(props)
     this.state = {
       dispositions: [],
-      seenId: 0,
+      seenId: 0
     }
   }
 
@@ -18,9 +18,11 @@ export default class CurrentlySeen extends Component {
   }
 
   loadDispositions() {
-    $.getJSON('counseling/Admin/Clinician', {command: 'dispositionList'}).done(function (data) {
-      this.setState({dispositions: data})
-    }.bind(this))
+    $.getJSON('counseling/Admin/Clinician', {command: 'dispositionList'}).done(
+      function (data) {
+        this.setState({dispositions: data})
+      }.bind(this)
+    )
   }
 
   moveBack(id) {
@@ -41,7 +43,7 @@ export default class CurrentlySeen extends Component {
     $.post('counseling/Admin/Clinician', {
       command: 'assignDisposition',
       dispositionId: dispositionId,
-      visitId: this.state.seenId,
+      visitId: this.state.seenId
     }, null, 'json').done(function () {
       this.closeModal()
     }.bind(this))
@@ -60,16 +62,15 @@ export default class CurrentlySeen extends Component {
           key={key}
           className={buttonClass}
           onClick={this.handleClick.bind(null, value.id)}>
-          <i className={iconClass}></i>
-          {value.title}</button>
+          <i className={iconClass}></i>&nbsp;{value.title}</button>
       )
     }.bind(this))
-    let modalBody = (
-      <div>
-        {dispositions}
-      </div>
+    let modalBody = (<div>
+      {dispositions}
+    </div>)
+    return (
+      <Modal body={modalBody} header="Assign disposition" onClose={this.closeModal}/>
     )
-    return (<Modal body={modalBody} header="Assign disposition" onClose={this.closeModal}/>)
   }
 
   closeModal() {
@@ -86,13 +87,17 @@ export default class CurrentlySeen extends Component {
     let seen = this.props.seen.map(function (value, key) {
       return (
         <span key={key} className="dropdown mr-1">
-          <button className="btn btn-default" data-toggle="dropdown">{value.visitor.last_name}&nbsp;w/&nbsp; {value.clinician}&nbsp;<span className="caret"></span>
+          <button className="btn btn-default" data-toggle="dropdown">{value.visitor.last_name}&#32;w/&#32;{value.clinician}&nbsp;<span className="caret"></span>
           </button>
           <div className="dropdown-menu">
-              <a className="dropdown-item pointer" onClick={this.moveBack.bind(this, value.id)}>
-                <i className="fa fa-reply"></i>&nbsp;Move&nbsp;{value.visitor.preferred_name}&nbsp; {value.visitor.last_name}&nbsp;back to queue</a>
-              <a className="dropdown-item pointer" onClick={this.complete.bind(this, value.id)}>
-                <i className="fa fa-flag-checkered"></i>&nbsp;Complete {value.visitor.preferred_name}&nbsp;{value.visitor.last_name}'s consultation</a>
+            <a
+              className="dropdown-item pointer"
+              onClick={this.moveBack.bind(this, value.id)}>
+              <i className="fa fa-reply"></i>&nbsp;Move {value.visitor.preferred_name}&#32;{value.visitor.last_name}&#32;back to queue</a>
+            <a
+              className="dropdown-item pointer"
+              onClick={this.complete.bind(this, value.id)}>
+              <i className="fa fa-flag-checkered"></i>&nbsp;Complete {value.visitor.preferred_name}&#32;{value.visitor.last_name}&apos;s consultation</a>
           </div>
         </span>
       )

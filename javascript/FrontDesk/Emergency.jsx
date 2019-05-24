@@ -38,10 +38,9 @@ const EmergencyRow = (props) => {
       <div className="col-sm-3">
         <ClipboardInput bannerId={props.visitor.banner_id}/>
       </div>
-      <div className="col-sm-2">
+      <div className="col-sm-3 wait-time">
         {props.wait_time}&nbsp;
-        min. in<br />
-        {props.location}
+        min. @&nbsp;{props.location}
       </div>
       <div className="col-sm-2">
         <WaitingListStatus
@@ -49,7 +48,7 @@ const EmergencyRow = (props) => {
           reload={props.reload}
           visitNumber={props.total_visits}/>
       </div>
-      <div className="col-sm-2">
+      <div className="col-sm-1">
         <WaitingAction visitId={props.id} reload={props.reload}/>
       </div>
     </div>

@@ -15,6 +15,7 @@ const ButtonGroup = (props) => {
     <div className="dropdown">
       <button
         type="button"
+        className="btn btn-default btn-sm"
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false">
@@ -30,31 +31,28 @@ const ButtonGroup = (props) => {
 
 ButtonGroup.propTypes = {
   options: PropTypes.array,
-  label :PropTypes.func,
+  label: PropTypes.oneOfType([PropTypes.string,PropTypes.object,])
 }
 
 ButtonGroup.defaultProps = {
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.element]),
+  label: PropTypes.oneOfType(
+    [PropTypes.string, PropTypes.object, PropTypes.element]
+  ),
   options: [
     {
-      label: 'Action1',
+      label: 'Action',
       handleClick: null,
       divider: false
-    },
+    }
   ]
 }
 
 const ButtonGroupOption = (props) => {
-
   if (props.divider) {
-    return (
-      <span role="separator" className="divider"></span>
-    )
+    return (<span role="separator" className="divider"></span>)
   } else {
     return (
-      
-        <a onClick={props.handleClick} className="dropdown-item">{props.label}</a>
-      
+      <a onClick={props.handleClick} className="dropdown-item">{props.label}</a>
     )
   }
 }
@@ -62,7 +60,9 @@ const ButtonGroupOption = (props) => {
 ButtonGroupOption.propTypes = {
   divider: PropTypes.bool,
   handleClick: PropTypes.func,
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.element,])
+  label: PropTypes.oneOfType(
+    [PropTypes.string, PropTypes.object, PropTypes.element]
+  )
 }
 
 export default ButtonGroup

@@ -10,7 +10,7 @@ export default class SelectVisitor extends Component {
     this.state = {
       waiting: null,
       emergencies: null,
-      selectedVisit: null,
+      selectedVisit: null
     }
     this.select = this.select.bind(this)
     this.startConsultation = this.startConsultation.bind(this)
@@ -23,11 +23,13 @@ export default class SelectVisitor extends Component {
   }
 
   loadData() {
-    $.getJSON('counseling/Admin/Clinician', {command: 'visitorList'}).done(function (data) {
-      if (data !== null) {
-        this.setState({waiting: data.waiting, emergencies: data.emergencies,})
-      }
-    }.bind(this))
+    $.getJSON('counseling/Admin/Clinician', {command: 'visitorList'}).done(
+      function (data) {
+        if (data !== null) {
+          this.setState({waiting: data.waiting, emergencies: data.emergencies})
+        }
+      }.bind(this)
+    )
   }
 
   goBack() {
@@ -48,7 +50,7 @@ export default class SelectVisitor extends Component {
     $.post('counseling/Admin/Clinician/', {
       command: 'selectVisit',
       visitId: visitId,
-      clinicianId: clinicianId,
+      clinicianId: clinicianId
     }, null, 'json').done(function () {
       this.reset()
       this.props.setStage('reset')
@@ -70,8 +72,7 @@ export default class SelectVisitor extends Component {
           <div className="alert alert-info">No visitors are currently waiting.</div>
           <div className="go-back text-center">
             <button className="btn btn-default btn-lg" onClick={this.goBack}>
-              <i className="fa fa-undo"></i>&nbsp;
-              Go Back</button>
+              <i className="fa fa-undo"></i>&nbsp;Go Back</button>
           </div>
         </div>
       )
@@ -96,35 +97,38 @@ export default class SelectVisitor extends Component {
 
 SelectVisitor.propTypes = {
   clinician: PropTypes.object,
-  setStage: PropTypes.func,
+  setStage: PropTypes.func
 }
 
 const ConfirmVisitor = (props) => {
   const visitor = props.visit.visitor
+  let preferredName = visitor.preferred_name !== null
+    ? visitor.preferred_name
+    : visitor.first_name
   return (
     <div className="text-center well">
       <h2>
-        {`You have chosen to start a consulation with ${visitor.preferred_name} \
-        ${visitor.last_name}`}
+        {
+          `You have chosen to start a consulation with ${preferredName} \
+        ${visitor.last_name}`
+        }
       </h2>
       <div className="go-back">
         <button
           className="btn btn-success btn-lg mb-1"
           onClick={props.startConsultation}>
-          <i className="fa fa-check"></i>&nbsp;
-          Start consultation</button><br/>
+          <i className="fa fa-check"></i>&nbsp;Start consultation</button><br/>
         <button className="btn btn-default btn-3x" onClick={props.goBack}>
-          <i className="fa fa-undo"></i>&nbsp;
-          Start over</button>
+          <i className="fa fa-undo"></i>&nbsp;Start over</button>
       </div>
     </div>
   )
 }
 
 ConfirmVisitor.propTypes = {
-  visit : PropTypes.object,
+  visit: PropTypes.object,
   startConsultation: PropTypes.func,
-  goBack: PropTypes.func,
+  goBack: PropTypes.func
 }
 
 const SelectVisitorListing = (props) => {
@@ -134,14 +138,14 @@ const SelectVisitorListing = (props) => {
         list={props.emergencies}
         clinician={props.clinician}
         select={props.select}/>
+      <hr/>
       <Waiting
         waiting={props.waiting}
         clinician={props.clinician}
         select={props.select}/>
       <div className="go-back text-center">
         <button className="btn btn-default btn-lg" onClick={props.goBack}>
-          <i className="fa fa-undo"></i>&nbsp;
-          Go Back</button>
+          <i className="fa fa-undo"></i>&nbsp;Go Back</button>
       </div>
     </div>
   )
@@ -152,7 +156,7 @@ SelectVisitorListing.propTypes = {
   select: PropTypes.func,
   waiting: PropTypes.array,
   clinician: PropTypes.object,
-  goBack: PropTypes.func,
+  goBack: PropTypes.func
 }
 
 const Emergencies = (props) => {
@@ -223,7 +227,7 @@ const VisitorRow = (props) => {
   return (
     <button className={_className} onClick={props.select}>
       <CategoryIcon category={props.category} title={props.reason_title}/>
-      &nbsp;<strong>{preferredName} {props.visitor.last_name}</strong>
+      &nbsp;<strong>{preferredName}&#32;{props.visitor.last_name}</strong>
       {waiting}
     </button>
   )
@@ -236,20 +240,17 @@ VisitorRow.propTypes = {
   select: PropTypes.func,
   reason_title: PropTypes.string,
   category: PropTypes.string,
-  wait_time: PropTypes.number,
+  wait_time: PropTypes.number
 }
-
 
 const CategoryIcon = (props) => {
 
   const _className = 'category fa ' + categoryIcons[props.category]
   const icon = <i className={_className} title={props.title}></i>
-  return (
-    <span>{icon}</span>
-  )
+  return (<span>{icon}</span>)
 }
 
 CategoryIcon.propTypes = {
   title: PropTypes.string,
-  category: PropTypes.string,
+  category: PropTypes.string
 }
