@@ -28,10 +28,10 @@ export default class Modal extends Component {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
+              <h4 className="modal-title">{this.props.header}</h4>
               <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
-              <h4 className="modal-title">{this.props.header}</h4>
             </div>
             <div className="modal-body">
               {this.props.body}
@@ -53,4 +53,8 @@ Modal.propTypes = {
   footer: PropTypes.string,
   modalId: PropTypes.string,
   onClose: PropTypes.func,
+}
+
+Modal.defaultProps = {
+  modalId : 'reactModal'
 }
