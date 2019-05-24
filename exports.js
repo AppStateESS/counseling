@@ -5,6 +5,6 @@ exports.entry = {
   Checkin: exports.APP_DIR + '/Checkin/index.jsx',
   Clinician: exports.APP_DIR + '/Clinician/index.jsx',
   FrontDesk: exports.APP_DIR + '/FrontDesk/index.jsx',
-  //Report: exports.APP_DIR + '/Report/index.jsx',
+  Report: exports.APP_DIR + '/Report/index.js',
   Settings: exports.APP_DIR + '/Settings/index.jsx'
 }

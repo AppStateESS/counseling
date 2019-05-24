@@ -4,7 +4,7 @@ namespace counseling\Factory;
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
- * @author Matthew McNaney <mcnaney at gmail dot com>
+ * @author Matthew McNaney <mcnaneym.appstate.edu>
  */
 class Report extends Base
 {
@@ -120,38 +120,39 @@ class Report extends Base
 
         return self::produceCSVReport($visits, $download_file);
     }
-    
+
     public static function intervalCSV(\Canopy\Request $request)
     {
         $start_date = $request->shiftCommand();
         $end_date = $request->shiftCommand();
-        
+
         if (empty($start_date) || !is_numeric($start_date) || empty($end_date) ||
                 !is_numeric($end_date) || $start_date >= $end_date) {
             return '<p>Improperly formatted date. Cannot create report.</p>';
         }
-        
+
         $start_time = strtotime($start_date);
         $end_time = strtotime($end_date);
 
         $start_month = date('m', $start_time);
         $start_day = date('d', $start_time);
         $start_year = date('Y', $start_time);
-        
+
         $end_month = date('m', $end_time);
         $end_day = date('d', $end_time);
-        $end_year = date('Y', $end_time);        
+        $end_year = date('Y', $end_time);
 
-        $start_of_interval = mktime(0, 0, 0, $start_month, $start_day, $start_year);
+        $start_of_interval = mktime(0, 0, 0, $start_month, $start_day,
+                $start_year);
         $end_of_interval = mktime(23, 59, 59, $end_month, $end_day, $end_year);
         $visits = Visit::getDaysVisits($start_of_interval, $end_of_interval);
 
-        $download_file = 'Interval Report ' . strftime('%Y%m%d', $start_of_interval) . ' to ' .
+        $download_file = 'Interval Report ' . strftime('%Y%m%d',
+                        $start_of_interval) . ' to ' .
                 strftime('%Y%m%d', $end_of_interval) . '.csv';
 
         return self::produceCSVReport($visits, $download_file);
     }
-
 
     private static function produceCSVReport($visits, $download_file)
     {
@@ -216,8 +217,6 @@ class Report extends Base
 
     public static function weekly(\Canopy\Request $request)
     {
-        javascript('datepicker');
-
         $datestamp = $request->shiftCommand();
         if (empty($datestamp) || !is_numeric($datestamp)) {
             $start_time = self::getTodayStartTime();
@@ -256,8 +255,6 @@ class Report extends Base
 
     public static function interval(\Canopy\Request $request)
     {
-        javascript('datepicker');
-
         $start_time_request = $request->shiftCommand();
         $end_time_request = $request->shiftCommand();
 
@@ -284,8 +281,7 @@ class Report extends Base
 
         $start_of_interval = mktime(0, 0, 0, $start_month, $start_day,
                 $start_year);
-        $end_of_interval = mktime(23, 59, 59, $end_month, $end_day,
-                $end_year);
+        $end_of_interval = mktime(23, 59, 59, $end_month, $end_day, $end_year);
 
         self::intervalDatePicker($start_of_interval, $end_of_interval);
 
@@ -330,10 +326,10 @@ class Report extends Base
         $month = date('n', $start_time) - 1;
         $day = date('j', $start_time);
 
-        $script = "<script type='text/javascript'>var defaultDate = {year:$year, month:$month, day:$day};var reportType = '$report_type';</script>"
-                . '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/counseling/javascript/Report/script.js"></script>';
+        $script = "<script type='text/javascript'>const startDate = {year:$year, month:$month, day:$day};const reportType = '$report_type';</script>";
         \Layout::addJSHeader($script);
-        javascript('datepicker');
+        $reactFactory = new React;
+        $reactFactory->scriptView('Report');
     }
 
     private static function intervalDatePicker($start_time, $end_time)
@@ -348,11 +344,11 @@ class Report extends Base
 
         $startstr = strftime('%Y%m%d', $start_time);
         $endstr = strftime('%Y%m%d', $end_time);
-        
-        $script = "<script type='text/javascript'>var startStr= '$startstr';var endStr= '$endstr';var startDate = {year:$syear, month:$smonth, day:$sday};var endDate = {year:$eyear, month:$emonth, day:$eday};</script>"
-                . '<script type="text/javascript" src="' . PHPWS_SOURCE_HTTP . 'mod/counseling/javascript/Report/interval.js"></script>';
+
+        $script = "<script type='text/javascript'>const startStr= '$startstr';const endStr= '$endstr';const startDate = {year:$syear, month:$smonth, day:$sday};const endDate = {year:$eyear, month:$emonth, day:$eday};</script>";
         \Layout::addJSHeader($script);
-        javascript('datepicker');
+        $reactFactory = new React;
+        $reactFactory->scriptView('Report');
     }
 
 }

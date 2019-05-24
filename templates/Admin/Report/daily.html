@@ -1,7 +1,30 @@
-<h2>Daily Report - <?php echo $date?> <button title="Pick different day" id="pick-date" class="btn btn-default"><i style="cursor:pointer" class="fa fa-calendar"></i></button></h2>
-    <a href="counseling/Admin/Report/DailyCSV/<?php echo $startTime?>" title="Download CSV file" class="btn btn-default"><i class="fa fa-download"></i></a>
-    <a href="counseling/Admin/Report/Weekly/<?php echo $startTime?>" title=View weekly report" class="btn btn-default"><i class="far fa-chart-bar"></i> Weekly</a>
-    <a href="counseling/Admin/Report/Interval/<?php echo $startTime?>" title=View interval report" class="btn btn-default"><i class="far fa-chart-bar"></i> Interval</a>
+<h2>Daily Report
+  <button
+    type="button"
+    title="Pick different day"
+    id="pick-date"
+    class="btn btn-default pick-date-button"><?php echo $date?></button>
+</h2>
+<div class="mb-3">
+  <a
+    href="counseling/Admin/Report/DailyCSV/<?php echo $startTime?>"
+    title="Download CSV file"
+    class="btn btn-default">
+    <i class="fa fa-download"></i>
+  </a>
+  <a
+    href="counseling/Admin/Report/Weekly/<?php echo $startTime?>"
+    title="View weekly report"
+    class="btn btn-default">
+    <i class="far fa-chart-bar"></i>
+    Weekly</a>
+  <a
+    href="counseling/Admin/Report/Interval/<?php echo $startTime?>"
+    title="View interval report"
+    class="btn btn-default">
+    <i class="far fa-chart-bar"></i>
+    Interval</a>
+</div>
 <?php if (empty($seen) && empty($unseen)):?>
 <p>No visitors recorded for today.</p>
 <?php return; endif;?>
@@ -9,122 +32,140 @@
 <?php if (empty($unseen)):?>
 <p>No visitors left without being seen</p>
 <?php endif; if (!empty($unseen)):?>
-<table class='table table-striped'>
-    <tr>
-        <th>&nbsp;</th>
-        <th>Name</th>
-        <th>Banner Id</th>
-        <th>Phone</th>
-        <th>Reason left</th>
-        <th>Arrived</th>
-        <th>Waited</th>
+<table class="table table-striped">
+  <tr>
+    <th>&nbsp;</th>
+    <th>Name</th>
+    <th>Banner Id</th>
+    <th>Phone</th>
+    <th>Reason left</th>
+    <th>Arrived</th>
+    <th>Waited</th>
+  </tr>
+  <?php foreach ($unseen as $vus):?>
+  <tr>
+    <td>
+      <?php echo $vus['icon'] ?>
+      <td>
+        <?php echo $vus['visitor']['first_name']?>
+        <?php echo empty($vus['visitor']['preferred_name']) ? null : '"'.$vus['visitor']['preferred_name'].'"'?>
+        <?php echo $vus['visitor']['last_name']?>
+      </td>
+      <td>
+        <?php echo $vus['visitor']['banner_id']?>
+      </td>
+      <td>
+        <?php echo $vus['visitor']['phone_number']?>
+      </td>
+      <td>
+        <?php echo $vus['complete_reason_title']?>
+      </td>
+      <td>
+        <?php echo strftime('%l:%M%p', $vus['arrival_time'])?>
+      </td>
+      <td>
+        <?php echo $vus['wait_time']?>
+        mins.
+      </td>
     </tr>
-    <?php foreach ($unseen as $vus):?>
+    <?php endforeach;endif;?>
+  </table>
+  <h3>Walk-ins seen</h3>
+  <?php if (empty($seen)):?>
+  <p>No walk-ins seen today.</p>
+  <?php endif; if (!empty($seen)):?>
+  <table class='table table-striped'>
     <tr>
-        <td>
-            <?php echo $vus['icon'] ?>
-        <td>
-            <?php echo $vus['visitor']['first_name']?>
-            <?php echo empty($vus['visitor']['preferred_name']) ? null : '"'.$vus['visitor']['preferred_name'].'"'?>
-            <?php echo $vus['visitor']['last_name']?>
-        </td>
-        <td>
-            <?php echo $vus['visitor']['banner_id']?>
-        </td>
-        <td>
-            <?php echo $vus['visitor']['phone_number']?>
-        </td>
-        <td>
-            <?php echo $vus['complete_reason_title']?>
-        </td>
-        <td>
-            <?php echo strftime('%l:%M%p', $vus['arrival_time'])?>
-        </td>
-        <td>
-            <?php echo $vus['wait_time']?> mins. </td>
-    </tr>
-    <?php endforeach;endif;?> </table>
-<h3>Walk-ins seen</h3>
-<?php if (empty($seen)):?>
-<p>No walk-ins seen today.</p>
-<?php endif; if (!empty($seen)):?>
-<table class='table table-striped'>
-    <tr>
-        <th>&nbsp;</th>
-        <th>Name</th>
-        <th>Banner Id</th>
-        <th>Clinician</th>
-        <th>Disposition</th>
-        <th>Arrived</th>
-        <th>Waited</th>
+      <th>&nbsp;</th>
+      <th>Name</th>
+      <th>Banner Id</th>
+      <th>Clinician</th>
+      <th>Disposition</th>
+      <th>Arrived</th>
+      <th>Waited</th>
     </tr>
     <?php foreach ($seen as $vs):?>
     <tr>
-        <td>
-            <?php echo $vs['icon'];?></td>
-        <td>
-            <?php echo $vs['visitor']['first_name']?>
-            <?php echo empty($vs['visitor']['preferred_name']) ? null : '"'.$vs['visitor']['preferred_name'].'"'?>
-            <?php echo $vs['visitor']['last_name']?>
-        </td>
-        <td>
-            <?php echo $vs['visitor']['banner_id']?>
-        </td>
-        <td>
-            <?php echo $vs['clinician']?>
-        </td>
-        <td>
-            <?php echo $vs['disposition']?>
-        </td>
-        <td>
-            <?php echo strftime('%l:%M%p', $vs['arrival_time'])?>
-        </td>
-        <td>
-            <?php echo $vs['wait_time']?> mins. </td>
+      <td>
+        <?php echo $vs['icon'];?></td>
+      <td>
+        <?php echo $vs['visitor']['first_name']?>
+        <?php echo empty($vs['visitor']['preferred_name']) ? null : '"'.$vs['visitor']['preferred_name'].'"'?>
+        <?php echo $vs['visitor']['last_name']?>
+      </td>
+      <td>
+        <?php echo $vs['visitor']['banner_id']?>
+      </td>
+      <td>
+        <?php echo $vs['clinician']?>
+      </td>
+      <td>
+        <?php echo $vs['disposition']?>
+      </td>
+      <td>
+        <?php echo strftime('%l:%M%p', $vs['arrival_time'])?>
+      </td>
+      <td>
+        <?php echo $vs['wait_time']?>
+        mins.
+      </td>
     </tr>
-    <?php endforeach;endif;?> </table>
-
-<h3>Appointments seen</h3>
-<?php if (empty($appointment)):?>
-<p>No appointment seen today.</p>
-<?php endif; if (!empty($appointment)):?>
-<table class='table table-striped'>
+    <?php endforeach;endif;?>
+  </table>
+  <h3>Appointments seen</h3>
+  <?php if (empty($appointment)):?>
+  <p>No appointment seen today.</p>
+  <?php endif; if (!empty($appointment)):?>
+  <table class='table table-striped'>
     <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Banner Id</th>
-        <th>Arrived</th>
-        <th>Waited</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Banner Id</th>
+      <th>Arrived</th>
+      <th>Waited</th>
     </tr>
     <?php foreach ($appointment as $vs):?>
     <tr>
-        <td>
-            <?php echo $vs['visitor']['first_name']?>
-            <?php echo empty($vs['visitor']['preferred_name']) ? null : '"'.$vs['visitor']['preferred_name'].'"'?>
-            <?php echo $vs['visitor']['last_name']?>
-        </td>
-        <td>
-            <?php
-            if ($vs['category'] == CC_CATEGORY_APPOINTMENT) {
-            echo 'Individual';
-            } elseif ($vs['category'] == CC_CATEGORY_GROUP) {
-            echo 'Group';
-            }
-            ?>
-        </td>
-        <td>
-            <?php echo $vs['visitor']['banner_id']?>
-        </td>
-        <td>
-            <?php echo strftime('%l:%M%p', $vs['arrival_time'])?>
-        </td>
-        <td>
-            <?php echo $vs['wait_time']?> mins. </td>
+      <td>
+        <?php echo $vs['visitor']['first_name']?>
+        <?php echo empty($vs['visitor']['preferred_name']) ? null : '"'.$vs['visitor']['preferred_name'].'"'?>
+        <?php echo $vs['visitor']['last_name']?>
+      </td>
+      <td>
+      <?php
+      if ($vs['category'] == CC_CATEGORY_APPOINTMENT) {
+      echo 'Individual';
+      } elseif ($vs['category'] == CC_CATEGORY_GROUP) {
+      echo 'Group';
+      }
+      ?>
+      </td>
+      <td>
+        <?php echo $vs['visitor']['banner_id']?>
+      </td>
+      <td>
+        <?php echo strftime('%l:%M%p', $vs['arrival_time'])?>
+      </td>
+      <td>
+        <?php echo $vs['wait_time']?>
+        mins.
+      </td>
     </tr>
-    <?php endforeach;endif;?> </table>
-<hr />
-<span style="margin-right:3em"><i class="fa <?php echo CC_CATEGORY_EMERGENCY_ICON;?>"></i> Emergency</span>
-<span style="margin-right:3em"><i class="fa <?php echo CC_CATEGORY_WALKIN_ICON;?>"></i> Walk-in</span>
-<span style="margin-right:3em"><i class="fa <?php echo CC_CATEGORY_APPOINTMENT_ICON;?>"></i> Appointment</span>
-<span style="margin-right:3em"><i class="fa <?php echo CC_CATEGORY_GROUP_ICON;?>"></i> Group</span>
-<span style="margin-right:3em"><i class="fa <?php echo CC_CATEGORY_OTHER_ICON;?>"></i> Other</span>
+    <?php endforeach;endif;?>
+  </table>
+  <hr/>
+  <span style="margin-right:3em">
+    <i class="fa <?php echo CC_CATEGORY_EMERGENCY_ICON;?>"></i>
+    Emergency</span>
+  <span style="margin-right:3em">
+    <i class="fa <?php echo CC_CATEGORY_WALKIN_ICON;?>"></i>
+    Walk-in</span>
+  <span style="margin-right:3em">
+    <i class="fa <?php echo CC_CATEGORY_APPOINTMENT_ICON;?>"></i>
+    Appointment</span>
+  <span style="margin-right:3em">
+    <i class="fa <?php echo CC_CATEGORY_GROUP_ICON;?>"></i>
+    Group</span>
+  <span style="margin-right:3em">
+    <i class="fa <?php echo CC_CATEGORY_OTHER_ICON;?>"></i>
+    Other</span>
