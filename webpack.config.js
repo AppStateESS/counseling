@@ -3,11 +3,11 @@ var webpack = require('webpack')
 const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = (env, argv) => {
-    const inProduction = argv.mode === 'production'
-    const inDevelopment = argv.mode === 'development'
-    
-    const settings = {
- entry: setup.entry,
+  const inProduction = argv.mode === 'production'
+  const inDevelopment = argv.mode === 'development'
+
+  const settings = {
+    entry: setup.entry,
     output: {
       path: setup.path.join(setup.APP_DIR, "dev"),
       filename: "[name].js"
@@ -30,7 +30,7 @@ module.exports = (env, argv) => {
           }
         }
       }
-  },
+    },
     resolve: {
       extensions: ['.js', '.jsx']
     },
@@ -75,18 +75,19 @@ module.exports = (env, argv) => {
     // require('webpack-bundle-analyzer').BundleAnalyzerPlugin
     // settings.plugins.push(new BundleAnalyzerPlugin()) const AssetsPlugin =
     // require('assets-webpack-plugin')
-      const AssetsPlugin = require('assets-webpack-plugin')
-      settings.plugins.push(
-	  new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify('production')})
-      )
+    const AssetsPlugin = require('assets-webpack-plugin')
+    settings.plugins.push(
+      new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify('production')})
+    )
 
-      settings.plugins.push(  new AssetsPlugin({filename: 'assets.json',
-						prettyPrint: true,}) )
-      settings.output = {
-	  path: setup.path.join(setup.APP_DIR, 'build'),
-	  filename: '[name].[chunkhash:8].min.js',
-	  chunkFilename: '[name].[chunkhash:8].chunk.js'
-      }
+    settings.plugins.push(
+      new AssetsPlugin({filename: 'assets.json', prettyPrint: true})
+    )
+    settings.output = {
+      path: setup.path.join(setup.APP_DIR, 'build'),
+      filename: '[name].[chunkhash:8].min.js',
+      chunkFilename: '[name].[chunkhash:8].chunk.js'
+    }
   }
   return settings
 }
