@@ -70,9 +70,9 @@ ClinicianChoose.defaultProps = {
 
 const ClinicianRow = (props) => {
   return (
-    <div className="col-sm-12 col-md-6">
+    <div className="col-sm-6 col-md-4">
       <button
-        className="clinician btn btn-primary btn-lg btn-block"
+        className="clinician btn btn-primary btn-block"
         onClick={props.choose}>{props.first_name}&nbsp;{props.last_name}</button>
     </div>
   )
