@@ -1,6 +1,6 @@
 {
   "name": "Counseling-Center-Check-In",
-  "version": "1.0.0",
+  "version": "2.3.2",
   "description": "Tracks appointments and walk ins to counseling center",
   "devDependencies": {
     "@babel/core": "^7.4.5",
@@ -27,8 +27,7 @@
     "strip-loader": "^0.1.2",
     "style-loader": "^0.23.1",
     "terser": "^3.17.0",
-    "terser-webpack-plugin": "^1.2.4",
-    "url-loader": "^0.5.9",
+    "terser-webpack-plugin": "^1.3.0",
     "webpack": "^4.32.2",
     "webpack-cli": "^3.3.2"
   },

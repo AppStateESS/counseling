@@ -75,6 +75,13 @@ EOF;
 + Added react-fontawesome
 </pre>
 EOF;
+        case version_compare($version, '2.3.2', '<'):
+            $content[] = <<<EOF
+            <pre>2.3.2
+--------------
++ Bug fixes
+</pre>
+EOF;
     }
 
     return true;
