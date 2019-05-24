@@ -6,7 +6,7 @@ namespace counseling\Resource;
  * This is the result of a completed meeting.
  *
  * @license http://opensource.org/licenses/lgpl-3.0.html
- * @author Matthew McNaney <mcnaney at gmail dot com>
+ * @author Matthew McNaney <mcnaneym@appstate.edu>
  */
 class Disposition extends \phpws2\Resource
 {

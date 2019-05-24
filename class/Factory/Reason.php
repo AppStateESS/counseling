@@ -6,7 +6,7 @@ use counseling\Resource\Reason as Resource;
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
- * @author Matthew McNaney <mcnaney at gmail dot com>
+ * @author Matthew McNaney <mcnaneym@appstate.edu>
  */
 class Reason extends Base
 {

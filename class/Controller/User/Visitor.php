@@ -7,7 +7,7 @@ use counseling\Resource\Visitor as Resource;
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
- * @author Matthew McNaney <mcnaney at gmail dot com>
+ * @author Matthew McNaney <mcnaneym@appstate.edu>
  */
 class Visitor extends \counseling\Controller\Base
 {

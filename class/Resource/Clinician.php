@@ -7,7 +7,7 @@ namespace counseling\Resource;
  * Initially was going to pair to user accounts, but no longer required.
  * 
  * @license http://opensource.org/licenses/lgpl-3.0.html
- * @author Matthew McNaney <mcnaney at gmail dot com>
+ * @author Matthew McNaney <mcnaneym@appstate.edu>
  */
 class Clinician extends \phpws2\Resource
 {

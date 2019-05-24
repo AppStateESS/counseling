@@ -8,7 +8,7 @@ require_once PHPWS_SOURCE_DIR . 'mod/counseling/conf/defines.php';
 
 /**
  * @license http://opensource.org/licenses/lgpl-3.0.html
- * @author Matthew McNaney <mcnaney at gmail dot com>
+ * @author Matthew McNaney <mcnaneym@appstate.edu>
  */
 class User extends \phpws2\Http\Controller
 {
