@@ -1,64 +1,70 @@
 .summary {
-    margin-top : 1em;
+  margin-top: 1em;
 }
 
 .summary h3 {
-    margin-top : 0;
-    margin-bottom : .5em;
+  margin-top: 0;
+  margin-bottom: .5em;
 }
 
 .summary .left {
-    border-right : 2px solid #eeeeee;
+  border-right: 2px solid #eeeeee;
 }
 
 .summary .row .row {
-    padding : 1em 0;
-    border-top : 2px solid #eeeeee;
-    border-bottom : 2px solid #eeeeee;
+  padding: 1em 0;
+  border-top: 2px solid #eeeeee;
+  border-bottom: 2px solid #eeeeee;
 }
 
 .big-number {
-    font-size : 44px;
-    line-height: 30px;
+  font-size: 44px;
+  line-height: 30px;
 }
 
 .tally {
-    font-size : 14px;
+  font-size: 14px;
 }
 
 .tally td {
-    padding-right : 8px;
+  padding-right: 8px;
 }
 
 .emergency {
-    background-image : url('../../../../../mod/counseling/img/redstripe.jpg');
-    border-top : 1px solid #f41e1e;
-    border-bottom : 1px solid #f41e1e;
-    padding : .8em 0 .4em 0;
+  background-image: url('../../../../../mod/counseling/img/redstripe.jpg');
+  border-top: 1px solid #f41e1e;
+  border-bottom: 1px solid #f41e1e;
+  padding: .8em 0 .4em 0;
+  margin-bottom : 2em;
 }
 
-.emergency > div.row {
-    background-color: #f4d1d1;
-    padding : .5em 2em;
-    margin : 0 0 .4em 0;
-    font-weight : bolder;
-    font-size : 1.3em;
-    color : #a94440;
+.emergency .wait-time {
+  font-size : 16px;
 }
 
-.emergency .visitor-name {
+.emergency>div.row {
+  background-color: #f4d1d1;
+  padding: 6px;
+  margin: 0 0 .4em 0;
+  font-weight: bolder;
+  font-size: 18px;
+  color: #a94440;
 }
 
 .waiting-list {
-    margin-top : 1em;
+  margin-top: 1em;
+}
+
+
+#FrontDesk div.awaiting table tbody tr td {
+  padding: 8px;
 }
 
 .bg-primary input, .bg-primary button>i.fa, .bg-primary i.glyphicon {
-    color : black;
+  color: black;
 }
 
-
 #dashboard tr.bg-primary span.label-primary {
-    background-color : white;
-    color : #337ab7;
+  background-color: white;
+  color: #337ab7;
 }
