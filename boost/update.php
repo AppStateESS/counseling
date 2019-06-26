@@ -82,6 +82,13 @@ EOF;
 + Bug fixes
 </pre>
 EOF;
+        case version_compare($version, '2.3.3', '<'):
+            $content[] = <<<EOF
+            <pre>2.3.3
+--------------
++ NPM update to address security concern.
+</pre>
+EOF;
     }
 
     return true;

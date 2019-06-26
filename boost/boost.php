@@ -5,6 +5,6 @@
  * @author Matthew McNaney <mcnaneym@appstate.edu>
  */
 $proper_name = 'Counseling Check In';
-$version = '2.3.2';
+$version = '2.3.3';
 $import_sql = false;
 $image_dir = true;
