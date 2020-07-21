@@ -1,5 +1,5 @@
 {
-  "name": "Check In",
+  "name": "counseling",
   "version": "3.0.1",
   "description": "Tracks appointments and walk ins to counseling center",
   "devDependencies": {
