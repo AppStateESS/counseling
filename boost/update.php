@@ -96,6 +96,13 @@ EOF;
 + NPM update
 </pre>
 EOF;
+        case version_compare($version, '3.0.1', '<'):
+            $content[] = <<<EOF
+            <pre>3.0.1
+--------------
++ NPM update
+</pre>
+EOF;
     }
 
     return true;

@@ -37,13 +37,7 @@ module.exports = (env, argv) => {
     plugins: [],
     module: {
       rules: [
-        {
-          test: /\.jsx?$/,
-          enforce: 'pre',
-          loader: 'jshint-loader',
-          exclude: '/node_modules/',
-          include: setup.APP_DIR + "/dev"
-        }, {
+       {
           test: /\.jsx?/,
           include: setup.APP_DIR,
           loader: 'babel-loader',
@@ -72,9 +66,7 @@ module.exports = (env, argv) => {
 
   if (inProduction) {
     // const BundleAnalyzerPlugin =
-    // require('webpack-bundle-analyzer').BundleAnalyzerPlugin
     // settings.plugins.push(new BundleAnalyzerPlugin()) const AssetsPlugin =
-    // require('assets-webpack-plugin')
     const AssetsPlugin = require('assets-webpack-plugin')
     settings.plugins.push(
       new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify('production')})
