@@ -18,12 +18,17 @@
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item dropdown">
         <?php if ($is_deity): ?>
-        <a class="nav-link" href="counseling/Admin/Settings" class=""><i class="fa fa-cog"></i> Settings</a>
+	<li class="nav-item dropdown">
+          <a class="nav-link" href="counseling/Admin/Settings" class=""><i class="fa fa-cog"></i> Settings</a>
+	</li>
         <?php endif; ?>
-        <a class="nav-link" href="index.php?module=controlpanel"><?=$username?></a>
-        <a class="nav-link" href="<?=$logout_uri?>"><i class="fas fa-sign-out-alt"></i> Sign out</a>
+	<li class="nav-item dropdown">	
+          <a class="nav-link" href="index.php?module=controlpanel"><?=$username?></a>
+	</li>
+	<li class="nav-item dropdown">	
+          <a class="nav-link" href="<?=$logout_uri?>"><i class="fas fa-sign-out-alt"></i> Sign out</a>
+	</li>
       </li>
     </ul>
   </div><!-- /.navbar-collapse -->
