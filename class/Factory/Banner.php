@@ -50,13 +50,17 @@ class Banner
     public static function pullByBannerId($banner_id)
     {
         require_once PHPWS_SOURCE_DIR.'mod/counseling/conf/defines.php';
+        
+        $curl = curl_init();
+        curl_setopt_array($curl, array(CURLOPT_RETURNTRANSFER => 1, CURLOPT_URL =>COUNSELING_BANNER_URL.$banner_id));
+        $result = json_decode(curl_exec($curl));
 
-        $client = new \Guzzle\Http\Client(COUNSELING_BANNER_URL);
-        $request = $client->get($banner_id);
-        $response = $request->send();
-        $result = $response->json();
-        $result = $result['response'];
-
+        if(empty($result->response)){
+            return false;
+        }else{
+            $result = $result->response;
+        }
+        
         if (empty($result['userName'])) {
             return false;
         } else {
