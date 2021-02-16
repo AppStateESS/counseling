@@ -50,6 +50,7 @@ class Banner
     public static function pullByBannerId($banner_id)
     {
         require_once PHPWS_SOURCE_DIR.'mod/counseling/conf/defines.php';
+        $userName = NULL;
         
         $curl = curl_init();
         curl_setopt_array($curl, array(CURLOPT_RETURNTRANSFER => 1, CURLOPT_URL =>COUNSELING_BANNER_URL.$banner_id));
@@ -60,7 +61,14 @@ class Banner
         }else{
             $result = $result->response;
         }
-        
+
+        if(is_object($result)){
+           $userName = $result->userName;
+           $result = (array)$result;
+        } else {
+           $userName = $result['userName'];
+        }
+
         if (empty($result['userName'])) {
             return false;
         } else {
