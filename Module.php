@@ -11,11 +11,6 @@ class Module extends \Canopy\Module
 
     public function __construct()
     {
-        $autoload = PHPWS_SOURCE_DIR . 'mod/counseling/vendor/autoload.php';
-        if (!is_file($autoload)) {
-            exit('Counseling requires "composer install" to be run in module directory');
-        }
-        require_once $autoload;
         parent::__construct();
         $this->setTitle('counseling');
         $this->setProperName('Counseling Center Check-In');
@@ -38,7 +33,7 @@ class Module extends \Canopy\Module
         }
         $checked = true;
         require_once $define_file;
-        require_once PHPWS_SOURCE_DIR .  'mod/counseling/conf/system_defines.php';
+        require_once PHPWS_SOURCE_DIR . 'mod/counseling/conf/system_defines.php';
     }
 
     public function getController(\Canopy\Request $request)
