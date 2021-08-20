@@ -15,10 +15,19 @@ const Appointment = (props) => {
   }
   let count = 0
 
-  let listRows = props.appointments.map(function (value, key) {
-    count = count + 1
-    return <AppointmentRow key={key} {...value} count={count} reload={props.reload}/>
-  }.bind(this))
+  let listRows = props.appointments.map(
+    function (value, key) {
+      count = count + 1
+      return (
+        <AppointmentRow
+          key={key}
+          {...value}
+          count={count}
+          reload={props.reload}
+        />
+      )
+    }.bind(this)
+  )
 
   return (
     <div className="appointment-list">
@@ -43,7 +52,7 @@ const Appointment = (props) => {
 
 Appointment.propTypes = {
   appointments: PropTypes.array,
-  reload: PropTypes.func
+  reload: PropTypes.func,
 }
 
 const AppointmentRow = (props) => {
@@ -53,21 +62,31 @@ const AppointmentRow = (props) => {
     <tr className={_className}>
       <td>{count}</td>
       <td className="text-center">
-        <CategoryIcon category={props.category} reasonTitle={props.reason_title}/></td>
-      <td><VisitorName visitor={props.visitor}/></td>
+        <CategoryIcon
+          category={props.category}
+          reasonTitle={props.reason_title}
+        />
+      </td>
       <td>
-        <ClipboardInput bannerId={props.visitor.banner_id}/>
+        <VisitorName visitor={props.visitor} />
       </td>
-      <td>{props.location}
+      <td>
+        <ClipboardInput bannerId={props.visitor.banner_id} />
       </td>
-      <td><WaitingListVisits visitNumber={props.total_visits}/></td>
+      <td>{props.location}</td>
+      <td>
+        <WaitingListVisits visitNumber={props.total_visits} />
+      </td>
       <td>
         <WaitingListStatus
           visitor={props.visitor}
           reload={props.reload}
-          visitNumber={props.total_visits}/>
+          visitNumber={props.total_visits}
+        />
       </td>
-      <td><AppointmentAction visitId={props.id} reload={props.reload}/></td>
+      <td>
+        <AppointmentAction visitId={props.id} reload={props.reload} />
+      </td>
     </tr>
   )
 }
@@ -82,7 +101,7 @@ AppointmentRow.propTypes = {
   visitor_id: PropTypes.string,
   reload: PropTypes.func,
   location: PropTypes.string,
-  count: PropTypes.number
+  count: PropTypes.number,
 }
 
 AppointmentRow.defaultProps = {
@@ -93,29 +112,42 @@ AppointmentRow.defaultProps = {
   total_visits: 0,
   visitor: {},
   visitor_id: 0,
-  reload: null
+  reload: null,
 }
 
 const AppointmentAction = (props) => {
-
   const completeReason = (reason) => {
-    $.post('counseling/Admin/Dashboard/Waiting', {
-      command: 'setCompleteReason',
-      reason: reason,
-      visitId: props.visitId
-    }, null, 'json').done(function () {
-      props.reload()
-    }.bind(this))
+    $.post(
+      'counseling/Admin/Dashboard/Waiting',
+      {
+        command: 'setCompleteReason',
+        reason: reason,
+        visitId: props.visitId,
+      },
+      null,
+      'json'
+    ).done(
+      function () {
+        props.reload()
+      }.bind(this)
+    )
   }
 
   const remove = () => {
     if (confirm('Are you sure you want to remove this visitor?')) {
-      $.post('counseling/Admin/Dashboard/Waiting', {
-        command: 'delete',
-        visitId: props.visitId
-      }, null, 'json').done(function () {
-        props.reload()
-      }.bind(this))
+      $.post(
+        'counseling/Admin/Dashboard/Waiting',
+        {
+          command: 'delete',
+          visitId: props.visitId,
+        },
+        null,
+        'json'
+      ).done(
+        function () {
+          props.reload()
+        }.bind(this)
+      )
     }
   }
 
@@ -123,42 +155,85 @@ const AppointmentAction = (props) => {
     var options = []
     options.push(
       {
-        label: <div className="text-success pointer">
-          <strong>
-            <i className="fas fa-thumbs-up"></i>&nbsp;Send back</strong>
-        </div>,
+        label: (
+          <div className="text-success pointer">
+            <strong>
+              <i className="fas fa-thumbs-up"></i>&nbsp;Send back
+            </strong>
+          </div>
+        ),
         visitId: props.visitId,
-        handleClick: completeReason.bind(null, 5)
+        handleClick: completeReason.bind(null, 5),
       },
       {
-        divider: true
+        divider: true,
       },
       {
-        label: <div className="pointer">
-          <i className="fas fa-external-link-square-alt"></i>&nbsp;Had to leave</div>,
+        label: (
+          <div className="pointer">
+            <i className="fas fa-external-link-square-alt"></i>&nbsp;Had to
+            leave
+          </div>
+        ),
         visitId: props.visitId,
-        handleClick: completeReason.bind(null, 2)
+        handleClick: completeReason.bind(null, 2),
       },
       {
-        label: <div className="pointer">
-          <i className="fa fa-user-plus"></i>&nbsp;Full, agreed to return</div>,
+        label: (
+          <div className="pointer">
+            <i className="fa fa-user-plus"></i>&nbsp;Full, agreed to return
+          </div>
+        ),
         visitId: props.visitId,
-        handleClick: completeReason.bind(null, 6)
+        handleClick: completeReason.bind(null, 6),
       },
       {
-        label: <div className="pointer">
-          <i className="fa fa-eye-slash"></i>&nbsp;Missing</div>,
+        label: (
+          <div className="pointer">
+            <i className="fas fa-fw fa-clipboard-list"></i>&nbsp;Rescheduled
+          </div>
+        ),
         visitId: props.visitId,
-        handleClick: completeReason.bind(null, 3)
+        handleClick: completeReason.bind(null, 9),
       },
       {
-        divider: true
-      },
-      {
-        label: <div className="text-danger pointer">
-          <i className="far fa-trash-alt"></i>&nbsp;Remove</div>,
+        label: (
+          <div className="pointer">
+            <i className="fa fa-eye-slash"></i>&nbsp;Missing
+          </div>
+        ),
         visitId: props.visitId,
-        handleClick: remove
+        handleClick: completeReason.bind(null, 3),
+      },
+      {
+        label: (
+          <div className="pointer">
+            <i className="fas fa-fw fa-comment-slash"></i>&nbsp;Canceled
+          </div>
+        ),
+        visitId: props.visitId,
+        handleClick: completeReason.bind(null, 7),
+      },
+      {
+        label: (
+          <div className="pointer">
+            <i className="fas fa-fw fa-times-circle"></i>&nbsp;No show
+          </div>
+        ),
+        visitId: props.visitId,
+        handleClick: completeReason.bind(null, 8),
+      },
+      {
+        divider: true,
+      },
+      {
+        label: (
+          <div className="text-danger pointer">
+            <i className="far fa-trash-alt"></i>&nbsp;Remove
+          </div>
+        ),
+        visitId: props.visitId,
+        handleClick: remove,
       }
     )
     return options
@@ -166,12 +241,12 @@ const AppointmentAction = (props) => {
 
   var options = getOptions()
   const icon = <i className="fas fa-cog"></i>
-  return <ButtonGroup label={icon} options={options}/>
+  return <ButtonGroup label={icon} options={options} />
 }
 
 AppointmentAction.propTypes = {
   visitId: PropTypes.string,
-  reload: PropTypes.func
+  reload: PropTypes.func,
 }
 
 export default Appointment
