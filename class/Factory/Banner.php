@@ -8,6 +8,7 @@ namespace counseling\Factory;
  */
 class Banner
 {
+
     public static function pullByFakeBannerId($banner_id)
     {
         if (preg_match('/\D/', $banner_id)) {
@@ -22,8 +23,8 @@ class Banner
             'firstName' => $fn[rand(0, count($fn) - 1)],
             'preferredName' => $fn[rand(0, count($fn) - 1)],
             'lastName' => $ln[rand(0, count($ln) - 1)],
-            'phoneNumber' => '828'.rand(2620000, 2659999),
-            'emailAddress' => $username.'@appstate.edu',
+            'phoneNumber' => '828' . rand(2620000, 2659999),
+            'emailAddress' => $username . '@appstate.edu',
             'studentLevel' => 'U',
         );
     }
@@ -33,46 +34,29 @@ class Banner
         return empty($vars) || count($vars) < 2 || isset($vars['Message']);
     }
 
-    private static function prune($vars)
-    {
-        $intersect = array(
-            'userName' => 1,
-            'emailAddress' => 1,
-            'preferredName' => 1,
-            'firstName' => 1,
-            'lastName' => 1,
-            'phoneNumber' => 1,
-            'studentLevel' => 1, );
-
-        return array_intersect_key($vars, $intersect);
-    }
-
     public static function pullByBannerId($banner_id)
     {
-        require_once PHPWS_SOURCE_DIR.'mod/counseling/conf/defines.php';
-        $userName = NULL;
-        
+        require_once PHPWS_SOURCE_DIR . 'mod/counseling/conf/defines.php';
+
+        $pluggedUrl = str_replace('{id}', $banner_id, COUNSELING_BANNER_URL);
+
         $curl = curl_init();
-        curl_setopt_array($curl, array(CURLOPT_RETURNTRANSFER => 1, CURLOPT_URL =>COUNSELING_BANNER_URL.$banner_id));
-        $result = json_decode(curl_exec($curl));
+        curl_setopt_array($curl, array(CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => $pluggedUrl,
+            CURLOPT_FAILONERROR => 1,
+            CURLOPT_TIMEOUT => 8,
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_SSL_VERIFYPEER => 0));
 
-        if(empty($result->response)){
-            return false;
-        }else{
-            $result = $result->response;
-        }
 
-        if(is_object($result)){
-           $userName = $result->userName;
-           $result = (array)$result;
-        } else {
-           $userName = $result['userName'];
-        }
+        $jsonResult = curl_exec($curl);
+        $result = json_decode($jsonResult);
 
-        if (empty($result['userName'])) {
+        if (empty($result)) {
             return false;
         } else {
-            return self::prune($result);
+            return (array) $result;
         }
     }
+
 }
