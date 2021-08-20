@@ -12,6 +12,7 @@ use counseling\Factory\Visit;
  */
 class Checkin extends \counseling\Controller\Base
 {
+
     protected function getJsonView($data, \Canopy\Request $request)
     {
         if (!$request->isVar('command')) {
@@ -36,7 +37,10 @@ class Checkin extends \counseling\Controller\Base
 
     private function loginVisitor()
     {
-        $banner_id = filter_input(INPUT_GET, 'bannerId', FILTER_SANITIZE_STRING);
+        $banner_id = filter_input(INPUT_GET, 'studentBannerId', FILTER_SANITIZE_STRING);
+        if (strlen($banner_id) < 9) {
+            return;
+        }
         $waiting = Visit::getWaitingByBanner($banner_id);
 
         if (!empty($waiting)) {
@@ -52,14 +56,15 @@ class Checkin extends \counseling\Controller\Base
             return;
         } else {
             $jsonVisitor = $visitor->getStringVars();
-
             return $jsonVisitor;
         }
     }
-    
-    public function post(\Canopy\Request $request) {
+
+    public function post(\Canopy\Request $request)
+    {
         $session = \phpws2\Session::getInstance();
         $session->defaultCounselingLocation = $request->pullPostInteger('location');
         \Canopy\Server::forward('./');
     }
+
 }
