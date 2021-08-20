@@ -10,6 +10,7 @@ use counseling\Resource\Visit as Resource;
  */
 class Visit extends Base
 {
+
     /**
      * @return array
      */
@@ -118,6 +119,9 @@ class Visit extends Base
             $sorted_visitors[$visitor['id']]['previously_seen'] = strftime('%b. %e, %Y', $visitor['previously_seen']);
         }
         foreach ($visits as $key => $visit) {
+            if (!isset($sorted_visitors[$visit['visitor_id']])) {
+                throw new \Exception("Visitor id {$visit['visitor_id']} is in queue but does not exist");
+            }
             $visits[$key]['visitor'] = $sorted_visitors[$visit['visitor_id']];
             if ($visit['complete_reason'] > 0) {
                 $visits[$key]['clinician'] = self::getClinician($visit['clinician_id']);
@@ -138,7 +142,7 @@ class Visit extends Base
         if ($id) {
             $visit->setId($id);
             if (!parent::loadByID($visit)) {
-                throw new \Exception('Visit id not found:'.$id);
+                throw new \Exception('Visit id not found:' . $id);
             }
         }
 
@@ -172,7 +176,7 @@ class Visit extends Base
         }
         if (isset($clin_list[$clinician_id])) {
             $clinician = $clin_list[$clinician_id];
-            $clinician_name = $clinician['first_name'].' '.$clinician['last_name'];
+            $clinician_name = $clinician['first_name'] . ' ' . $clinician['last_name'];
         } else {
             $clinician_name = '[Clinician deleted]';
         }
@@ -236,7 +240,16 @@ class Visit extends Base
 
             case CC_COMPLETE_FULL:
                 return 'Full, agreed to return';
-                
+
+            case CC_COMPLETE_CANCELED:
+                return 'Canceled appointment';
+
+            case CC_COMPLETE_NO_SHOW:
+                return 'Did not show';
+
+            case CC_COMPLETE_RESCHEDULED:
+                return 'Rescheduled appointment';
+
             default:
                 return 'Unknown reason';
         }
@@ -334,4 +347,5 @@ class Visit extends Base
 
         return $db->selectOneRow();
     }
+
 }
