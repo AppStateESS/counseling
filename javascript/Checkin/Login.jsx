@@ -15,7 +15,7 @@ export default class Login extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      stage: 'swipe'
+      stage: 'swipe',
     }
     this.updateStage = this.updateStage.bind(this)
   }
@@ -25,9 +25,8 @@ export default class Login extends Component {
   }
 
   render() {
-    return (<Stage updateStage={this.updateStage} stage={this.state.stage}/>)
+    return <Stage updateStage={this.updateStage} stage={this.state.stage} />
   }
-
 }
 
 class Stage extends Component {
@@ -49,10 +48,11 @@ class Stage extends Component {
   }
 
   componentDidMount() {
-    $.getJSON('counseling/User/Checkin', {command: 'instructions'}).done(function (data) {
-      this.setState({instructionList: data})
-    }.bind(this))
-
+    $.getJSON('counseling/User/Checkin', {command: 'instructions'}).done(
+      function (data) {
+        this.setState({instructionList: data})
+      }.bind(this)
+    )
   }
 
   updateReason(reason) {
@@ -79,11 +79,16 @@ class Stage extends Component {
     }
     //update phone number if changed
     if (phone !== this.state.visitor.phone_number) {
-      $.post('counseling/User/Visitor', {
-        command: 'updatePhone',
-        visitorId: this.state.visitor.id,
-        phoneNumber: phone,
-      }, null, 'json')
+      $.post(
+        'counseling/User/Visitor',
+        {
+          command: 'updatePhone',
+          visitorId: this.state.visitor.id,
+          phoneNumber: phone,
+        },
+        null,
+        'json'
+      )
     }
 
     this.setState({phone: phone})
@@ -106,15 +111,22 @@ class Stage extends Component {
   }
 
   completeCheckin() {
-    $.post('counseling/User/Visit', {
-      command: 'create',
-      locationId: currentLocation,
-      visitorId: this.state.visitor.id,
-      reasonId: this.state.reason.id,
-      emergency: this.state.emergency,
-    }, null, 'json').done(function () {
-      resetTimeout = setTimeout(this.resetLogin, 5000)
-    }.bind(this))
+    $.post(
+      'counseling/User/Visit',
+      {
+        command: 'create',
+        locationId: currentLocation,
+        visitorId: this.state.visitor.id,
+        reasonId: this.state.reason.id,
+        emergency: this.state.emergency,
+      },
+      null,
+      'json'
+    ).done(
+      function () {
+        resetTimeout = setTimeout(this.resetLogin, 5000)
+      }.bind(this)
+    )
   }
 
   resetLogin() {
@@ -131,28 +143,35 @@ class Stage extends Component {
   render() {
     switch (this.props.stage) {
       case 'swipe':
-        return <Swipe update={this.updateVisitor}/>
+        return <Swipe update={this.updateVisitor} />
 
       case 'reason':
-        return <Reason update={this.updateReason} visitor={this.state.visitor}/>
+        return (
+          <Reason update={this.updateReason} visitor={this.state.visitor} />
+        )
 
       case 'phone':
-        return <Phone
-          update={this.updatePhone}
-          visitor={this.state.visitor}
-          back={this.backToReason}/>
+        return (
+          <Phone
+            update={this.updatePhone}
+            visitor={this.state.visitor}
+            back={this.backToReason}
+          />
+        )
 
       case 'emergency':
-        return <Emergency update={this.updateEmergency}/>
+        return <Emergency update={this.updateEmergency} />
 
       case 'instruction':
-        return <Instruction
-          reset={this.resetLogin}
-          instruction={this.state.reason.instruction}
-          instructionList={this.state.instructionList}/>
+        return (
+          <Instruction
+            reset={this.resetLogin}
+            instruction={this.state.reason.instruction}
+            instructionList={this.state.instructionList}
+          />
+        )
     }
   }
-
 }
 
 Stage.propTypes = {
