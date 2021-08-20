@@ -6,7 +6,7 @@ export default class Instruction extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      instructions: null
+      instructions: null,
     }
   }
   render() {
@@ -21,11 +21,13 @@ export default class Instruction extends Component {
     return (
       <div className="checkin-box">
         <div className="text-center">
-          <p className="title">Ok, you're checked in.</p>
+          <p className="title">Ok, you&apos;re checked in.</p>
           <p className="subtitle">{instruction}</p>
         </div>
-        <div className="text-right">
-          <button className="btn btn-default" onClick={this.props.reset}>Finished</button>
+        <div className="text-center">
+          <button className="btn btn-default" onClick={this.props.reset}>
+            Finished
+          </button>
         </div>
       </div>
     )
@@ -35,7 +37,7 @@ export default class Instruction extends Component {
 Instruction.defaultProps = {
   instruction: '1',
   instructionList: null,
-  reset: null
+  reset: null,
 }
 
 Instruction.propTypes = {
