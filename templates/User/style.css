@@ -8,7 +8,6 @@
 }
 
 .checkin-box input {
-    margin-top : 1em;
     font-size : 1.6em;
     height : 2em;
 }
@@ -24,7 +23,6 @@
 }
 
 .checkin-box p, .checkin-box ul li {
-    margin-bottom : .1em;
     font-family : Arial, sans;
 }
 
