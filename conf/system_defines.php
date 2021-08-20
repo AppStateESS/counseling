@@ -1,7 +1,6 @@
 <?php
 
-/** Defines below do not need editing **/
-
+/** Defines below do not need editing * */
 define('COUNSELING_SIT_INSTRUCTION', 'Please have a seat in the lobby area. One of our counselors will speak with you shortly.');
 define('COUNSELING_FRONT_DESK_INSTRUCTION', 'Please see one of our staff members at the front desk for your next step.');
 
@@ -24,3 +23,6 @@ define('CC_COMPLETE_MISSING', 3);
 define('CC_COMPLETE_APPOINTMENT', 4);
 define('CC_COMPLETE_SENT_BACK', 5);
 define('CC_COMPLETE_FULL', 6);
+define('CC_COMPLETE_CANCELED', 7);
+define('CC_COMPLETE_NO_SHOW', 8);
+define('CC_COMPLETE_RESCHEDULED', 9);
