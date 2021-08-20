@@ -103,6 +103,16 @@ EOF;
 + NPM update
 </pre>
 EOF;
+        case version_compare($version, '3.1.0', '<'):
+            $content[] = <<<EOF
+            <pre>3.1.0
+--------------
++ Package updates.
++ Swipe in is automatic.
++ Multiple error checks to prevent banner id = 0.
++ Added new options to appointment choices.
+</pre>
+EOF;
     }
 
     return true;
