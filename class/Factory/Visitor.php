@@ -10,8 +10,12 @@ use counseling\Resource\Visitor as Resource;
  */
 class Visitor extends Base
 {
+
     public static function getByBannerId($banner_id)
     {
+        if (strlen($banner_id) < 9) {
+            return;
+        }
         $db = \phpws2\Database::getDB();
         $tbl = $db->addTable('cc_visitor');
         $tbl->addFieldConditional('banner_id', $banner_id);
@@ -36,7 +40,7 @@ class Visitor extends Base
         if ($id) {
             $visitor->setId($id);
             if (!parent::loadByID($visitor)) {
-                throw new \Exception('Visitor id not found:'.$id);
+                throw new \Exception('Visitor id not found:' . $id);
             }
         }
 
@@ -45,6 +49,9 @@ class Visitor extends Base
 
     public static function createFromBanner($banner_id)
     {
+        if (strlen($banner_id) < 9) {
+            return;
+        }
         if (COUNSELING_FAKE_VISITOR) {
             $vars = Banner::pullByFakeBannerId($banner_id);
         } else {
@@ -69,8 +76,7 @@ class Visitor extends Base
         $visitor->stampLastVisit();
         $visitor->setPhoneNumber($vars['phoneNumber']);
         $visitor->setEmail($vars['emailAddress']);
-
-        self::saveResource($visitor);
+        self::save($visitor);
 
         return $visitor;
     }
@@ -80,7 +86,7 @@ class Visitor extends Base
         $visitor = new Resource();
         self::loadByID($visitor, $id);
         $visitor->setIntakeComplete(true);
-        self::saveResource($visitor);
+        self::save($visitor);
     }
 
     public static function stampAsNotSeen($visitor_id)
@@ -88,7 +94,7 @@ class Visitor extends Base
         $visitor = self::build($visitor_id);
         $visitor->setSeenLastVisit(false);
         $visitor->stampLastVisit();
-        self::saveResource($visitor);
+        self::save($visitor);
     }
 
     public static function stampAsSeen($visitor_id)
@@ -97,6 +103,15 @@ class Visitor extends Base
         $visitor->setSeenLastVisit(true);
         $visitor->stampLastVisit();
         $visitor->stampPreviouslySeen();
+        self::save($visitor);
+    }
+
+    public static function save($visitor)
+    {
+        if ($visitor->getBannerId() == 0) {
+            throw new \Exception('Tried to save 0 banner id visitor');
+        }
         self::saveResource($visitor);
     }
+
 }
