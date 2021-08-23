@@ -76,11 +76,38 @@ const WaitingAction = (props) => {
       {
         label: (
           <div className="pointer">
+            <i className="fas fa-fw fa-clipboard-list"></i>&nbsp;Rescheduled
+          </div>
+        ),
+        visitId: props.visitId,
+        handleClick: completeReason.bind(null, 9),
+      },
+      {
+        label: (
+          <div className="pointer">
             <i className="fas fa-fw fa-clock"></i>&nbsp;Made appointment
           </div>
         ),
         visitId: props.visitId,
         handleClick: completeReason.bind(null, 4),
+      },
+      {
+        label: (
+          <div className="pointer">
+            <i className="fas fa-fw fa-comment-slash"></i>&nbsp;Canceled
+          </div>
+        ),
+        visitId: props.visitId,
+        handleClick: completeReason.bind(null, 7),
+      },
+      {
+        label: (
+          <div className="pointer">
+            <i className="fas fa-fw fa-times-circle"></i>&nbsp;No show
+          </div>
+        ),
+        visitId: props.visitId,
+        handleClick: completeReason.bind(null, 8),
       },
       {
         divider: true,
