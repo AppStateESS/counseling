@@ -20,7 +20,7 @@ deploy:
   provider: releases
   skip_cleanup: true
   api_key:
-    secure: JROiJALvmW13HaUqdzbKuDsn5oXASh3UO1H9jkz3M9ZmwUb1vzSAR8LUPlxjDOa+zn5YKHUcmWEs66oyGWS9iyhOkUfQDnqy6+54klUk86RhygSEGJo4m0wUjjmTXEIMmn9oqh7HI1hQvSVhBtiJIiNsvZiB3f/h5SmU72jwu1w=
+    secure: ImGQnsM43w3O7N+53jpCyHhJ01CaxlCg8fuHKS25DGYFozP/Kwhge1bmen1jGsazze5qLs0Hv5HEkqYhwC/3hgp1LSLJCDZpDIGGbzRmJfEVCFkg34BeuhDtjsuLtkWx9VYd1cpLpFkd8amjiKXbvLkOutdzLcBYwGkwEtUuMHE=
   file: counseling.tar.gz
   overwrite: true
   on:
