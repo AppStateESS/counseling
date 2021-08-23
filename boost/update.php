@@ -113,6 +113,13 @@ EOF;
 + Added new options to appointment choices.
 </pre>
 EOF;
+        case version_compare($version, '3.1.1', '<'):
+            $content[] = <<<EOF
+            <pre>3.1.1
+--------------
++ Added new options to walk-in choices.
+</pre>
+EOF;
     }
 
     return true;
