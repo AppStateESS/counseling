@@ -1,23 +1,28 @@
 sudo: false
-language: php
-php:
-- 7
+matrix:
+  include:
+    - language: php
+      php:
+        - 7
+      script:
+        - ".travis-build/phplint ."
+    - language: node.js
+      node_js: 10.20.1
+before_install:
+  - npm i -g npm@v6.14.8
 install:
-- nvm install 6
-- npm install
-script:
-- ".travis-build/phplint ."
+  - npm install
 after_success:
-- composer install
-- npm run build
-- rm -rf node_modules
-- tar -czf counseling.tar.gz *
+  - npm run build
+  - rm -rf node_modules
+  - tar -czf counseling.tar.gz *
 deploy:
   provider: releases
   skip_cleanup: true
   api_key:
     secure: JROiJALvmW13HaUqdzbKuDsn5oXASh3UO1H9jkz3M9ZmwUb1vzSAR8LUPlxjDOa+zn5YKHUcmWEs66oyGWS9iyhOkUfQDnqy6+54klUk86RhygSEGJo4m0wUjjmTXEIMmn9oqh7HI1hQvSVhBtiJIiNsvZiB3f/h5SmU72jwu1w=
   file: counseling.tar.gz
+  overwrite: true
   on:
     repo: AppStateESS/counseling
     branch: master
