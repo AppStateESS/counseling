@@ -1,6 +1,14 @@
 # Counseling Setup
 
-The Counseling module (which I will refer to as "counseling" below) is setup much like other Canopy modules.
+The Counseling module (which I will refer to as "counseling" below) has the following server LAMP requirements:
+* Linux/Unix
+* Apache web server (or Nginx which is what we now use)
+* PHP 7.0 or higher
+* MySQL/MariaDB. It should work with PostGreSQL but I haven't tested it.
+
+You will also need to install the Canopy content management system.
+
+Installing counseling works like other modules in Canopy.
 
 1. Install Canopy from Github. Canopy does not have a release so you will need to download it a Git copy: https://github.com/AppStateESS/canopy/archive/refs/heads/master.zip
    I will warn you that Canopy at its heart is old and setup can be finicky. That said, we use it daily and have done so for years.
