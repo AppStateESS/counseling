@@ -2,9 +2,9 @@
 
 The Counseling module (which I will refer to as "counseling" below) has the following server LAMP requirements:
 * Linux/Unix
-* Apache web server (or Nginx which is what we now use)
+* Apache or Nginx web server
 * PHP 7.0 or higher
-* MySQL/MariaDB. It should work with PostGreSQL but I haven't tested it.
+* MySQL/MariaDB. It should work with PostgreSQL but I haven't tested it.
 
 You will also need to install the Canopy content management system.
 
