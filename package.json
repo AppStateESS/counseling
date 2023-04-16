@@ -11,7 +11,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.15",
     "babel-loader": "^8.2.2",
-    "browser-sync": "^2.27.5",
+    "browser-sync": "^2.29.1",
     "browser-sync-webpack-plugin": "^2.3.0",
     "css-loader": "^6.2.0",
     "es6-promise": "^4.2.8",
